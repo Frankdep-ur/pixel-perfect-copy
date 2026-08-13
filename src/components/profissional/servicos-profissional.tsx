@@ -62,12 +62,14 @@ export function ServicosProfissional({ profissionalId, regiao }: Props) {
     mutationFn: async (booking: BookingProf) => {
       const passo = PROXIMO[booking.status];
       if (!passo) return;
-      const payload: Record<string, string> = {
+      const agora = new Date().toISOString();
+      const payload = {
         status: passo.status,
         profissional_id: profissionalId,
+        ...(passo.campo === "iniciado_em" ? { iniciado_em: agora } : {}),
+        ...(passo.campo === "finalizado_em" ? { finalizado_em: agora } : {}),
+        ...(passo.status === "a_caminho" ? { checkin_em: agora } : {}),
       };
-      if (passo.campo) payload[passo.campo] = new Date().toISOString();
-      if (passo.status === "a_caminho") payload["checkin_em"] = new Date().toISOString();
       const { error } = await supabase.from("bookings").update(payload).eq("id", booking.id);
       if (error) throw error;
     },

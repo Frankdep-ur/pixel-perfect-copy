@@ -14,6 +14,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { TIPOS_LIMPEZA } from "@/lib/catalogo";
 import { REGIOES, type RegiaoId } from "@/lib/regioes";
+import { UploadFoto } from "@/components/upload-foto";
 
 type Props = { user: User };
 
@@ -21,6 +22,7 @@ export function CadastroProfissional({ user }: Props) {
   const queryClient = useQueryClient();
   const [nome, setNome] = useState((user.user_metadata?.['nome'] as string) ?? "");
   const [telefone, setTelefone] = useState((user.user_metadata?.['telefone'] as string) ?? "");
+  const [foto, setFoto] = useState<string | null>(null);
   const [bio, setBio] = useState("");
   const [anos, setAnos] = useState("1");
   const [raio, setRaio] = useState("15");
@@ -28,6 +30,7 @@ export function CadastroProfissional({ user }: Props) {
   const [cidade, setCidade] = useState("");
   const [cidades, setCidades] = useState<string[]>([]);
   const [tipos, setTipos] = useState<string[]>(["padrao"]);
+
 
   function alternar(lista: string[], set: (v: string[]) => void, valor: string) {
     set(lista.includes(valor) ? lista.filter((v) => v !== valor) : [...lista, valor]);

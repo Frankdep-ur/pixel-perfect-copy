@@ -36,7 +36,7 @@ export function SiteHeader() {
         <div className="hidden items-center gap-3 md:flex">
           <Link
             to={user ? "/minha-conta" : "/auth"}
-            search={user ? undefined : { next: undefined }}
+            search={{ next: undefined }}
             className="inline-flex h-11 items-center gap-2 rounded-xl px-3 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
           >
             <UserRound className="size-4" />

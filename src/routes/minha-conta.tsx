@@ -1,7 +1,9 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { CalendarDays, Loader2, MapPin, Plus } from "lucide-react";
+import { CalendarDays, Loader2, MapPin, Plus, Sparkles } from "lucide-react";
+
+import { EstadoVazio } from "@/components/estado-vazio";
 
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/site-header";

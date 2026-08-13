@@ -208,3 +208,30 @@
 @utility safe-top {
   padding-top: env(safe-area-inset-top);
 }
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer base {
+  /* Rodapé nunca senta no meio da tela em páginas curtas */
+  main {
+    min-height: calc(100dvh - 56px - 64px);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    line-height: 1.4;
+  }
+
+  p,
+  li {
+    line-height: 1.55;
+  }
+}

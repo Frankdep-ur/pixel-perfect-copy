@@ -10,15 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AjudaRouteImport } from './routes/ajuda'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContratarRouteImport } from './routes/contratar'
 import { Route as MinhaContaRouteImport } from './routes/minha-conta'
+import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as ProfissionalRouteImport } from './routes/profissional'
+import { Route as SejaProfissionalRouteImport } from './routes/seja-profissional'
+import { Route as TermosRouteImport } from './routes/termos'
 import { Route as ConfirmacaoIdRouteImport } from './routes/confirmacao.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AjudaRoute = AjudaRouteImport.update({
+  id: '/ajuda',
+  path: '/ajuda',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -36,9 +45,24 @@ const MinhaContaRoute = MinhaContaRouteImport.update({
   path: '/minha-conta',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacidadeRoute = PrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfissionalRoute = ProfissionalRouteImport.update({
   id: '/profissional',
   path: '/profissional',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SejaProfissionalRoute = SejaProfissionalRouteImport.update({
+  id: '/seja-profissional',
+  path: '/seja-profissional',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermosRoute = TermosRouteImport.update({
+  id: '/termos',
+  path: '/termos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConfirmacaoIdRoute = ConfirmacaoIdRouteImport.update({
@@ -49,62 +73,90 @@ const ConfirmacaoIdRoute = ConfirmacaoIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ajuda': typeof AjudaRoute
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
   '/minha-conta': typeof MinhaContaRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/profissional': typeof ProfissionalRoute
+  '/seja-profissional': typeof SejaProfissionalRoute
+  '/termos': typeof TermosRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ajuda': typeof AjudaRoute
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
   '/minha-conta': typeof MinhaContaRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/profissional': typeof ProfissionalRoute
+  '/seja-profissional': typeof SejaProfissionalRoute
+  '/termos': typeof TermosRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ajuda': typeof AjudaRoute
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
   '/minha-conta': typeof MinhaContaRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/profissional': typeof ProfissionalRoute
+  '/seja-profissional': typeof SejaProfissionalRoute
+  '/termos': typeof TermosRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/ajuda'
     | '/auth'
     | '/contratar'
     | '/minha-conta'
+    | '/privacidade'
     | '/profissional'
+    | '/seja-profissional'
+    | '/termos'
     | '/confirmacao/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/ajuda'
     | '/auth'
     | '/contratar'
     | '/minha-conta'
+    | '/privacidade'
     | '/profissional'
+    | '/seja-profissional'
+    | '/termos'
     | '/confirmacao/$id'
   id:
     | '__root__'
     | '/'
+    | '/ajuda'
     | '/auth'
     | '/contratar'
     | '/minha-conta'
+    | '/privacidade'
     | '/profissional'
+    | '/seja-profissional'
+    | '/termos'
     | '/confirmacao/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AjudaRoute: typeof AjudaRoute
   AuthRoute: typeof AuthRoute
   ContratarRoute: typeof ContratarRoute
   MinhaContaRoute: typeof MinhaContaRoute
+  PrivacidadeRoute: typeof PrivacidadeRoute
   ProfissionalRoute: typeof ProfissionalRoute
+  SejaProfissionalRoute: typeof SejaProfissionalRoute
+  TermosRoute: typeof TermosRoute
   ConfirmacaoIdRoute: typeof ConfirmacaoIdRoute
 }
 
@@ -115,6 +167,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ajuda': {
+      id: '/ajuda'
+      path: '/ajuda'
+      fullPath: '/ajuda'
+      preLoaderRoute: typeof AjudaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -138,11 +197,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MinhaContaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacidade': {
+      id: '/privacidade'
+      path: '/privacidade'
+      fullPath: '/privacidade'
+      preLoaderRoute: typeof PrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profissional': {
       id: '/profissional'
       path: '/profissional'
       fullPath: '/profissional'
       preLoaderRoute: typeof ProfissionalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/seja-profissional': {
+      id: '/seja-profissional'
+      path: '/seja-profissional'
+      fullPath: '/seja-profissional'
+      preLoaderRoute: typeof SejaProfissionalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/termos': {
+      id: '/termos'
+      path: '/termos'
+      fullPath: '/termos'
+      preLoaderRoute: typeof TermosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/confirmacao/$id': {
@@ -157,10 +237,14 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AjudaRoute: AjudaRoute,
   AuthRoute: AuthRoute,
   ContratarRoute: ContratarRoute,
   MinhaContaRoute: MinhaContaRoute,
+  PrivacidadeRoute: PrivacidadeRoute,
   ProfissionalRoute: ProfissionalRoute,
+  SejaProfissionalRoute: SejaProfissionalRoute,
+  TermosRoute: TermosRoute,
   ConfirmacaoIdRoute: ConfirmacaoIdRoute,
 }
 export const routeTree = rootRouteImport

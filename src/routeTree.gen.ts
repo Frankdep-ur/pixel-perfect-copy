@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AjudaRouteImport } from './routes/ajuda'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContratarRouteImport } from './routes/contratar'
@@ -18,11 +19,24 @@ import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as ProfissionalRouteImport } from './routes/profissional'
 import { Route as SejaProfissionalRouteImport } from './routes/seja-profissional'
 import { Route as TermosRouteImport } from './routes/termos'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminAvaliacoesRouteImport } from './routes/admin.avaliacoes'
+import { Route as AdminClientesRouteImport } from './routes/admin.clientes'
+import { Route as AdminContratacoesRouteImport } from './routes/admin.contratacoes'
+import { Route as AdminExtrasRouteImport } from './routes/admin.extras'
+import { Route as AdminListaEsperaRouteImport } from './routes/admin.lista-espera'
+import { Route as AdminPrecosRouteImport } from './routes/admin.precos'
+import { Route as AdminProfissionaisRouteImport } from './routes/admin.profissionais'
 import { Route as ConfirmacaoIdRouteImport } from './routes/confirmacao.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AjudaRoute = AjudaRouteImport.update({
@@ -65,6 +79,46 @@ const TermosRoute = TermosRouteImport.update({
   path: '/termos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAvaliacoesRoute = AdminAvaliacoesRouteImport.update({
+  id: '/avaliacoes',
+  path: '/avaliacoes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminClientesRoute = AdminClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminContratacoesRoute = AdminContratacoesRouteImport.update({
+  id: '/contratacoes',
+  path: '/contratacoes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminExtrasRoute = AdminExtrasRouteImport.update({
+  id: '/extras',
+  path: '/extras',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminListaEsperaRoute = AdminListaEsperaRouteImport.update({
+  id: '/lista-espera',
+  path: '/lista-espera',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPrecosRoute = AdminPrecosRouteImport.update({
+  id: '/precos',
+  path: '/precos',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProfissionaisRoute = AdminProfissionaisRouteImport.update({
+  id: '/profissionais',
+  path: '/profissionais',
+  getParentRoute: () => AdminRoute,
+} as any)
 const ConfirmacaoIdRoute = ConfirmacaoIdRouteImport.update({
   id: '/confirmacao/$id',
   path: '/confirmacao/$id',
@@ -73,6 +127,7 @@ const ConfirmacaoIdRoute = ConfirmacaoIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/ajuda': typeof AjudaRoute
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
@@ -81,7 +136,15 @@ export interface FileRoutesByFullPath {
   '/profissional': typeof ProfissionalRoute
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
+  '/admin/avaliacoes': typeof AdminAvaliacoesRoute
+  '/admin/clientes': typeof AdminClientesRoute
+  '/admin/contratacoes': typeof AdminContratacoesRoute
+  '/admin/extras': typeof AdminExtrasRoute
+  '/admin/lista-espera': typeof AdminListaEsperaRoute
+  '/admin/precos': typeof AdminPrecosRoute
+  '/admin/profissionais': typeof AdminProfissionaisRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -93,11 +156,20 @@ export interface FileRoutesByTo {
   '/profissional': typeof ProfissionalRoute
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
+  '/admin/avaliacoes': typeof AdminAvaliacoesRoute
+  '/admin/clientes': typeof AdminClientesRoute
+  '/admin/contratacoes': typeof AdminContratacoesRoute
+  '/admin/extras': typeof AdminExtrasRoute
+  '/admin/lista-espera': typeof AdminListaEsperaRoute
+  '/admin/precos': typeof AdminPrecosRoute
+  '/admin/profissionais': typeof AdminProfissionaisRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/ajuda': typeof AjudaRoute
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
@@ -106,12 +178,21 @@ export interface FileRoutesById {
   '/profissional': typeof ProfissionalRoute
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
+  '/admin/avaliacoes': typeof AdminAvaliacoesRoute
+  '/admin/clientes': typeof AdminClientesRoute
+  '/admin/contratacoes': typeof AdminContratacoesRoute
+  '/admin/extras': typeof AdminExtrasRoute
+  '/admin/lista-espera': typeof AdminListaEsperaRoute
+  '/admin/precos': typeof AdminPrecosRoute
+  '/admin/profissionais': typeof AdminProfissionaisRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/ajuda'
     | '/auth'
     | '/contratar'
@@ -120,7 +201,15 @@ export interface FileRouteTypes {
     | '/profissional'
     | '/seja-profissional'
     | '/termos'
+    | '/admin/avaliacoes'
+    | '/admin/clientes'
+    | '/admin/contratacoes'
+    | '/admin/extras'
+    | '/admin/lista-espera'
+    | '/admin/precos'
+    | '/admin/profissionais'
     | '/confirmacao/$id'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -132,10 +221,19 @@ export interface FileRouteTypes {
     | '/profissional'
     | '/seja-profissional'
     | '/termos'
+    | '/admin/avaliacoes'
+    | '/admin/clientes'
+    | '/admin/contratacoes'
+    | '/admin/extras'
+    | '/admin/lista-espera'
+    | '/admin/precos'
+    | '/admin/profissionais'
     | '/confirmacao/$id'
+    | '/admin'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/ajuda'
     | '/auth'
     | '/contratar'
@@ -144,11 +242,20 @@ export interface FileRouteTypes {
     | '/profissional'
     | '/seja-profissional'
     | '/termos'
+    | '/admin/avaliacoes'
+    | '/admin/clientes'
+    | '/admin/contratacoes'
+    | '/admin/extras'
+    | '/admin/lista-espera'
+    | '/admin/precos'
+    | '/admin/profissionais'
     | '/confirmacao/$id'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AjudaRoute: typeof AjudaRoute
   AuthRoute: typeof AuthRoute
   ContratarRoute: typeof ContratarRoute
@@ -167,6 +274,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ajuda': {
@@ -225,6 +339,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/avaliacoes': {
+      id: '/admin/avaliacoes'
+      path: '/avaliacoes'
+      fullPath: '/admin/avaliacoes'
+      preLoaderRoute: typeof AdminAvaliacoesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/clientes': {
+      id: '/admin/clientes'
+      path: '/clientes'
+      fullPath: '/admin/clientes'
+      preLoaderRoute: typeof AdminClientesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/contratacoes': {
+      id: '/admin/contratacoes'
+      path: '/contratacoes'
+      fullPath: '/admin/contratacoes'
+      preLoaderRoute: typeof AdminContratacoesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/extras': {
+      id: '/admin/extras'
+      path: '/extras'
+      fullPath: '/admin/extras'
+      preLoaderRoute: typeof AdminExtrasRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/lista-espera': {
+      id: '/admin/lista-espera'
+      path: '/lista-espera'
+      fullPath: '/admin/lista-espera'
+      preLoaderRoute: typeof AdminListaEsperaRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/precos': {
+      id: '/admin/precos'
+      path: '/precos'
+      fullPath: '/admin/precos'
+      preLoaderRoute: typeof AdminPrecosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/profissionais': {
+      id: '/admin/profissionais'
+      path: '/profissionais'
+      fullPath: '/admin/profissionais'
+      preLoaderRoute: typeof AdminProfissionaisRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/confirmacao/$id': {
       id: '/confirmacao/$id'
       path: '/confirmacao/$id'
@@ -235,8 +405,33 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminRouteChildren {
+  AdminAvaliacoesRoute: typeof AdminAvaliacoesRoute
+  AdminClientesRoute: typeof AdminClientesRoute
+  AdminContratacoesRoute: typeof AdminContratacoesRoute
+  AdminExtrasRoute: typeof AdminExtrasRoute
+  AdminListaEsperaRoute: typeof AdminListaEsperaRoute
+  AdminPrecosRoute: typeof AdminPrecosRoute
+  AdminProfissionaisRoute: typeof AdminProfissionaisRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAvaliacoesRoute: AdminAvaliacoesRoute,
+  AdminClientesRoute: AdminClientesRoute,
+  AdminContratacoesRoute: AdminContratacoesRoute,
+  AdminExtrasRoute: AdminExtrasRoute,
+  AdminListaEsperaRoute: AdminListaEsperaRoute,
+  AdminPrecosRoute: AdminPrecosRoute,
+  AdminProfissionaisRoute: AdminProfissionaisRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   AjudaRoute: AjudaRoute,
   AuthRoute: AuthRoute,
   ContratarRoute: ContratarRoute,

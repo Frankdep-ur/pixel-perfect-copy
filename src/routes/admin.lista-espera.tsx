@@ -6,7 +6,7 @@ import { adminListaEsperaQuery } from "@/lib/admin-queries";
 import { CardMetrica, Painel, TituloSecao, formatarData } from "@/components/admin/ui";
 
 export const Route = createFileRoute("/admin/lista-espera")({
-  component: AdminListaEspera;
+  component: AdminListaEspera,
 });
 
 function AdminListaEspera() {

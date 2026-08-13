@@ -95,22 +95,30 @@ function MinhaConta() {
               <TabsTrigger value="historico">Histórico ({historico.length})</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="ativas" className="mt-6 space-y-4">
+            <TabsContent value="ativas" className="mt-6 space-y-3">
               {ativas.length === 0 && (
-                <p className="rounded-xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">
-                  Você não tem limpezas agendadas. Que tal contratar a primeira?
-                </p>
+                <EstadoVazio
+                  icon={CalendarDays}
+                  titulo="Nenhuma limpeza agendada"
+                  texto="Escolha o serviço, a data e contrate em poucos minutos."
+                  acaoLabel="Contratar uma faxina"
+                  acaoTo="/contratar"
+                />
               )}
               {ativas.map((b) => (
                 <CartaoBooking key={b.id} booking={b} userId={user!.id} />
               ))}
             </TabsContent>
 
-            <TabsContent value="historico" className="mt-6 space-y-4">
+            <TabsContent value="historico" className="mt-6 space-y-3">
               {historico.length === 0 && (
-                <p className="rounded-xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">
-                  Nenhum serviço concluído por aqui ainda.
-                </p>
+                <EstadoVazio
+                  icon={Sparkles}
+                  titulo="Sem histórico ainda"
+                  texto="Quando um serviço for concluído, ele aparece aqui para você avaliar."
+                  acaoLabel="Contratar uma faxina"
+                  acaoTo="/contratar"
+                />
               )}
               {historico.map((b) => (
                 <CartaoBooking key={b.id} booking={b} userId={user!.id} />

@@ -1,15 +1,18 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Menu, X } from "lucide-react";
+import { Menu, UserRound, X } from "lucide-react";
+
+import { useSession } from "@/hooks/use-auth";
 
 const navLinks = [
-  { label: "Como funciona", href: "#como-funciona" },
-  { label: "Segurança", href: "#seguranca" },
-  { label: "Seja profissional", href: "#profissionais" },
+  { label: "Como funciona", href: "/#como-funciona" },
+  { label: "Segurança", href: "/#seguranca" },
+  { label: "Seja profissional", href: "/#profissionais" },
 ];
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const { user } = useSession();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur">

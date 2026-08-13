@@ -1,5 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CalendarDays, Clock, Loader2, MapPin } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
+import { EstadoVazio } from "@/components/estado-vazio";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -107,7 +110,11 @@ export function ServicosProfissional({ profissionalId, regiao }: Props) {
 
       <TabsContent value="oportunidades" className="mt-6 space-y-4">
         {oportunidades.length === 0 && (
-          <Vazio texto={`Nenhuma solicitação aberta na sua região${regiao ? "" : ""} agora.`} />
+          <Vazio
+            icon={Inbox}
+            titulo="Nenhuma oportunidade agora"
+            texto="Assim que surgir uma solicitação na sua região, ela aparece aqui."
+          />
         )}
         {oportunidades.map((b) => (
           <Cartao key={b.id} booking={b} onAvancar={() => avancar.mutate(b)} pendente={avancar.isPending} />
@@ -115,14 +122,22 @@ export function ServicosProfissional({ profissionalId, regiao }: Props) {
       </TabsContent>
 
       <TabsContent value="agenda" className="mt-6 space-y-4">
-        {meus.length === 0 && <Vazio texto="Você ainda não tem serviços aceitos." />}
+        {meus.length === 0 && <Vazio
+            icon={CalendarCheck}
+            titulo="Agenda livre"
+            texto="Aceite uma solicitação em Oportunidades para começar."
+          />}
         {meus.map((b) => (
           <Cartao key={b.id} booking={b} onAvancar={() => avancar.mutate(b)} pendente={avancar.isPending} />
         ))}
       </TabsContent>
 
       <TabsContent value="historico" className="mt-6 space-y-4">
-        {concluidos.length === 0 && <Vazio texto="Nenhum serviço finalizado ainda." />}
+        {concluidos.length === 0 && <Vazio
+            icon={Sparkles}
+            titulo="Sem histórico ainda"
+            texto="Os serviços que você finalizar ficam registrados aqui."
+          />}
         {concluidos.map((b) => (
           <Cartao key={b.id} booking={b} />
         ))}
@@ -131,12 +146,8 @@ export function ServicosProfissional({ profissionalId, regiao }: Props) {
   );
 }
 
-function Vazio({ texto }: { texto: string }) {
-  return (
-    <p className="rounded-xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">
-      {texto}
-    </p>
-  );
+function Vazio({ titulo, texto, icon }: { titulo: string; texto: string; icon: LucideIcon }) {
+  return <EstadoVazio icon={icon} titulo={titulo} texto={texto} />;
 }
 
 function Cartao({

@@ -53,7 +53,7 @@ function AreaProfissional() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profissionais")
-        .select("*")
+        .select("*, profiles!profissionais_user_id_fkey(nome)")
         .eq("user_id", user!.id)
         .maybeSingle();
       if (error) throw error;

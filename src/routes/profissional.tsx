@@ -12,6 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { CadastroProfissional } from "@/components/profissional/cadastro-profissional";
+import { EstadoVazio } from "@/components/estado-vazio";
 import { ServicosProfissional } from "@/components/profissional/servicos-profissional";
 import { nomeRegiao } from "@/lib/regioes";
 import { useSession } from "@/hooks/use-auth";

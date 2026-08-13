@@ -20,6 +20,7 @@ import { Route as ProfissionalRouteImport } from './routes/profissional'
 import { Route as SejaProfissionalRouteImport } from './routes/seja-profissional'
 import { Route as TermosRouteImport } from './routes/termos'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminClientesRouteImport } from './routes/admin.clientes'
 import { Route as AdminProfissionaisRouteImport } from './routes/admin.profissionais'
 import { Route as ConfirmacaoIdRouteImport } from './routes/confirmacao.$id'
 
@@ -78,6 +79,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminClientesRoute = AdminClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminProfissionaisRoute = AdminProfissionaisRouteImport.update({
   id: '/profissionais',
   path: '/profissionais',
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/profissional': typeof ProfissionalRoute
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
+  '/admin/clientes': typeof AdminClientesRoute
   '/admin/profissionais': typeof AdminProfissionaisRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -114,6 +121,7 @@ export interface FileRoutesByTo {
   '/profissional': typeof ProfissionalRoute
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
+  '/admin/clientes': typeof AdminClientesRoute
   '/admin/profissionais': typeof AdminProfissionaisRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
   '/admin': typeof AdminIndexRoute
@@ -130,6 +138,7 @@ export interface FileRoutesById {
   '/profissional': typeof ProfissionalRoute
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
+  '/admin/clientes': typeof AdminClientesRoute
   '/admin/profissionais': typeof AdminProfissionaisRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
     | '/profissional'
     | '/seja-profissional'
     | '/termos'
+    | '/admin/clientes'
     | '/admin/profissionais'
     | '/confirmacao/$id'
     | '/admin/'
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/profissional'
     | '/seja-profissional'
     | '/termos'
+    | '/admin/clientes'
     | '/admin/profissionais'
     | '/confirmacao/$id'
     | '/admin'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/profissional'
     | '/seja-profissional'
     | '/termos'
+    | '/admin/clientes'
     | '/admin/profissionais'
     | '/confirmacao/$id'
     | '/admin/'
@@ -274,6 +286,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/clientes': {
+      id: '/admin/clientes'
+      path: '/clientes'
+      fullPath: '/admin/clientes'
+      preLoaderRoute: typeof AdminClientesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/profissionais': {
       id: '/admin/profissionais'
       path: '/profissionais'
@@ -292,11 +311,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminClientesRoute: typeof AdminClientesRoute
   AdminProfissionaisRoute: typeof AdminProfissionaisRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminClientesRoute: AdminClientesRoute,
   AdminProfissionaisRoute: AdminProfissionaisRoute,
   AdminIndexRoute: AdminIndexRoute,
 }

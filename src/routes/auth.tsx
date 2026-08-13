@@ -201,7 +201,7 @@ function AuthPage() {
                   id="senha-nova"
                   type="password"
                   required
-                  minLength={6}
+                  
                   value={senha}
                   onChange={(e) => setSenha(e.target.value)}
                 />

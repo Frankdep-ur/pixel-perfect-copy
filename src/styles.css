@@ -153,9 +153,12 @@
 
 /* Comportamento de aplicativo (mobile) */
 @layer base {
-  html,
-  body {
+  html {
     overflow-x: hidden;
+    overscroll-behavior-y: contain;
+  }
+
+  body {
     overscroll-behavior-y: contain;
     -webkit-tap-highlight-color: transparent;
   }

@@ -66,7 +66,7 @@ export function UploadFoto({ userId, url, nome, onChange, className }: Props) {
   }
 
   return (
-    <div className={cn("flex items-center gap-4", className)}>
+    <div className={cn("flex flex-col items-start gap-4 sm:flex-row sm:items-center", className)}>
       <button
         type="button"
         onClick={() => input.current?.click()}
@@ -88,7 +88,7 @@ export function UploadFoto({ userId, url, nome, onChange, className }: Props) {
         </span>
       </button>
 
-      <div className="space-y-1">
+      <div className="min-w-0 flex-1 space-y-1.5">
         <div className="flex flex-wrap gap-2">
           <Button
             type="button"

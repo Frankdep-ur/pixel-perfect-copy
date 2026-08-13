@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CalendarDays, Clock, Loader2, MapPin } from "lucide-react";
+import { CalendarCheck, CalendarDays, Clock, Inbox, Loader2, MapPin, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import { EstadoVazio } from "@/components/estado-vazio";

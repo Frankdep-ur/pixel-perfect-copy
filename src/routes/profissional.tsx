@@ -54,12 +54,13 @@ function AreaProfissional() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profissionais")
-        .select("*, profiles!profissionais_user_id_fkey(nome)")
+        .select("*, profiles!profissionais_user_id_fkey(nome, telefone, foto_url)")
         .eq("user_id", user!.id)
         .maybeSingle();
       if (error) throw error;
       return data;
     },
+
   });
 
   const alternarDisponivel = useMutation({

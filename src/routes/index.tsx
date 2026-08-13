@@ -10,6 +10,7 @@ import {
 import heroSala from "@/assets/hero-sala.jpg";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { CtaFixoMobile } from "@/components/cta-fixo-mobile";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -72,10 +73,24 @@ function Home() {
 
       <main className="flex-1">
         {/* Hero */}
-        <section className="px-5 py-12 md:py-20">
-          <div className="mx-auto grid w-full max-w-6xl items-center gap-10 md:grid-cols-2">
-            <div>
-              <h1 className="text-3xl leading-tight text-foreground md:text-5xl">
+        <section className="pb-14 pt-6 md:px-5 md:py-20">
+          <div className="mx-auto grid w-full max-w-6xl items-center gap-8 md:grid-cols-2 md:gap-10">
+            {/* Mobile: imagem full-bleed acima do texto */}
+            <div className="order-1 -mx-0 h-[40vh] overflow-hidden rounded-b-[24px] md:order-2 md:h-auto md:rounded-2xl md:shadow-[0_24px_48px_rgba(14,59,54,0.12)]">
+              <img
+                src={heroSala}
+                alt="Sala de estar clara e organizada após a limpeza"
+                width={1280}
+                height={1280}
+                className="h-full w-full object-cover"
+              />
+            </div>
+
+            <div className="order-2 px-5 md:order-1 md:px-0">
+              <h1
+                className="leading-tight text-foreground"
+                style={{ fontSize: "clamp(28px, 7vw, 56px)" }}
+              >
                 Sua casa limpa. Sua contratação segura. Seu tempo de volta.
               </h1>
               <p className="mt-5 text-base text-muted-foreground md:text-lg">
@@ -85,40 +100,33 @@ function Home() {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link
                   to="/contratar"
-                  className="inline-flex h-[52px] items-center justify-center rounded-xl bg-primary px-7 text-base font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
+                  className="inline-flex min-h-[52px] items-center justify-center rounded-xl bg-primary px-7 text-base font-semibold text-primary-foreground transition-all duration-200 ease-out hover:bg-primary-hover active:scale-[0.98]"
                 >
                   Contratar uma faxina
                 </Link>
-                <a
-                  href="#profissionais"
-                  className="inline-flex h-[52px] items-center justify-center rounded-xl border border-border bg-card px-7 text-base font-semibold text-primary transition-colors hover:bg-secondary"
+                <Link
+                  to="/seja-profissional"
+                  className="inline-flex min-h-[52px] items-center justify-center rounded-xl border border-border bg-card px-7 text-base font-semibold text-primary transition-all duration-200 ease-out hover:bg-secondary active:scale-[0.98]"
                 >
                   Quero ser profissional
-                </a>
+                </Link>
               </div>
-            </div>
-
-            <div className="overflow-hidden rounded-2xl border border-border shadow-[var(--shadow-card)]">
-              <img
-                src={heroSala}
-                alt="Sala de estar clara e organizada após a limpeza"
-                width={1280}
-                height={1280}
-                className="h-full w-full object-cover"
-              />
             </div>
           </div>
         </section>
 
         {/* Como funciona */}
-        <section id="como-funciona" className="px-5 py-12 md:py-16">
+        <section id="como-funciona" className="px-5 py-14 md:py-20">
           <div className="mx-auto w-full max-w-6xl">
             <h2 className="text-2xl text-foreground md:text-3xl">Como funciona</h2>
             <div className="mt-8 grid gap-4 md:grid-cols-4">
               {passos.map((passo, i) => (
-                <article key={passo.titulo} className="lar-card p-6">
+                <article
+                  key={passo.titulo}
+                  className="lar-card p-6 transition-all duration-200 ease-out md:hover:-translate-y-0.5 md:hover:shadow-[var(--shadow-card-hover)]"
+                >
                   <div className="flex items-center gap-3">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-secondary font-display text-sm font-bold text-primary">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent-soft)] font-display text-base font-bold text-primary">
                       {i + 1}
                     </span>
                     <passo.icon
@@ -136,19 +144,19 @@ function Home() {
         </section>
 
         {/* Segurança */}
-        <section id="seguranca" className="px-5 py-12 md:py-16">
+        <section id="seguranca" className="px-5 py-14 md:py-20">
           <div className="mx-auto w-full max-w-6xl">
             <div className="lar-card p-7 md:p-10">
               <h2 className="text-2xl text-foreground md:text-3xl">
                 Limpeza com tecnologia e proteção.
               </h2>
-              <ul className="mt-7 grid gap-4 md:grid-cols-2">
+              <ul className="mt-7 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
                 {seguranca.map((item) => (
                   <li key={item} className="flex items-start gap-3">
-                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--accent-soft)]">
-                      <Check strokeWidth={1.5} className="h-4 w-4 text-accent" aria-hidden />
+                    <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--accent-soft)]">
+                      <Check strokeWidth={2} className="h-4 w-4 text-accent" aria-hidden />
                     </span>
-                    <span className="text-base text-foreground">{item}</span>
+                    <span className="pt-1 text-base text-foreground">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -157,7 +165,7 @@ function Home() {
         </section>
 
         {/* Faixa profissionais */}
-        <section id="profissionais" className="px-5 py-12 md:py-16">
+        <section id="profissionais" className="px-5 py-14 md:py-20">
           <div className="mx-auto w-full max-w-6xl rounded-2xl bg-primary p-8 md:p-14">
             <h2 className="max-w-2xl text-2xl text-primary-foreground md:text-4xl">
               Transforme seu trabalho em novas oportunidades.
@@ -166,17 +174,19 @@ function Home() {
               Cadastre-se no LAR10, encontre novos clientes e organize sua agenda em um único
               lugar.
             </p>
-            <a
-              href="#cadastro-profissional"
-              className="mt-8 inline-flex h-[52px] items-center justify-center rounded-xl bg-card px-7 text-base font-semibold text-primary transition-opacity hover:opacity-90"
+            <Link
+              to="/seja-profissional"
+              className="mt-8 inline-flex min-h-[52px] items-center justify-center rounded-xl bg-card px-7 text-base font-semibold text-primary transition-all duration-200 ease-out hover:opacity-90 active:scale-[0.98]"
             >
               Quero ser profissional LAR10
-            </a>
+            </Link>
           </div>
         </section>
       </main>
 
       <SiteFooter />
+      <CtaFixoMobile />
     </div>
   );
 }
+

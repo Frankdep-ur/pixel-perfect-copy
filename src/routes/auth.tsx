@@ -85,7 +85,11 @@ function AuthPage() {
     });
     setEnviando(false);
     if (error) {
-      toast.error("Não foi possível criar a conta", { description: error.message });
+      const descricao =
+        error.message.includes("at least 6") || error.message.includes("weak_password")
+          ? "Use uma senha com pelo menos 6 caracteres."
+          : error.message;
+      toast.error("Não foi possível criar a conta", { description: descricao });
       return;
     }
     toast.success("Conta criada!", { description: "Bem-vinda ao LAR10." });
@@ -205,6 +209,9 @@ function AuthPage() {
                   value={senha}
                   onChange={(e) => setSenha(e.target.value)}
                 />
+                <p className="text-xs text-muted-foreground">
+                  Qualquer senha com 6 caracteres ou mais é aceita (ex.: 123456).
+                </p>
               </div>
               <Button type="submit" className="w-full" disabled={enviando}>
                 {enviando && <Loader2 className="mr-2 size-4 animate-spin" />}

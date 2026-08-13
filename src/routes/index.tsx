@@ -127,15 +127,30 @@ function Home() {
           </div>
         </section>
 
+        {/* Faixa de confiança */}
+        <section className="bg-primary px-5 py-5">
+          <ul className="mx-auto grid w-full max-w-6xl grid-cols-3 gap-3">
+            {confianca.map((item) => (
+              <li
+                key={item.texto}
+                className="flex flex-col items-center gap-1.5 text-center text-primary-foreground md:flex-row md:justify-center md:gap-2.5"
+              >
+                <item.icon strokeWidth={1.5} className="h-5 w-5 text-accent" aria-hidden />
+                <span className="text-xs font-medium md:text-sm">{item.texto}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
         {/* Como funciona */}
-        <section id="como-funciona" className="px-5 py-14 md:py-20">
+        <section id="como-funciona" className="bg-surface-tint py-14 md:py-20">
           <div className="mx-auto w-full max-w-6xl">
-            <h2 className="text-2xl text-foreground md:text-3xl">Como funciona</h2>
-            <div className="mt-8 grid gap-4 md:grid-cols-4">
+            <h2 className="px-5 text-2xl text-foreground md:text-3xl">Como funciona</h2>
+            <div className="no-scrollbar mt-7 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2 md:mt-8 md:grid md:grid-cols-4 md:gap-5 md:overflow-visible">
               {passos.map((passo, i) => (
                 <article
                   key={passo.titulo}
-                  className="lar-card p-6 transition-all duration-200 ease-out md:hover:-translate-y-0.5 md:hover:shadow-[var(--shadow-card-hover)]"
+                  className="lar-card w-[78vw] shrink-0 snap-start p-5 transition-all duration-200 ease-out md:w-auto md:p-6 md:hover:-translate-y-0.5 md:hover:shadow-[var(--shadow-card-hover)]"
                 >
                   <div className="flex items-center gap-3">
                     <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent-soft)] font-display text-base font-bold text-primary">
@@ -147,34 +162,37 @@ function Home() {
                       aria-hidden
                     />
                   </div>
-                  <h3 className="mt-4 text-lg text-foreground">{passo.titulo}</h3>
+                  <h3 className="mt-4 text-lg leading-[1.4] text-foreground">{passo.titulo}</h3>
                   <p className="mt-2 text-sm text-muted-foreground">{passo.texto}</p>
                 </article>
               ))}
+              <span className="w-1 shrink-0 md:hidden" aria-hidden />
             </div>
           </div>
         </section>
 
-        {/* Segurança */}
-        <section id="seguranca" className="px-5 py-14 md:py-20">
+        {/* Profissionais da sua região */}
+        <ProfissionaisRegiao />
+
+        {/* Segurança — invertida */}
+        <section id="seguranca" className="bg-primary px-5 py-14 md:py-20">
           <div className="mx-auto w-full max-w-6xl">
-            <div className="lar-card p-7 md:p-10">
-              <h2 className="text-2xl text-foreground md:text-3xl">
-                Limpeza com tecnologia e proteção.
-              </h2>
-              <ul className="mt-7 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
-                {seguranca.map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--accent-soft)]">
-                      <Check strokeWidth={2} className="h-4 w-4 text-accent" aria-hidden />
-                    </span>
-                    <span className="pt-1 text-base text-foreground">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <h2 className="text-2xl text-primary-foreground md:text-3xl">
+              Limpeza com tecnologia e proteção.
+            </h2>
+            <ul className="mt-7 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-5">
+              {seguranca.map((item) => (
+                <li key={item} className="flex items-start gap-3">
+                  <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/15">
+                    <Check strokeWidth={2} className="h-4 w-4 text-accent" aria-hidden />
+                  </span>
+                  <span className="pt-1 text-base text-primary-foreground">{item}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
+
 
         {/* Faixa profissionais */}
         <section id="profissionais" className="px-5 py-14 md:py-20">

@@ -1,0 +1,156 @@
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { BadgeCheck, Clock3, Loader2, MapPin, Star } from "lucide-react";
+import { toast } from "sonner";
+
+import { supabase } from "@/integrations/supabase/client";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { CadastroProfissional } from "@/components/profissional/cadastro-profissional";
+import { ServicosProfissional } from "@/components/profissional/servicos-profissional";
+import { nomeRegiao } from "@/lib/regioes";
+import { useSession } from "@/hooks/use-auth";
+
+export const Route = createFileRoute("/profissional")({
+  head: () => ({
+    meta: [
+      { title: "Área da profissional — LAR10" },
+      {
+        name: "description",
+        content:
+          "Gerencie seus serviços de limpeza, aceite solicitações e acompanhe seus ganhos no LAR10.",
+      },
+      { property: "og:title", content: "Área da profissional — LAR10" },
+      {
+        property: "og:description",
+        content: "Aceite solicitações, atualize o andamento do serviço e acompanhe sua nota.",
+      },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
+  component: AreaProfissional,
+});
+
+function AreaProfissional() {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { user, carregando } = useSession();
+
+  useEffect(() => {
+    if (!carregando && !user) {
+      navigate({ to: "/auth", search: { next: "/profissional" }, replace: true });
+    }
+  }, [carregando, user, navigate]);
+
+  const { data: perfil, isLoading } = useQuery({
+    queryKey: ["meu-perfil-profissional", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profissionais")
+        .select("*")
+        .eq("user_id", user!.id)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const alternarDisponivel = useMutation({
+    mutationFn: async (valor: boolean) => {
+      const { error } = await supabase
+        .from("profissionais")
+        .update({ disponivel: valor })
+        .eq("id", perfil!.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["meu-perfil-profissional"] });
+    },
+    onError: (erro: Error) => toast.error(erro.message),
+  });
+
+  return (
+    <div className="flex min-h-screen flex-col">
+      <SiteHeader />
+      <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-10">
+        <h1 className="text-3xl font-semibold tracking-tight">Área da profissional</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Receba solicitações da sua região e atualize o andamento de cada limpeza.
+        </p>
+
+        {(carregando || isLoading) && (
+          <div className="flex justify-center py-16">
+            <Loader2 className="size-6 animate-spin text-primary" />
+          </div>
+        )}
+
+        {!isLoading && user && !perfil && (
+          <div className="mt-8">
+            <CadastroProfissional user={user} />
+          </div>
+        )}
+
+        {!isLoading && perfil && (
+          <>
+            <Card className="mt-8">
+              <CardContent className="flex flex-col gap-5 p-5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="space-y-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {perfil.status === "aprovada" ? (
+                      <Badge className="gap-1">
+                        <BadgeCheck className="size-3.5" /> Perfil aprovado
+                      </Badge>
+                    ) : perfil.status === "recusada" ? (
+                      <Badge variant="destructive">Cadastro recusado</Badge>
+                    ) : (
+                      <Badge variant="secondary" className="gap-1">
+                        <Clock3 className="size-3.5" /> Em análise
+                      </Badge>
+                    )}
+                    {perfil.verificada && <Badge variant="outline">Verificada</Badge>}
+                  </div>
+                  <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                    <span className="flex items-center gap-1.5">
+                      <MapPin className="size-4" />
+                      {nomeRegiao(perfil.regiao)} · até {perfil.raio_km} km
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Star className="size-4 fill-primary text-primary" />
+                      {Number(perfil.nota_media).toFixed(1)} ({perfil.total_avaliacoes} avaliações)
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <Switch
+                    id="disponivel"
+                    checked={perfil.disponivel}
+                    onCheckedChange={(v) => alternarDisponivel.mutate(v)}
+                  />
+                  <Label htmlFor="disponivel" className="text-sm">
+                    Disponível para novos serviços
+                  </Label>
+                </div>
+              </CardContent>
+            </Card>
+
+            {perfil.status === "aprovada" ? (
+              <ServicosProfissional profissionalId={perfil.id} regiao={perfil.regiao} />
+            ) : (
+              <p className="mt-6 rounded-xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">
+                Assim que seu cadastro for aprovado, as solicitações da sua região aparecem aqui.
+              </p>
+            )}
+          </>
+        )}
+      </main>
+      <SiteFooter />
+    </div>
+  );
+}

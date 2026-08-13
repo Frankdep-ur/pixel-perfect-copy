@@ -54,6 +54,7 @@
   --color-ring: var(--ring);
   --color-ring-offset-background: var(--background);
   --color-surface: var(--surface);
+  --color-surface-tint: var(--surface-tint);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -67,14 +68,17 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --shadow-card: 0 1px 2px oklch(0 0 0 / 0.04);
-  --shadow-card-hover: 0 6px 20px -8px oklch(0.3207 0.0487 184.57 / 0.18);
+  --shadow-card:
+    0 1px 2px oklch(0.2246 0.0215 180.2 / 0.05), 0 8px 24px oklch(0.2246 0.0215 180.2 / 0.07);
+  --shadow-card-hover:
+    0 2px 4px oklch(0.2246 0.0215 180.2 / 0.06), 0 14px 32px oklch(0.2246 0.0215 180.2 / 0.1);
 }
 
 :root {
   --radius: 0.75rem;
   --background: oklch(0.9756 0.0026 106.45);
   --surface: oklch(1 0 0);
+  --surface-tint: oklch(0.9413 0.0143 158.5);
   --foreground: oklch(0.2246 0.0215 180.2);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.2246 0.0215 180.2);
@@ -203,4 +207,31 @@
 
 @utility safe-top {
   padding-top: env(safe-area-inset-top);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer base {
+  /* Rodapé nunca senta no meio da tela em páginas curtas */
+  main {
+    min-height: calc(100dvh - 56px - 64px);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    line-height: 1.4;
+  }
+
+  p,
+  li {
+    line-height: 1.55;
+  }
 }

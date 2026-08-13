@@ -1,16 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
+  BadgeCheck,
   Check,
   ClipboardList,
   CalendarClock,
+  Lock,
   ShieldCheck,
   Sparkles,
+  Tag,
 } from "lucide-react";
 
 import heroSala from "@/assets/hero-sala.jpg";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CtaFixoMobile } from "@/components/cta-fixo-mobile";
+import { ProfissionaisRegiao } from "@/components/profissionais-regiao";
 
 export const Route = createFileRoute("/")({
   head: () => ({

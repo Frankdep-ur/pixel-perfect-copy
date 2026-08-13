@@ -99,53 +99,56 @@ function AreaProfissional() {
         {!isLoading && perfil && (
           <>
             <Card className="mt-8">
-              <CardContent className="flex flex-col gap-5 p-5 sm:flex-row sm:items-center sm:justify-between">
-                <div className="space-y-2">
-                  <div className="flex flex-wrap items-center gap-2">
-                    {perfil.status === "aprovada" ? (
-                      <Badge className="gap-1">
-                        <BadgeCheck className="size-3.5" /> Perfil aprovado
-                      </Badge>
-                    ) : perfil.status === "recusada" ? (
-                      <Badge variant="destructive">Cadastro recusado</Badge>
-                    ) : (
-                      <Badge variant="secondary" className="gap-1">
-                        <Clock3 className="size-3.5" /> Em análise
-                      </Badge>
-                    )}
-                    {perfil.verificada && <Badge variant="outline">Verificada</Badge>}
-                  </div>
-                  <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                    <span className="flex items-center gap-1.5">
-                      <MapPin className="size-4" />
-                      {nomeRegiao(perfil.regiao)} · até {perfil.raio_km} km
+              <CardContent className="space-y-3 p-5">
+                <h2 className="text-2xl font-bold tracking-tight text-foreground">
+                  {perfil.profiles?.nome ?? "Profissional LAR10"}
+                </h2>
+                <div className="flex flex-wrap items-center gap-2">
+                  {perfil.status === "aprovada" ? (
+                    <Badge className="gap-1">
+                      <BadgeCheck className="size-3.5" /> Perfil aprovado
+                    </Badge>
+                  ) : perfil.status === "recusada" ? (
+                    <Badge variant="destructive">Cadastro recusado</Badge>
+                  ) : (
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-warning/12 px-3 py-1 text-xs font-semibold text-warning">
+                      <Clock3 className="size-3.5" /> Em análise
                     </span>
-                    <span className="flex items-center gap-1.5">
-                      <Star className="size-4 fill-primary text-primary" />
-                      {Number(perfil.nota_media).toFixed(1)} ({perfil.total_avaliacoes} avaliações)
-                    </span>
-                  </div>
+                  )}
+                  {perfil.verificada && <Badge variant="outline">Verificada</Badge>}
                 </div>
-
-                <div className="flex items-center gap-3">
-                  <Switch
-                    id="disponivel"
-                    checked={perfil.disponivel}
-                    onCheckedChange={(v) => alternarDisponivel.mutate(v)}
-                  />
-                  <Label htmlFor="disponivel" className="text-sm">
-                    Disponível para novos serviços
-                  </Label>
+                <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                  <span className="flex items-center gap-1.5">
+                    <MapPin className="size-4" />
+                    {nomeRegiao(perfil.regiao)} · até {perfil.raio_km} km
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Star className="size-4 fill-accent text-accent" />
+                    {Number(perfil.nota_media).toFixed(1)} ({perfil.total_avaliacoes} avaliações)
+                  </span>
                 </div>
               </CardContent>
             </Card>
 
+            <div className="mt-3 flex items-center justify-between gap-4 rounded-2xl bg-surface-tint p-5">
+              <Label htmlFor="disponivel" className="text-sm font-semibold text-foreground">
+                Disponível para novos serviços
+              </Label>
+              <Switch
+                id="disponivel"
+                checked={perfil.disponivel}
+                onCheckedChange={(v) => alternarDisponivel.mutate(v)}
+              />
+            </div>
+
             {perfil.status === "aprovada" ? (
               <ServicosProfissional profissionalId={perfil.id} regiao={perfil.regiao} />
             ) : (
-              <p className="mt-6 rounded-xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">
-                Assim que seu cadastro for aprovado, as solicitações da sua região aparecem aqui.
-              </p>
+              <EstadoVazio
+                icon={Clock3}
+                titulo="Cadastro em análise"
+                texto="Assim que seu cadastro for aprovado, as solicitações da sua região aparecem aqui."
+              />
             )}
           </>
         )}

@@ -2,106 +2,129 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import type { User } from "@supabase/supabase-js";
 
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import { cn } from "@/lib/utils";
+import { UploadFoto } from "@/components/upload-foto";
 import { TIPOS_LIMPEZA } from "@/lib/catalogo";
 import { REGIOES, type RegiaoId } from "@/lib/regioes";
-import { UploadFoto } from "@/components/upload-foto";
+import { cn } from "@/lib/utils";
 
-type Props = { user: User };
+export type PerfilProfissionalEdicao = {
+  id: string;
+  user_id: string;
+  bio: string | null;
+  anos_experiencia: number;
+  raio_km: number;
+  regiao: string | null;
+  cidade: string | null;
+  cidades_atendidas: string[];
+  tipos_limpeza: string[];
+  nome: string | null;
+  telefone: string | null;
+  foto_url: string | null;
+};
 
-export function CadastroProfissional({ user }: Props) {
+export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdicao }) {
   const queryClient = useQueryClient();
-  const [nome, setNome] = useState((user.user_metadata?.['nome'] as string) ?? "");
-  const [telefone, setTelefone] = useState((user.user_metadata?.['telefone'] as string) ?? "");
-  const [foto, setFoto] = useState<string | null>(null);
-  const [bio, setBio] = useState("");
-  const [anos, setAnos] = useState("1");
-  const [raio, setRaio] = useState("15");
-  const [regiao, setRegiao] = useState<RegiaoId>("grande_floripa");
-  const [cidade, setCidade] = useState("");
-  const [cidades, setCidades] = useState<string[]>([]);
-  const [tipos, setTipos] = useState<string[]>(["padrao"]);
-
+  const [foto, setFoto] = useState(perfil.foto_url);
+  const [nome, setNome] = useState(perfil.nome ?? "");
+  const [telefone, setTelefone] = useState(perfil.telefone ?? "");
+  const [bio, setBio] = useState(perfil.bio ?? "");
+  const [anos, setAnos] = useState(String(perfil.anos_experiencia));
+  const [raio, setRaio] = useState(String(perfil.raio_km));
+  const [regiao, setRegiao] = useState<RegiaoId>(
+    (perfil.regiao as RegiaoId) in REGIOES ? (perfil.regiao as RegiaoId) : "grande_floripa",
+  );
+  const [cidades, setCidades] = useState<string[]>(perfil.cidades_atendidas ?? []);
+  const [cidade, setCidade] = useState(perfil.cidade ?? "");
+  const [tipos, setTipos] = useState<string[]>(perfil.tipos_limpeza ?? []);
 
   function alternar(lista: string[], set: (v: string[]) => void, valor: string) {
     set(lista.includes(valor) ? lista.filter((v) => v !== valor) : [...lista, valor]);
   }
 
   const salvar = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (dados?: { foto_url?: string | null }) => {
+      const fotoFinal = dados && "foto_url" in dados ? (dados.foto_url ?? null) : foto;
       if (!nome.trim()) throw new Error("Informe seu nome completo.");
-      if (tipos.length === 0) throw new Error("Escolha pelo menos um tipo de limpeza.");
-      if (cidades.length === 0) throw new Error("Escolha as cidades que você atende.");
+      if (cidades.length === 0) throw new Error("Escolha ao menos uma cidade atendida.");
+      if (tipos.length === 0) throw new Error("Escolha ao menos um tipo de limpeza.");
 
       const { error: erroPerfil } = await supabase
         .from("profiles")
-        .update({ nome: nome.trim(), telefone: telefone.trim() || null, foto_url: foto })
-        .eq("id", user.id);
-
+        .update({
+          nome: nome.trim(),
+          telefone: telefone.trim() || null,
+          foto_url: fotoFinal,
+        })
+        .eq("id", perfil.user_id);
       if (erroPerfil) throw erroPerfil;
 
-      const { error } = await supabase.from("profissionais").insert({
-        user_id: user.id,
-        bio: bio.trim() || null,
-        anos_experiencia: Number(anos) || 0,
-        raio_km: Number(raio) || 15,
-        regiao,
-        cidade: cidade || cidades[0] || null,
-        cidades_atendidas: cidades,
-        tipos_limpeza: tipos,
-      });
+      const { error } = await supabase
+        .from("profissionais")
+        .update({
+          bio: bio.trim() || null,
+          anos_experiencia: Number(anos) || 0,
+          raio_km: Number(raio) || 15,
+          regiao,
+          cidade: cidade || cidades[0] || null,
+          cidades_atendidas: cidades,
+          tipos_limpeza: tipos,
+        })
+        .eq("id", perfil.id);
       if (error) throw error;
-
-      await supabase.from("user_roles").insert({ user_id: user.id, role: "profissional" });
     },
     onSuccess: () => {
-      toast.success("Cadastro enviado! Nossa equipe vai analisar seu perfil.");
+      toast.success("Perfil atualizado!");
       queryClient.invalidateQueries({ queryKey: ["meu-perfil-profissional"] });
+      queryClient.invalidateQueries({ queryKey: ["profissionais"] });
     },
     onError: (erro: Error) => toast.error(erro.message),
   });
 
   return (
-    <Card className="mx-auto max-w-2xl">
+    <Card className="mt-3">
       <CardHeader>
-        <CardTitle>Cadastro de profissional</CardTitle>
+        <CardTitle>Meu perfil</CardTitle>
         <p className="text-sm text-muted-foreground">
-          Preencha seus dados para começar a receber serviços. Seu perfil passa por análise
-          antes de ficar visível para os clientes.
+          Essas informações aparecem para os clientes na hora de escolher a profissional.
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="rounded-2xl bg-surface-tint p-4">
-          <UploadFoto userId={user.id} url={foto} nome={nome} onChange={setFoto} />
-        </div>
+        <UploadFoto
+          userId={perfil.user_id}
+          url={foto}
+          nome={nome}
+          onChange={(url) => {
+            setFoto(url);
+            salvar.mutate({ foto_url: url });
+          }}
+        />
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="nome">Nome completo</Label>
-            <Input id="nome" value={nome} onChange={(e) => setNome(e.target.value)} />
+            <Label htmlFor="p-nome">Nome completo</Label>
+            <Input id="p-nome" value={nome} onChange={(e) => setNome(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="telefone">WhatsApp</Label>
+            <Label htmlFor="p-tel">WhatsApp</Label>
             <Input
-              id="telefone"
+              id="p-tel"
               value={telefone}
               onChange={(e) => setTelefone(e.target.value)}
               placeholder="(48) 99999-0000"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="anos">Anos de experiência</Label>
+            <Label htmlFor="p-anos">Anos de experiência</Label>
             <Input
-              id="anos"
+              id="p-anos"
               type="number"
               min={0}
               value={anos}
@@ -109,9 +132,9 @@ export function CadastroProfissional({ user }: Props) {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="raio">Distância máxima que você atende (km)</Label>
+            <Label htmlFor="p-raio">Distância máxima (km)</Label>
             <Input
-              id="raio"
+              id="p-raio"
               type="number"
               min={1}
               value={raio}
@@ -121,9 +144,9 @@ export function CadastroProfissional({ user }: Props) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="bio">Sobre você</Label>
+          <Label htmlFor="p-bio">Sobre você</Label>
           <Textarea
-            id="bio"
+            id="p-bio"
             rows={3}
             value={bio}
             onChange={(e) => setBio(e.target.value)}
@@ -171,10 +194,10 @@ export function CadastroProfissional({ user }: Props) {
           </div>
           {cidades.length > 0 && (
             <div className="space-y-2">
-              <Label htmlFor="cidade-base">Cidade onde você mora</Label>
+              <Label htmlFor="p-cidade">Cidade onde você mora</Label>
               <select
-                id="cidade-base"
-                value={cidade || cidades[0]}
+                id="p-cidade"
+                value={cidades.includes(cidade) ? cidade : cidades[0]}
                 onChange={(e) => setCidade(e.target.value)}
                 className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
               >
@@ -189,7 +212,7 @@ export function CadastroProfissional({ user }: Props) {
         </div>
 
         <div className="space-y-3">
-          <Label>Tipos de limpeza que você faz</Label>
+          <Label>Tipos de limpeza</Label>
           <div className="grid gap-3 sm:grid-cols-2">
             {TIPOS_LIMPEZA.map((t) => (
               <label
@@ -213,10 +236,10 @@ export function CadastroProfissional({ user }: Props) {
           className="w-full"
           size="lg"
           disabled={salvar.isPending}
-          onClick={() => salvar.mutate()}
+          onClick={() => salvar.mutate(undefined)}
         >
           {salvar.isPending && <Loader2 className="mr-2 size-4 animate-spin" />}
-          Enviar cadastro
+          Salvar alterações
         </Button>
       </CardContent>
     </Card>

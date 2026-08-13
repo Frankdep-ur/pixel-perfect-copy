@@ -12,6 +12,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { CadastroProfissional } from "@/components/profissional/cadastro-profissional";
+import { PerfilProfissional } from "@/components/profissional/perfil-profissional";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { EstadoVazio } from "@/components/estado-vazio";
 import { ServicosProfissional } from "@/components/profissional/servicos-profissional";
 import { nomeRegiao } from "@/lib/regioes";
@@ -54,12 +56,13 @@ function AreaProfissional() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profissionais")
-        .select("*, profiles!profissionais_user_id_fkey(nome)")
+        .select("*, profiles!profissionais_user_id_fkey(nome, telefone, foto_url)")
         .eq("user_id", user!.id)
         .maybeSingle();
       if (error) throw error;
       return data;
     },
+
   });
 
   const alternarDisponivel = useMutation({
@@ -99,34 +102,51 @@ function AreaProfissional() {
 
         {!isLoading && perfil && (
           <>
-            <Card className="mt-8">
-              <CardContent className="space-y-3 p-5">
-                <h2 className="text-2xl font-bold tracking-tight text-foreground">
-                  {perfil.profiles?.nome ?? "Profissional LAR10"}
-                </h2>
-                <div className="flex flex-wrap items-center gap-2">
-                  {perfil.status === "aprovada" ? (
-                    <Badge className="gap-1">
-                      <BadgeCheck className="size-3.5" /> Perfil aprovado
-                    </Badge>
-                  ) : perfil.status === "recusada" ? (
-                    <Badge variant="destructive">Cadastro recusado</Badge>
-                  ) : (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-warning/12 px-3 py-1 text-xs font-semibold text-warning">
-                      <Clock3 className="size-3.5" /> Em análise
-                    </span>
+            <Card className="mt-8 overflow-hidden">
+              <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center">
+                <Avatar className="size-20 shrink-0 border border-border shadow-sm">
+                  {perfil.profiles?.foto_url && (
+                    <AvatarImage
+                      src={perfil.profiles.foto_url}
+                      alt={perfil.profiles?.nome ?? "Foto de perfil"}
+                    />
                   )}
-                  {perfil.verificada && <Badge variant="outline">Verificada</Badge>}
-                </div>
-                <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                  <span className="flex items-center gap-1.5">
-                    <MapPin className="size-4" />
-                    {nomeRegiao(perfil.regiao)} · até {perfil.raio_km} km
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <Star className="size-4 fill-accent text-accent" />
-                    {Number(perfil.nota_media).toFixed(1)} ({perfil.total_avaliacoes} avaliações)
-                  </span>
+                  <AvatarFallback className="bg-surface-tint text-base font-semibold text-primary">
+                    {(perfil.profiles?.nome ?? "LAR")
+                      .split(" ")
+                      .slice(0, 2)
+                      .map((p) => p[0]?.toUpperCase() ?? "")
+                      .join("")}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="space-y-3">
+                  <h2 className="text-2xl font-bold tracking-tight text-foreground">
+                    {perfil.profiles?.nome ?? "Profissional LAR10"}
+                  </h2>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {perfil.status === "aprovada" ? (
+                      <Badge className="gap-1">
+                        <BadgeCheck className="size-3.5" /> Perfil aprovado
+                      </Badge>
+                    ) : perfil.status === "recusada" ? (
+                      <Badge variant="destructive">Cadastro recusado</Badge>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-warning/12 px-3 py-1 text-xs font-semibold text-warning">
+                        <Clock3 className="size-3.5" /> Em análise
+                      </span>
+                    )}
+                    {perfil.verificada && <Badge variant="outline">Verificada</Badge>}
+                  </div>
+                  <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                    <span className="flex items-center gap-1.5">
+                      <MapPin className="size-4" />
+                      {nomeRegiao(perfil.regiao)} · até {perfil.raio_km} km
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Star className="size-4 fill-accent text-accent" />
+                      {Number(perfil.nota_media).toFixed(1)} ({perfil.total_avaliacoes} avaliações)
+                    </span>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -142,6 +162,23 @@ function AreaProfissional() {
               />
             </div>
 
+            <PerfilProfissional
+              perfil={{
+                id: perfil.id,
+                user_id: perfil.user_id,
+                bio: perfil.bio,
+                anos_experiencia: perfil.anos_experiencia,
+                raio_km: perfil.raio_km,
+                regiao: perfil.regiao,
+                cidade: perfil.cidade,
+                cidades_atendidas: perfil.cidades_atendidas ?? [],
+                tipos_limpeza: perfil.tipos_limpeza ?? [],
+                nome: perfil.profiles?.nome ?? null,
+                telefone: perfil.profiles?.telefone ?? null,
+                foto_url: perfil.profiles?.foto_url ?? null,
+              }}
+            />
+
             {perfil.status === "aprovada" ? (
               <ServicosProfissional profissionalId={perfil.id} regiao={perfil.regiao} />
             ) : (
@@ -151,6 +188,7 @@ function AreaProfissional() {
                 texto="Assim que seu cadastro for aprovado, as solicitações da sua região aparecem aqui."
               />
             )}
+
           </>
         )}
       </main>

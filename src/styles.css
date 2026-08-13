@@ -187,11 +187,12 @@
       min-height: 48px;
     }
 
-    button,
+    button:not([role="checkbox"]):not([role="switch"]):not([role="radio"]),
     a[role="button"],
     [role="button"] {
       min-height: 48px;
     }
+
 
     button:active,
     a:active,

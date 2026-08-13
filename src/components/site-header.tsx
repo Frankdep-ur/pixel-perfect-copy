@@ -1,15 +1,18 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Menu, X } from "lucide-react";
+import { Menu, UserRound, X } from "lucide-react";
+
+import { useSession } from "@/hooks/use-auth";
 
 const navLinks = [
-  { label: "Como funciona", href: "#como-funciona" },
-  { label: "Segurança", href: "#seguranca" },
-  { label: "Seja profissional", href: "#profissionais" },
+  { label: "Como funciona", href: "/#como-funciona" },
+  { label: "Segurança", href: "/#seguranca" },
+  { label: "Seja profissional", href: "/#profissionais" },
 ];
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const { user } = useSession();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur">
@@ -30,7 +33,15 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="hidden md:block">
+        <div className="hidden items-center gap-3 md:flex">
+          <Link
+            to={user ? "/minha-conta" : "/auth"}
+            search={{ next: undefined }}
+            className="inline-flex h-11 items-center gap-2 rounded-xl px-3 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+          >
+            <UserRound className="size-4" />
+            {user ? "Minha conta" : "Entrar"}
+          </Link>
           <Link
             to="/contratar"
             className="inline-flex h-11 items-center justify-center rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"

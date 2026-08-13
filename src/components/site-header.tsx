@@ -33,7 +33,15 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="hidden md:block">
+        <div className="hidden items-center gap-3 md:flex">
+          <Link
+            to={user ? "/minha-conta" : "/auth"}
+            search={user ? undefined : { next: undefined }}
+            className="inline-flex h-11 items-center gap-2 rounded-xl px-3 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+          >
+            <UserRound className="size-4" />
+            {user ? "Minha conta" : "Entrar"}
+          </Link>
           <Link
             to="/contratar"
             className="inline-flex h-11 items-center justify-center rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"

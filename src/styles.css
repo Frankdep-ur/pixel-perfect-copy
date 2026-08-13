@@ -150,3 +150,57 @@
   box-shadow: var(--shadow-card);
 }
 
+
+/* Comportamento de aplicativo (mobile) */
+@layer base {
+  html {
+    overflow-x: hidden;
+    overscroll-behavior-y: contain;
+  }
+
+  body {
+    overscroll-behavior-y: contain;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button,
+  a,
+  [role="button"] {
+    transition-duration: 200ms;
+    transition-timing-function: ease-out;
+  }
+
+  @media (max-width: 767px) {
+    /* iOS dá zoom automático em campos com menos de 16px */
+    input,
+    select,
+    textarea {
+      font-size: 16px !important;
+      min-height: 48px;
+    }
+
+    button,
+    a[role="button"],
+    [role="button"] {
+      min-height: 48px;
+    }
+
+    button:active,
+    a:active,
+    [role="button"]:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+@utility safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@utility safe-top {
+  padding-top: env(safe-area-inset-top);
+}

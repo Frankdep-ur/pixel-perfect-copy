@@ -7,8 +7,9 @@ import { useSession } from "@/hooks/use-auth";
 const navLinks = [
   { label: "Como funciona", href: "/#como-funciona" },
   { label: "Segurança", href: "/#seguranca" },
-  { label: "Seja profissional", href: "/#profissionais" },
+  { label: "Seja profissional", href: "/profissional" },
 ];
+
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);

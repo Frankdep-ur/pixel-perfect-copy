@@ -1,35 +1,248 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
+
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import {
+  PassoDataHora,
+  PassoDuracao,
+  PassoEndereco,
+  PassoExtras,
+  PassoImovel,
+  PassoObservacoes,
+  PassoTamanho,
+  PassoTipoLimpeza,
+} from "@/components/contratar/passos";
+import { Resumo } from "@/components/contratar/resumo";
+import { EscolhaProfissional } from "@/components/contratar/escolha-profissional";
+import { Checkout } from "@/components/contratar/checkout";
+import { extrasQuery, pricingQuery } from "@/lib/queries";
+import { calcularOrcamento } from "@/lib/pricing";
+import {
+  RASCUNHO_INICIAL,
+  carregarRascunho,
+  salvarRascunho,
+  type Rascunho,
+} from "@/lib/contratacao";
+import { useSession } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/contratar")({
   head: () => ({
     meta: [
-      { title: "Contratar uma faxina | LAR10" },
+      { title: "Contratar limpeza — LAR10" },
       {
         name: "description",
         content:
-          "Monte sua faxina em poucos passos: endereço, tipo de imóvel, duração, extras, data e horário. Preço transparente antes de confirmar.",
+          "Monte seu serviço de limpeza em 8 passos, veja o preço na hora e escolha uma profissional verificada em Santa Catarina.",
       },
-      { property: "og:title", content: "Contratar uma faxina | LAR10" },
+      { property: "og:title", content: "Contratar limpeza — LAR10" },
       {
         property: "og:description",
-        content: "Monte sua faxina em poucos passos e veja o preço em tempo real.",
+        content:
+          "Monte seu serviço, veja o preço na hora e escolha uma profissional verificada.",
       },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: ContratarPage,
+  component: Contratar,
 });
 
-function ContratarPage() {
-  return (
-    <main className="min-h-screen py-16">
-      <div className="lar-container text-center">
-        <h1 className="text-2xl text-foreground">Funil de contratação</h1>
-        <p className="mt-3 text-sm text-muted-foreground">
-          Em construção — próxima etapa do LAR10.
-        </p>
+const TOTAL_PASSOS = 8;
+
+function Contratar() {
+  const navigate = useNavigate();
+  const { user, carregando } = useSession();
+  const [rascunho, setRascunho] = useState<Rascunho>(RASCUNHO_INICIAL);
+  const [passo, setPasso] = useState(1);
+  const [fase, setFase] = useState<"passos" | "profissional" | "checkout">("passos");
+
+  useEffect(() => {
+    setRascunho(carregarRascunho());
+  }, []);
+
+  const { data: precos } = useQuery(pricingQuery);
+  const { data: extras } = useQuery(extrasQuery);
+
+  function atualizar(parcial: Partial<Rascunho>) {
+    setRascunho((atual) => {
+      const proximo = { ...atual, ...parcial };
+      salvarRascunho(proximo);
+      return proximo;
+    });
+  }
+
+  const listaExtras = useMemo(
+    () => (extras ?? []).map((e) => ({ ...e, preco: Number(e.preco) })),
+    [extras],
+  );
+
+  const orcamento = useMemo(
+    () =>
+      calcularOrcamento(
+        {
+          duracao_horas: rascunho.duracao_horas ?? 0,
+          quartos: rascunho.quartos,
+          banheiros: rascunho.banheiros,
+          area_externa: rascunho.area_externa,
+          tipo_limpeza: rascunho.tipo_limpeza ?? "padrao",
+          extras: listaExtras.filter((e) => rascunho.extras_ids.includes(e.id)),
+        },
+        precos ?? {},
+      ),
+    [rascunho, listaExtras, precos],
+  );
+
+  const podeAvancar = (() => {
+    switch (passo) {
+      case 1:
+        return !!rascunho.endereco.regiao && !!rascunho.endereco.rua && !!rascunho.endereco.numero;
+      case 2:
+        return !!rascunho.tipo_imovel;
+      case 3:
+        return true;
+      case 4:
+        return !!rascunho.duracao_horas;
+      case 5:
+        return !!rascunho.tipo_limpeza;
+      case 6:
+        return true;
+      case 7:
+        return !!rascunho.data && !!rascunho.hora;
+      default:
+        return true;
+    }
+  })();
+
+  function avancar() {
+    if (passo < TOTAL_PASSOS) {
+      setPasso(passo + 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    setFase("profissional");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function voltar() {
+    if (fase === "checkout") {
+      setFase("profissional");
+      return;
+    }
+    if (fase === "profissional") {
+      setFase("passos");
+      return;
+    }
+    if (passo > 1) setPasso(passo - 1);
+  }
+
+  function irParaCheckout() {
+    if (!user) {
+      navigate({ to: "/auth", search: { next: "/contratar" } });
+      return;
+    }
+    setFase("checkout");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  if (!precos || !extras || carregando) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <SiteHeader />
+        <main className="flex flex-1 items-center justify-center">
+          <Loader2 className="size-6 animate-spin text-primary" />
+        </main>
+        <SiteFooter />
       </div>
-    </main>
+    );
+  }
+
+  return (
+    <div className="flex min-h-screen flex-col">
+      <SiteHeader />
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
+        {fase === "passos" && (
+          <div className="mb-8">
+            <div className="mb-2 flex items-center justify-between text-sm text-muted-foreground">
+              <span>
+                Passo {passo} de {TOTAL_PASSOS}
+              </span>
+              <span>{Math.round((passo / TOTAL_PASSOS) * 100)}%</span>
+            </div>
+            <Progress value={(passo / TOTAL_PASSOS) * 100} />
+          </div>
+        )}
+
+        <div className="grid gap-8 lg:grid-cols-[1fr_20rem]">
+          <div>
+            {fase === "passos" && (
+              <>
+                {passo === 1 && <PassoEndereco rascunho={rascunho} atualizar={atualizar} />}
+                {passo === 2 && <PassoImovel rascunho={rascunho} atualizar={atualizar} />}
+                {passo === 3 && <PassoTamanho rascunho={rascunho} atualizar={atualizar} />}
+                {passo === 4 && (
+                  <PassoDuracao rascunho={rascunho} atualizar={atualizar} precos={precos} />
+                )}
+                {passo === 5 && <PassoTipoLimpeza rascunho={rascunho} atualizar={atualizar} />}
+                {passo === 6 && (
+                  <PassoExtras rascunho={rascunho} atualizar={atualizar} extras={listaExtras} />
+                )}
+                {passo === 7 && <PassoDataHora rascunho={rascunho} atualizar={atualizar} />}
+                {passo === 8 && <PassoObservacoes rascunho={rascunho} atualizar={atualizar} />}
+
+                <div className="mt-8 flex items-center justify-between gap-3">
+                  <Button
+                    variant="ghost"
+                    onClick={voltar}
+                    disabled={passo === 1}
+                    className="gap-2"
+                  >
+                    <ArrowLeft className="size-4" /> Voltar
+                  </Button>
+                  <Button onClick={avancar} disabled={!podeAvancar} size="lg" className="gap-2">
+                    {passo === TOTAL_PASSOS ? "Ver profissionais" : "Continuar"}
+                    <ArrowRight className="size-4" />
+                  </Button>
+                </div>
+              </>
+            )}
+
+            {fase === "profissional" && (
+              <>
+                <EscolhaProfissional
+                  rascunho={rascunho}
+                  atualizar={atualizar}
+                  onAvancar={irParaCheckout}
+                />
+                <Button variant="ghost" onClick={voltar} className="mt-6 gap-2">
+                  <ArrowLeft className="size-4" /> Revisar serviço
+                </Button>
+              </>
+            )}
+
+            {fase === "checkout" && user && (
+              <>
+                <Checkout
+                  rascunho={rascunho}
+                  orcamento={orcamento}
+                  extras={listaExtras}
+                  userId={user.id}
+                />
+                <Button variant="ghost" onClick={voltar} className="mt-6 gap-2">
+                  <ArrowLeft className="size-4" /> Trocar profissional
+                </Button>
+              </>
+            )}
+          </div>
+
+          <aside className="hidden lg:block">
+            <Resumo rascunho={rascunho} orcamento={orcamento} extras={listaExtras} />
+          </aside>
+        </div>
+      </main>
+      <SiteFooter />
+    </div>
   );
 }

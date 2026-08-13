@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContratarRouteImport } from './routes/contratar'
+import { Route as ConfirmacaoIdRouteImport } from './routes/confirmacao.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,35 +29,44 @@ const ContratarRoute = ContratarRouteImport.update({
   path: '/contratar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConfirmacaoIdRoute = ConfirmacaoIdRouteImport.update({
+  id: '/confirmacao/$id',
+  path: '/confirmacao/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
+  '/confirmacao/$id': typeof ConfirmacaoIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
+  '/confirmacao/$id': typeof ConfirmacaoIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
+  '/confirmacao/$id': typeof ConfirmacaoIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/contratar'
+  fullPaths: '/' | '/auth' | '/contratar' | '/confirmacao/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/contratar'
-  id: '__root__' | '/' | '/auth' | '/contratar'
+  to: '/' | '/auth' | '/contratar' | '/confirmacao/$id'
+  id: '__root__' | '/' | '/auth' | '/contratar' | '/confirmacao/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   ContratarRoute: typeof ContratarRoute
+  ConfirmacaoIdRoute: typeof ConfirmacaoIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +92,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContratarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/confirmacao/$id': {
+      id: '/confirmacao/$id'
+      path: '/confirmacao/$id'
+      fullPath: '/confirmacao/$id'
+      preLoaderRoute: typeof ConfirmacaoIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   ContratarRoute: ContratarRoute,
+  ConfirmacaoIdRoute: ConfirmacaoIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

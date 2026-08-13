@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContratarRouteImport } from './routes/contratar'
 import { Route as MinhaContaRouteImport } from './routes/minha-conta'
+import { Route as ProfissionalRouteImport } from './routes/profissional'
 import { Route as ConfirmacaoIdRouteImport } from './routes/confirmacao.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -35,6 +36,11 @@ const MinhaContaRoute = MinhaContaRouteImport.update({
   path: '/minha-conta',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfissionalRoute = ProfissionalRouteImport.update({
+  id: '/profissional',
+  path: '/profissional',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConfirmacaoIdRoute = ConfirmacaoIdRouteImport.update({
   id: '/confirmacao/$id',
   path: '/confirmacao/$id',
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
   '/minha-conta': typeof MinhaContaRoute
+  '/profissional': typeof ProfissionalRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
   '/minha-conta': typeof MinhaContaRoute
+  '/profissional': typeof ProfissionalRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
 }
 export interface FileRoutesById {
@@ -61,19 +69,33 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
   '/minha-conta': typeof MinhaContaRoute
+  '/profissional': typeof ProfissionalRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/contratar' | '/minha-conta' | '/confirmacao/$id'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/contratar'
+    | '/minha-conta'
+    | '/profissional'
+    | '/confirmacao/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/contratar' | '/minha-conta' | '/confirmacao/$id'
+  to:
+    | '/'
+    | '/auth'
+    | '/contratar'
+    | '/minha-conta'
+    | '/profissional'
+    | '/confirmacao/$id'
   id:
     | '__root__'
     | '/'
     | '/auth'
     | '/contratar'
     | '/minha-conta'
+    | '/profissional'
     | '/confirmacao/$id'
   fileRoutesById: FileRoutesById
 }
@@ -82,6 +104,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ContratarRoute: typeof ContratarRoute
   MinhaContaRoute: typeof MinhaContaRoute
+  ProfissionalRoute: typeof ProfissionalRoute
   ConfirmacaoIdRoute: typeof ConfirmacaoIdRoute
 }
 
@@ -115,6 +138,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MinhaContaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profissional': {
+      id: '/profissional'
+      path: '/profissional'
+      fullPath: '/profissional'
+      preLoaderRoute: typeof ProfissionalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/confirmacao/$id': {
       id: '/confirmacao/$id'
       path: '/confirmacao/$id'
@@ -130,6 +160,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ContratarRoute: ContratarRoute,
   MinhaContaRoute: MinhaContaRoute,
+  ProfissionalRoute: ProfissionalRoute,
   ConfirmacaoIdRoute: ConfirmacaoIdRoute,
 }
 export const routeTree = rootRouteImport

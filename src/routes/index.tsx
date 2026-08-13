@@ -70,6 +70,14 @@ const seguranca = [
   "Suporte LAR10",
 ];
 
+const confianca = [
+  { icon: BadgeCheck, texto: "Profissionais verificadas" },
+  { icon: Lock, texto: "Pagamento protegido" },
+  { icon: Tag, texto: "Preço sem surpresa" },
+];
+
+
+
 function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-background">

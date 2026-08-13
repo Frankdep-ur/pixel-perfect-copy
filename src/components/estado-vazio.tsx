@@ -18,7 +18,7 @@ export function EstadoVazio({
 }) {
   return (
     <div className="flex min-h-[280px] flex-col items-center justify-center px-5 py-10 text-center">
-      <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[color-mix(in_oklab,var(--accent)_10%,transparent)]">
+      <span className="flex h-16 w-16 items-center justify-center rounded-full bg-accent/10">
         <Icon strokeWidth={1.5} className="h-8 w-8 text-accent" aria-hidden />
       </span>
       <p className="mt-5 text-[18px] font-semibold text-foreground">{titulo}</p>

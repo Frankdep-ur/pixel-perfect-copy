@@ -19,6 +19,7 @@ import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as ProfissionalRouteImport } from './routes/profissional'
 import { Route as SejaProfissionalRouteImport } from './routes/seja-profissional'
 import { Route as TermosRouteImport } from './routes/termos'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ConfirmacaoIdRouteImport } from './routes/confirmacao.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -71,6 +72,11 @@ const TermosRoute = TermosRouteImport.update({
   path: '/termos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const ConfirmacaoIdRoute = ConfirmacaoIdRouteImport.update({
   id: '/confirmacao/$id',
   path: '/confirmacao/$id',
@@ -79,7 +85,7 @@ const ConfirmacaoIdRoute = ConfirmacaoIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/ajuda': typeof AjudaRoute
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
@@ -89,10 +95,10 @@ export interface FileRoutesByFullPath {
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
   '/ajuda': typeof AjudaRoute
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
@@ -102,11 +108,12 @@ export interface FileRoutesByTo {
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/ajuda': typeof AjudaRoute
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
@@ -116,6 +123,7 @@ export interface FileRoutesById {
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -131,10 +139,10 @@ export interface FileRouteTypes {
     | '/seja-profissional'
     | '/termos'
     | '/confirmacao/$id'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/admin'
     | '/ajuda'
     | '/auth'
     | '/contratar'
@@ -144,6 +152,7 @@ export interface FileRouteTypes {
     | '/seja-profissional'
     | '/termos'
     | '/confirmacao/$id'
+    | '/admin'
   id:
     | '__root__'
     | '/'
@@ -157,11 +166,12 @@ export interface FileRouteTypes {
     | '/seja-profissional'
     | '/termos'
     | '/confirmacao/$id'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AjudaRoute: typeof AjudaRoute
   AuthRoute: typeof AuthRoute
   ContratarRoute: typeof ContratarRoute
@@ -245,6 +255,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/confirmacao/$id': {
       id: '/confirmacao/$id'
       path: '/confirmacao/$id'
@@ -255,9 +272,19 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   AjudaRoute: AjudaRoute,
   AuthRoute: AuthRoute,
   ContratarRoute: ContratarRoute,

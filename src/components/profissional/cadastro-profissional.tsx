@@ -44,8 +44,9 @@ export function CadastroProfissional({ user }: Props) {
 
       const { error: erroPerfil } = await supabase
         .from("profiles")
-        .update({ nome: nome.trim(), telefone: telefone.trim() || null })
+        .update({ nome: nome.trim(), telefone: telefone.trim() || null, foto_url: foto })
         .eq("id", user.id);
+
       if (erroPerfil) throw erroPerfil;
 
       const { error } = await supabase.from("profissionais").insert({

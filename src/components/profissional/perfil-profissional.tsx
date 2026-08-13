@@ -1,0 +1,247 @@
+import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { UploadFoto } from "@/components/upload-foto";
+import { TIPOS_LIMPEZA } from "@/lib/catalogo";
+import { REGIOES, type RegiaoId } from "@/lib/regioes";
+import { cn } from "@/lib/utils";
+
+export type PerfilProfissionalEdicao = {
+  id: string;
+  user_id: string;
+  bio: string | null;
+  anos_experiencia: number;
+  raio_km: number;
+  regiao: string | null;
+  cidade: string | null;
+  cidades_atendidas: string[];
+  tipos_limpeza: string[];
+  nome: string | null;
+  telefone: string | null;
+  foto_url: string | null;
+};
+
+export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdicao }) {
+  const queryClient = useQueryClient();
+  const [foto, setFoto] = useState(perfil.foto_url);
+  const [nome, setNome] = useState(perfil.nome ?? "");
+  const [telefone, setTelefone] = useState(perfil.telefone ?? "");
+  const [bio, setBio] = useState(perfil.bio ?? "");
+  const [anos, setAnos] = useState(String(perfil.anos_experiencia));
+  const [raio, setRaio] = useState(String(perfil.raio_km));
+  const [regiao, setRegiao] = useState<RegiaoId>(
+    (perfil.regiao as RegiaoId) in REGIOES ? (perfil.regiao as RegiaoId) : "grande_floripa",
+  );
+  const [cidades, setCidades] = useState<string[]>(perfil.cidades_atendidas ?? []);
+  const [cidade, setCidade] = useState(perfil.cidade ?? "");
+  const [tipos, setTipos] = useState<string[]>(perfil.tipos_limpeza ?? []);
+
+  function alternar(lista: string[], set: (v: string[]) => void, valor: string) {
+    set(lista.includes(valor) ? lista.filter((v) => v !== valor) : [...lista, valor]);
+  }
+
+  const salvar = useMutation({
+    mutationFn: async (dados?: { foto_url?: string | null }) => {
+      const fotoFinal = dados && "foto_url" in dados ? (dados.foto_url ?? null) : foto;
+      if (!nome.trim()) throw new Error("Informe seu nome completo.");
+      if (cidades.length === 0) throw new Error("Escolha ao menos uma cidade atendida.");
+      if (tipos.length === 0) throw new Error("Escolha ao menos um tipo de limpeza.");
+
+      const { error: erroPerfil } = await supabase
+        .from("profiles")
+        .update({
+          nome: nome.trim(),
+          telefone: telefone.trim() || null,
+          foto_url: fotoFinal,
+        })
+        .eq("id", perfil.user_id);
+      if (erroPerfil) throw erroPerfil;
+
+      const { error } = await supabase
+        .from("profissionais")
+        .update({
+          bio: bio.trim() || null,
+          anos_experiencia: Number(anos) || 0,
+          raio_km: Number(raio) || 15,
+          regiao,
+          cidade: cidade || cidades[0] || null,
+          cidades_atendidas: cidades,
+          tipos_limpeza: tipos,
+        })
+        .eq("id", perfil.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Perfil atualizado!");
+      queryClient.invalidateQueries({ queryKey: ["meu-perfil-profissional"] });
+      queryClient.invalidateQueries({ queryKey: ["profissionais"] });
+    },
+    onError: (erro: Error) => toast.error(erro.message),
+  });
+
+  return (
+    <Card className="mt-3">
+      <CardHeader>
+        <CardTitle>Meu perfil</CardTitle>
+        <p className="text-sm text-muted-foreground">
+          Essas informações aparecem para os clientes na hora de escolher a profissional.
+        </p>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <UploadFoto
+          userId={perfil.user_id}
+          url={foto}
+          nome={nome}
+          onChange={(url) => {
+            setFoto(url);
+            salvar.mutate({ foto_url: url });
+          }}
+        />
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="p-nome">Nome completo</Label>
+            <Input id="p-nome" value={nome} onChange={(e) => setNome(e.target.value)} />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="p-tel">WhatsApp</Label>
+            <Input
+              id="p-tel"
+              value={telefone}
+              onChange={(e) => setTelefone(e.target.value)}
+              placeholder="(48) 99999-0000"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="p-anos">Anos de experiência</Label>
+            <Input
+              id="p-anos"
+              type="number"
+              min={0}
+              value={anos}
+              onChange={(e) => setAnos(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="p-raio">Distância máxima (km)</Label>
+            <Input
+              id="p-raio"
+              type="number"
+              min={1}
+              value={raio}
+              onChange={(e) => setRaio(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="p-bio">Sobre você</Label>
+          <Textarea
+            id="p-bio"
+            rows={3}
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            placeholder="Conte sua experiência, cuidados e diferenciais no atendimento."
+          />
+        </div>
+
+        <div className="space-y-3">
+          <Label>Região de atuação</Label>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {(Object.keys(REGIOES) as RegiaoId[]).map((id) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => {
+                  setRegiao(id);
+                  setCidades([]);
+                  setCidade("");
+                }}
+                className={cn(
+                  "rounded-xl border p-4 text-left text-sm transition",
+                  regiao === id
+                    ? "border-primary bg-primary/5 text-foreground"
+                    : "border-border hover:border-primary/40",
+                )}
+              >
+                <span className="font-medium">{REGIOES[id].nome}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <Label>Cidades atendidas</Label>
+          <div className="flex flex-wrap gap-4">
+            {REGIOES[regiao].cidades.map((c) => (
+              <label key={c} className="flex items-center gap-2 text-sm">
+                <Checkbox
+                  checked={cidades.includes(c)}
+                  onCheckedChange={() => alternar(cidades, setCidades, c)}
+                />
+                {c}
+              </label>
+            ))}
+          </div>
+          {cidades.length > 0 && (
+            <div className="space-y-2">
+              <Label htmlFor="p-cidade">Cidade onde você mora</Label>
+              <select
+                id="p-cidade"
+                value={cidades.includes(cidade) ? cidade : cidades[0]}
+                onChange={(e) => setCidade(e.target.value)}
+                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+              >
+                {cidades.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
+
+        <div className="space-y-3">
+          <Label>Tipos de limpeza</Label>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {TIPOS_LIMPEZA.map((t) => (
+              <label
+                key={t.id}
+                className="flex items-start gap-3 rounded-xl border border-border p-3 text-sm"
+              >
+                <Checkbox
+                  checked={tipos.includes(t.id)}
+                  onCheckedChange={() => alternar(tipos, setTipos, t.id)}
+                />
+                <span>
+                  <span className="font-medium">{t.label}</span>
+                  <span className="block text-xs text-muted-foreground">{t.descricao}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <Button
+          className="w-full"
+          size="lg"
+          disabled={salvar.isPending}
+          onClick={() => salvar.mutate(undefined)}
+        >
+          {salvar.isPending && <Loader2 className="mr-2 size-4 animate-spin" />}
+          Salvar alterações
+        </Button>
+      </CardContent>
+    </Card>
+  );
+}

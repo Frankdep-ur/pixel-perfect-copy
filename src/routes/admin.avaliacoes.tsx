@@ -42,7 +42,7 @@ function AdminAvaliacoes() {
 
       {avaliacoes.length === 0 ? (
         <EstadoVazio
-          icone={Star}
+          icon={Star}
           titulo="Nenhuma avaliação ainda"
           texto="As avaliações aparecem aqui quando os clientes avaliam um serviço concluído."
         />

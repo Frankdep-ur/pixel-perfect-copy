@@ -19,8 +19,8 @@ type Props = { user: User };
 
 export function CadastroProfissional({ user }: Props) {
   const queryClient = useQueryClient();
-  const [nome, setNome] = useState((user.user_metadata?.nome as string) ?? "");
-  const [telefone, setTelefone] = useState((user.user_metadata?.telefone as string) ?? "");
+  const [nome, setNome] = useState((user.user_metadata?.['nome'] as string) ?? "");
+  const [telefone, setTelefone] = useState((user.user_metadata?.['telefone'] as string) ?? "");
   const [bio, setBio] = useState("");
   const [anos, setAnos] = useState("1");
   const [raio, setRaio] = useState("15");
@@ -51,7 +51,7 @@ export function CadastroProfissional({ user }: Props) {
         anos_experiencia: Number(anos) || 0,
         raio_km: Number(raio) || 15,
         regiao,
-        cidade: cidade || cidades[0],
+        cidade: cidade || cidades[0] || null,
         cidades_atendidas: cidades,
         tipos_limpeza: tipos,
       });

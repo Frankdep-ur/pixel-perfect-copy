@@ -12,11 +12,11 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 
-type Busca = { next?: string };
+type Busca = { next: string | undefined };
 
 export const Route = createFileRoute("/auth")({
   validateSearch: (busca: Record<string, unknown>): Busca => ({
-    next: typeof busca.next === "string" ? busca.next : undefined,
+    next: typeof busca["next"] === "string" ? (busca["next"] as string) : undefined,
   }),
   head: () => ({
     meta: [

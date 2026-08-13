@@ -80,6 +80,10 @@ export function CadastroProfissional({ user }: Props) {
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
+        <div className="rounded-2xl bg-surface-tint p-4">
+          <UploadFoto userId={user.id} url={foto} nome={nome} onChange={setFoto} />
+        </div>
+
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="nome">Nome completo</Label>

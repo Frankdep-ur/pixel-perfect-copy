@@ -13,21 +13,23 @@ type Documento = { label: string; url: string | null };
 
 export function FichaProfissional({
   profissionalId,
+  userId,
   documentos,
 }: {
   profissionalId: string;
+  userId: string;
   documentos: Documento[];
 }) {
   const queryClient = useQueryClient();
   const [texto, setTexto] = useState("");
 
   const { data: mensagens } = useQuery({
-    queryKey: ["admin", "mensagens", profissionalId],
+    queryKey: ["admin", "mensagens", userId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("mensagens_profissional")
         .select("id, mensagem, criado_em")
-        .eq("profissional_id", profissionalId)
+        .eq("profissional_user_id", userId)
         .order("criado_em", { ascending: false });
       if (error) throw error;
       return data ?? [];
@@ -54,13 +56,13 @@ export function FichaProfissional({
       if (!mensagem) throw new Error("Escreva uma mensagem.");
       const { error } = await supabase
         .from("mensagens_profissional")
-        .insert({ profissional_id: profissionalId, mensagem });
+        .insert({ profissional_user_id: userId, mensagem });
       if (error) throw error;
     },
     onSuccess: () => {
       setTexto("");
       toast.success("Mensagem interna registrada.");
-      queryClient.invalidateQueries({ queryKey: ["admin", "mensagens", profissionalId] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "mensagens", userId] });
     },
     onError: (erro: Error) => toast.error(erro.message),
   });

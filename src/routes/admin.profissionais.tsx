@@ -18,6 +18,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { cn } from "@/lib/utils";
 import { labelTipoLimpeza } from "@/lib/catalogo";
 import { nomeRegiao } from "@/lib/regioes";
+import { FichaProfissional } from "@/components/admin/ficha-profissional";
 
 export const Route = createFileRoute("/admin/profissionais")({
   component: AdminProfissionais,
@@ -199,6 +200,7 @@ function AdminProfissionais() {
 
                 <FichaProfissional
                   profissionalId={selecionada.id}
+                  userId={selecionada.user_id}
                   documentos={[
                     { label: "Identidade (RG/CNH)", url: selecionada.doc_identidade_url },
                     { label: "CPF", url: selecionada.doc_cpf_url },

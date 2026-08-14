@@ -36,7 +36,7 @@ export function SiteHeader() {
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
-          {navLinks.map((link) => (
+          {navLinksCliente.map((link) => (
             <a
               key={link.href}
               href={link.href}
@@ -45,6 +45,12 @@ export function SiteHeader() {
               {link.label}
             </a>
           ))}
+          <Link
+            to={navLinksProfissional.href}
+            className="text-sm font-medium text-muted-foreground transition-colors duration-200 ease-out hover:text-primary"
+          >
+            {navLinksProfissional.label}
+          </Link>
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
@@ -104,7 +110,7 @@ export function SiteHeader() {
         </div>
 
         <nav className="flex flex-1 flex-col gap-1 px-5 pt-4">
-          {navLinks.map((link) => (
+          {navLinksCliente.map((link) => (
             <a
               key={link.href}
               href={link.href}
@@ -114,6 +120,13 @@ export function SiteHeader() {
               {link.label}
             </a>
           ))}
+          <Link
+            to={navLinksProfissional.href}
+            onClick={() => setOpen(false)}
+            className="flex min-h-14 items-center rounded-xl px-2 text-lg font-medium text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+          >
+            {navLinksProfissional.label}
+          </Link>
           <Link
             to={user ? "/minha-conta" : "/auth"}
             search={{ next: undefined }}

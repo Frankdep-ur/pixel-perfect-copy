@@ -52,10 +52,10 @@ function AdminLayout() {
   useEffect(() => {
     if (carregando) return;
     if (!user) {
-      navigate({ to: "/auth", search: { next: "/admin" } });
+      navigate({ to: "/admin/login", replace: true });
       return;
     }
-    if (!carregandoPapeis && !ehAdmin) navigate({ to: "/" });
+    if (!carregandoPapeis && !ehAdmin) navigate({ to: "/admin/login", replace: true });
   }, [carregando, carregandoPapeis, ehAdmin, navigate, user]);
 
   if (carregando || carregandoPapeis || !ehAdmin) {

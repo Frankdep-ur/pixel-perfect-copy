@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   ListPlus,
   Loader2,
+  LogOut,
   MailQuestion,
   Sparkles,
   Star,
@@ -13,7 +14,9 @@ import {
   UserCheck,
 } from "lucide-react";
 
+import { supabase } from "@/integrations/supabase/client";
 import { useSession, usePapeis } from "@/hooks/use-auth";
+
 
 export const Route = createFileRoute("/admin")({
   head: () => ({

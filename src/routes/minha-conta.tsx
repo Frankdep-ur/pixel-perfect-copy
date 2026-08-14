@@ -1,7 +1,17 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { CalendarDays, Loader2, MapPin, Plus, Sparkles } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  CalendarDays,
+  CheckCircle2,
+  Loader2,
+  MapPin,
+  MessageCircle,
+  Plus,
+  Sparkles,
+} from "lucide-react";
+import { toast } from "sonner";
+import { MENSAGENS, linkWhatsApp } from "@/lib/whatsapp";
 
 import { EstadoVazio } from "@/components/estado-vazio";
 
@@ -156,57 +166,156 @@ type BookingLista = {
   duracao_horas: number;
   valor_total: number;
   enderecos: { rua: string | null; numero: string | null; bairro: string | null; cidade: string | null } | null;
-  profissionais: { id: string; user_id: string; profiles: { nome: string | null } | null } | null;
+  profissionais: {
+    id: string;
+    user_id: string;
+    cidade: string | null;
+    profiles: { nome: string | null; telefone: string | null; foto_url: string | null } | null;
+  } | null;
   avaliacoes: { id: string }[];
 };
 
 function CartaoBooking({ booking, userId }: { booking: BookingLista; userId: string }) {
-  const concluida = booking.status === "concluida" || booking.status === "finalizada";
+  const queryClient = useQueryClient();
+  const concluida = booking.status === "concluida";
+  const aguardandoConfirmacao = booking.status === "finalizada";
   const jaAvaliou = booking.avaliacoes.length > 0;
+  const mostraProfissional = APOS_ACEITE.includes(booking.status) && !!booking.profissionais;
+  const prof = booking.profissionais;
+
+  const confirmar = useMutation({
+    mutationFn: async () => {
+      const agora = new Date().toISOString();
+      const { error } = await supabase
+        .from("bookings")
+        .update({
+          status: "concluida",
+          cliente_confirmado_em: agora,
+          pagamento_liberado_em: agora,
+        })
+        .eq("id", booking.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Faxina confirmada!", {
+        description: "O pagamento da profissional foi liberado. Agora você pode avaliar o serviço.",
+      });
+      queryClient.invalidateQueries({ queryKey: ["minhas-contratacoes"] });
+    },
+    onError: (erro: Error) => toast.error(erro.message),
+  });
 
   return (
     <Card>
-      <CardContent className="flex flex-wrap items-start justify-between gap-4 pt-6">
-        <div className="space-y-2">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="secondary">{STATUS_LABEL[booking.status] ?? booking.status}</Badge>
-            <span className="text-xs text-muted-foreground">{booking.codigo}</span>
-          </div>
-          <p className="font-semibold">
-            Limpeza {labelTipoLimpeza(booking.tipo_limpeza)} · {booking.duracao_horas}h
-          </p>
-          <p className="flex items-center gap-2 text-sm text-muted-foreground">
-            <CalendarDays className="size-4" />
-            {booking.data
-              ? new Date(`${booking.data}T12:00:00`).toLocaleDateString("pt-BR")
-              : "Data a definir"}
-            {booking.hora ? ` às ${booking.hora.slice(0, 5)}` : ""}
-          </p>
-          {booking.enderecos && (
+      <CardContent className="space-y-4 pt-6">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant="secondary">{STATUS_LABEL[booking.status] ?? booking.status}</Badge>
+              <span className="text-xs text-muted-foreground">{booking.codigo}</span>
+            </div>
+            <p className="font-semibold">
+              Limpeza {labelTipoLimpeza(booking.tipo_limpeza)} · {booking.duracao_horas}h
+            </p>
             <p className="flex items-center gap-2 text-sm text-muted-foreground">
-              <MapPin className="size-4" />
-              {booking.enderecos.bairro}, {booking.enderecos.cidade}
+              <CalendarDays className="size-4" />
+              {booking.data
+                ? new Date(`${booking.data}T12:00:00`).toLocaleDateString("pt-BR")
+                : "Data a definir"}
+              {booking.hora ? ` às ${booking.hora.slice(0, 5)}` : ""}
             </p>
-          )}
-          {booking.profissionais?.profiles?.nome && (
-            <p className="text-sm text-muted-foreground">
-              Profissional: {booking.profissionais.profiles.nome}
+            {booking.enderecos && (
+              <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                <MapPin className="size-4" />
+                {booking.enderecos.bairro}, {booking.enderecos.cidade}
+              </p>
+            )}
+          </div>
+          <div className="flex flex-col items-end gap-3">
+            <span className="text-xl font-semibold text-primary">
+              {formatBRL(Number(booking.valor_total))}
+            </span>
+            {concluida && !jaAvaliou && prof && (
+              <AvaliarDialog
+                bookingId={booking.id}
+                avaliadoId={prof.user_id}
+                avaliadorId={userId}
+              />
+            )}
+            {jaAvaliou && <span className="text-xs text-muted-foreground">Serviço avaliado</span>}
+          </div>
+        </div>
+
+        {booking.status === "aguardando_aceite" && (
+          <p className="rounded-xl bg-surface-tint px-4 py-3 text-sm text-muted-foreground">
+            Sua data já está reservada. Assim que a profissional aceitar, os dados de contato dela
+            aparecem aqui.
+          </p>
+        )}
+
+        {booking.status === "sem_profissional" && (
+          <p className="rounded-xl bg-surface-tint px-4 py-3 text-sm text-muted-foreground">
+            Estamos procurando outra profissional disponível para esta data. Você será avisado assim
+            que confirmarmos.
+          </p>
+        )}
+
+        {mostraProfissional && prof && (
+          <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl bg-surface-tint px-4 py-3">
+            <div className="flex items-center gap-3">
+              {prof.profiles?.foto_url ? (
+                <img
+                  src={prof.profiles.foto_url}
+                  alt={`Foto de ${prof.profiles?.nome ?? "profissional"}`}
+                  className="size-12 rounded-full object-cover"
+                />
+              ) : (
+                <span className="flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <Sparkles className="size-5" />
+                </span>
+              )}
+              <div className="text-sm">
+                <p className="font-semibold">{prof.profiles?.nome ?? "Profissional LAR10"}</p>
+                <p className="text-muted-foreground">{prof.profiles?.telefone ?? "—"}</p>
+                <p className="text-muted-foreground">{prof.cidade ?? ""}</p>
+              </div>
+            </div>
+            <Button asChild variant="outline" size="sm" className="gap-2">
+              <a
+                href={linkWhatsApp(
+                  prof.profiles?.telefone,
+                  MENSAGENS.clienteParaProfissional(booking.codigo ?? "LAR10"),
+                )}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <MessageCircle className="size-4" /> WhatsApp
+              </a>
+            </Button>
+          </div>
+        )}
+
+        {aguardandoConfirmacao && (
+          <div className="space-y-2 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3">
+            <p className="text-sm">
+              A profissional marcou a faxina como finalizada. Confirme para liberar o pagamento e
+              encerrar o serviço.
             </p>
-          )}
-        </div>
-        <div className="flex flex-col items-end gap-3">
-          <span className="text-xl font-semibold text-primary">
-            {formatBRL(Number(booking.valor_total))}
-          </span>
-          {concluida && !jaAvaliou && booking.profissionais && (
-            <AvaliarDialog
-              bookingId={booking.id}
-              avaliadoId={booking.profissionais.user_id}
-              avaliadorId={userId}
-            />
-          )}
-          {jaAvaliou && <span className="text-xs text-muted-foreground">Serviço avaliado</span>}
-        </div>
+            <Button
+              size="sm"
+              className="gap-2"
+              onClick={() => confirmar.mutate()}
+              disabled={confirmar.isPending}
+            >
+              {confirmar.isPending ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <CheckCircle2 className="size-4" />
+              )}
+              Faxina finalizada
+            </Button>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

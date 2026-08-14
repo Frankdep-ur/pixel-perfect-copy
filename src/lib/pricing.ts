@@ -15,10 +15,14 @@ export type Orcamento = {
   subtotalServico: number;
   valorExtras: number;
   valorProfissional: number;
+  /** Percentual administrativo sem o seguro (uso interno/admin). */
+  taxaAdminBase: number;
+  /** Taxa administrativa exibida ao cliente — já inclui o seguro. */
   taxaAdmin: number;
   valorSeguro: number;
   total: number;
 };
+
 
 const MULT_POR_TIPO: Record<string, string> = {
   padrao: "mult_limpeza_padrao",
@@ -65,9 +69,11 @@ export function calcularOrcamento(
 
   const valorExtras = input.extras.reduce((soma, e) => soma + (e.preco ?? 0), 0);
   const valorProfissional = subtotalServico + valorExtras;
-  const taxaAdmin = valorProfissional * num("taxa_admin_percentual");
+  const taxaAdminBase = valorProfissional * num("taxa_admin_percentual");
   const valorSeguro = num("valor_seguro");
-  const total = valorProfissional + taxaAdmin + valorSeguro;
+  // O seguro é embutido na taxa administrativa: o cliente nunca vê a linha "seguro".
+  const taxaAdmin = taxaAdminBase + valorSeguro;
+  const total = valorProfissional + taxaAdmin;
 
   return {
     base: arredondar(base),
@@ -75,8 +81,10 @@ export function calcularOrcamento(
     subtotalServico: arredondar(subtotalServico),
     valorExtras: arredondar(valorExtras),
     valorProfissional: arredondar(valorProfissional),
+    taxaAdminBase: arredondar(taxaAdminBase),
     taxaAdmin: arredondar(taxaAdmin),
     valorSeguro: arredondar(valorSeguro),
     total: arredondar(total),
   };
 }
+

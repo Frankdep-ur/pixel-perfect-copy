@@ -21,11 +21,12 @@ export const TIPOS_IMOVEL: { id: string; label: string; icon: LucideIcon }[] = [
   { id: "outro", label: "Outro", icon: Shapes },
 ];
 
-export const DURACOES: { horas: 4 | 6 | 8; label: string; descricao: string }[] = [
-  { horas: 4, label: "4 horas", descricao: "Limpeza básica e imóveis menores" },
-  { horas: 6, label: "6 horas", descricao: "Limpeza mais completa" },
-  { horas: 8, label: "8 horas", descricao: "Limpeza completa de imóveis maiores" },
+export const DURACOES: { horas: 4 | 6 | 8; label: string; nivel: string; descricao: string }[] = [
+  { horas: 4, label: "4 horas", nivel: "Básico", descricao: "Imóveis compactos e manutenção" },
+  { horas: 6, label: "6 horas", nivel: "Médio", descricao: "Apartamentos e salas comerciais" },
+  { horas: 8, label: "8 horas", nivel: "Master", descricao: "Casas e escritórios maiores" },
 ];
+
 
 export const TIPOS_LIMPEZA: { id: string; label: string; descricao: string }[] = [
   {
@@ -67,12 +68,8 @@ export const AREAS_EXTERNAS: { id: string; label: string }[] = [
   { id: "grande", label: "Grande" },
 ];
 
-export const HORARIOS = Array.from({ length: 10 }, (_, i) => {
-  const h = 7 + i;
-  return `${String(h).padStart(2, "0")}:00`;
-});
-
 export const STATUS_BOOKING = [
+  "aguardando_aceite",
   "solicitada",
   "aceita",
   "confirmada",
@@ -83,15 +80,19 @@ export const STATUS_BOOKING = [
 ] as const;
 
 export const STATUS_LABEL: Record<string, string> = {
+  aguardando_aceite: "Aguardando aceite",
+  sem_profissional: "Buscando profissional",
   solicitada: "Solicitada",
   aceita: "Aceita",
   confirmada: "Confirmada",
   a_caminho: "A caminho",
   em_andamento: "Em andamento",
-  finalizada: "Finalizada",
+  finalizada: "Aguardando sua confirmação",
   concluida: "Concluída",
+  recusada: "Recusada",
   cancelada: "Cancelada",
 };
+
 
 export function labelTipoLimpeza(id: string | null | undefined) {
   return TIPOS_LIMPEZA.find((t) => t.id === id)?.label ?? "";

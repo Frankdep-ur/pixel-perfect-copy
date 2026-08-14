@@ -22,8 +22,13 @@ export type AdminProfissional = {
   nome: string;
   email: string | null;
   telefone: string | null;
+  telefone_recado: string | null;
+  doc_identidade_url: string | null;
+  doc_cpf_url: string | null;
+  comprovante_url: string | null;
   foto_url: string | null;
 };
+
 
 export const adminProfissionaisQuery = queryOptions({
   queryKey: ["admin", "profissionais"],
@@ -64,7 +69,12 @@ export const adminProfissionaisQuery = queryOptions({
         nome: perfil?.nome ?? "Sem nome",
         email: perfil?.email ?? null,
         telefone: perfil?.telefone ?? null,
+        telefone_recado: p.telefone_recado ?? null,
+        doc_identidade_url: p.doc_identidade_url ?? null,
+        doc_cpf_url: p.doc_cpf_url ?? null,
+        comprovante_url: p.comprovante_url ?? null,
         foto_url: perfil?.foto_url ?? null,
+
       };
     });
   },
@@ -116,6 +126,7 @@ export type AdminCliente = {
   email: string | null;
   telefone: string | null;
   cidade: string | null;
+  endereco: string | null;
 };
 
 export const adminClientesQuery = queryOptions({
@@ -132,25 +143,44 @@ export const adminClientesQuery = queryOptions({
     const [{ data: perfis, error: erroPerfis }, { data: enderecos, error: erroEnd }] =
       await Promise.all([
         supabase.from("profiles").select("id, nome, email, telefone").in("id", ids),
-        supabase.from("enderecos").select("user_id, cidade").in("user_id", ids),
+        supabase
+          .from("enderecos")
+          .select("user_id, cep, rua, numero, complemento, bairro, cidade, estado, padrao")
+          .in("user_id", ids),
       ]);
     if (erroPerfis) throw erroPerfis;
     if (erroEnd) throw erroEnd;
 
-    const cidadePorUsuario = new Map<string, string | null>();
+    const enderecoPorUsuario = new Map<string, (typeof enderecos)[number]>();
     for (const e of enderecos ?? []) {
-      if (!cidadePorUsuario.has(e.user_id)) cidadePorUsuario.set(e.user_id, e.cidade);
+      const atual = enderecoPorUsuario.get(e.user_id);
+      if (!atual || (e.padrao && !atual.padrao)) enderecoPorUsuario.set(e.user_id, e);
     }
 
-    return (perfis ?? []).map((p) => ({
-      id: p.id,
-      nome: p.nome ?? "Sem nome",
-      email: p.email,
-      telefone: p.telefone,
-      cidade: cidadePorUsuario.get(p.id) ?? null,
-    }));
+    return (perfis ?? []).map((p) => {
+      const e = enderecoPorUsuario.get(p.id);
+      const completo = e
+        ? [
+            `${e.rua ?? ""}, ${e.numero ?? "s/n"}${e.complemento ? ` - ${e.complemento}` : ""}`,
+            e.bairro,
+            `${e.cidade ?? ""}${e.estado ? `/${e.estado}` : ""}`,
+            e.cep ? `CEP ${e.cep}` : null,
+          ]
+            .filter(Boolean)
+            .join(" · ")
+        : null;
+      return {
+        id: p.id,
+        nome: p.nome ?? "Sem nome",
+        email: p.email,
+        telefone: p.telefone,
+        cidade: e?.cidade ?? null,
+        endereco: completo,
+      };
+    });
   },
 });
+
 
 export const adminExtrasQuery = queryOptions({
   queryKey: ["admin", "extras"],
@@ -192,6 +222,7 @@ export type AdminAvaliacao = {
   qualidade: number | null;
   cordialidade: number | null;
   comentario: string | null;
+  bloqueada: boolean;
   criado_em: string;
   cliente: string;
   profissional: string;
@@ -203,7 +234,7 @@ export const adminAvaliacoesQuery = queryOptions({
     const { data, error } = await supabase
       .from("avaliacoes")
       .select(
-        "id, nota, pontualidade, qualidade, cordialidade, comentario, criado_em, avaliador:profiles!avaliacoes_avaliador_id_fkey(nome), avaliado:profiles!avaliacoes_avaliado_id_fkey(nome)",
+        "id, nota, pontualidade, qualidade, cordialidade, comentario, bloqueada, criado_em, avaliador:profiles!avaliacoes_avaliador_id_fkey(nome), avaliado:profiles!avaliacoes_avaliado_id_fkey(nome)",
       )
       .order("criado_em", { ascending: false })
       .limit(50);
@@ -220,6 +251,7 @@ export const adminAvaliacoesQuery = queryOptions({
         qualidade: a.qualidade,
         cordialidade: a.cordialidade,
         comentario: a.comentario,
+        bloqueada: a.bloqueada,
         criado_em: a.criado_em,
         cliente: linha.avaliador?.nome ?? "Cliente",
         profissional: linha.avaliado?.nome ?? "Profissional",

@@ -1,20 +1,34 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CalendarCheck, CalendarDays, Clock, Inbox, Loader2, MapPin, Sparkles } from "lucide-react";
+import {
+  CalendarCheck,
+  CalendarDays,
+  Check,
+  Clock,
+  Inbox,
+  Loader2,
+  MapPin,
+  MessageCircle,
+  Play,
+  Sparkles,
+  X,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-
-import { EstadoVazio } from "@/components/estado-vazio";
 import { toast } from "sonner";
 
+import { EstadoVazio } from "@/components/estado-vazio";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { STATUS_LABEL, formatBRL, labelTipoImovel, labelTipoLimpeza } from "@/lib/catalogo";
+import { formatarData } from "@/lib/agenda";
+import { MENSAGENS, linkWhatsApp } from "@/lib/whatsapp";
 
-type Props = { profissionalId: string; regiao: string | null };
+type Props = { profissionalId: string; nomeProfissional: string };
 
-const ABERTOS = ["solicitada", "aceita", "confirmada", "a_caminho", "em_andamento"];
+const PENDENTES = ["aguardando_aceite", "solicitada"];
+const ABERTOS = ["aceita", "confirmada", "a_caminho", "em_andamento", "finalizada"];
 
 type BookingProf = {
   id: string;
@@ -28,23 +42,25 @@ type BookingProf = {
   observacoes: string | null;
   valor_profissional: number;
   profissional_id: string | null;
+  cliente_id: string;
   enderecos: {
     rua: string | null;
     numero: string | null;
+    complemento: string | null;
     bairro: string | null;
     cidade: string | null;
   } | null;
+  profiles: { nome: string | null; telefone: string | null } | null;
 };
 
-const PROXIMO: Record<string, { status: string; label: string; campo?: string }> = {
-  solicitada: { status: "aceita", label: "Aceitar serviço" },
-  aceita: { status: "confirmada", label: "Confirmar agendamento" },
-  confirmada: { status: "a_caminho", label: "Estou a caminho" },
-  a_caminho: { status: "em_andamento", label: "Iniciar limpeza", campo: "iniciado_em" },
-  em_andamento: { status: "finalizada", label: "Finalizar limpeza", campo: "finalizado_em" },
+const PROXIMO: Record<string, { status: string; label: string; icone: LucideIcon }> = {
+  aceita: { status: "confirmada", label: "Confirmar agendamento", icone: Check },
+  confirmada: { status: "a_caminho", label: "Estou a caminho", icone: MapPin },
+  a_caminho: { status: "em_andamento", label: "Iniciar faxina", icone: Play },
+  em_andamento: { status: "finalizada", label: "Faxina finalizada", icone: Check },
 };
 
-export function ServicosProfissional({ profissionalId, regiao }: Props) {
+export function ServicosProfissional({ profissionalId, nomeProfissional }: Props) {
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
@@ -53,12 +69,56 @@ export function ServicosProfissional({ profissionalId, regiao }: Props) {
       const { data: bookings, error } = await supabase
         .from("bookings")
         .select(
-          "id, codigo, status, data, hora, tipo_imovel, tipo_limpeza, duracao_horas, observacoes, valor_profissional, profissional_id, enderecos(rua, numero, bairro, cidade)",
+          "id, codigo, status, data, hora, tipo_imovel, tipo_limpeza, duracao_horas, observacoes, valor_profissional, profissional_id, cliente_id, enderecos(rua, numero, complemento, bairro, cidade), profiles!bookings_cliente_id_fkey(nome, telefone)",
         )
         .order("data", { ascending: true });
       if (error) throw error;
-      return bookings as BookingProf[];
+      return bookings as unknown as BookingProf[];
     },
+  });
+
+  function atualizarLista() {
+    queryClient.invalidateQueries({ queryKey: ["servicos-profissional", profissionalId] });
+  }
+
+  const aceitar = useMutation({
+    mutationFn: async (booking: BookingProf) => {
+      const { error } = await supabase
+        .from("bookings")
+        .update({
+          status: "aceita",
+          profissional_id: profissionalId,
+          aceito_em: new Date().toISOString(),
+        })
+        .eq("id", booking.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Serviço aceito!", {
+        description: "Agora você já pode falar com o cliente pelo WhatsApp.",
+      });
+      atualizarLista();
+    },
+    onError: (erro: Error) => toast.error(erro.message),
+  });
+
+  const recusar = useMutation({
+    mutationFn: async (booking: BookingProf) => {
+      const { data: novo, error } = await supabase.rpc("recusar_booking", {
+        _booking_id: booking.id,
+      });
+      if (error) throw error;
+      return novo;
+    },
+    onSuccess: (novo) => {
+      toast.success("Serviço recusado.", {
+        description: novo
+          ? "Já repassamos automaticamente para outra profissional."
+          : "A equipe LAR10 vai procurar outra profissional.",
+      });
+      atualizarLista();
+    },
+    onError: (erro: Error) => toast.error(erro.message),
   });
 
   const avancar = useMutation({
@@ -66,19 +126,34 @@ export function ServicosProfissional({ profissionalId, regiao }: Props) {
       const passo = PROXIMO[booking.status];
       if (!passo) return;
       const agora = new Date().toISOString();
-      const payload = {
-        status: passo.status,
-        profissional_id: profissionalId,
-        ...(passo.campo === "iniciado_em" ? { iniciado_em: agora } : {}),
-        ...(passo.campo === "finalizado_em" ? { finalizado_em: agora } : {}),
-        ...(passo.status === "a_caminho" ? { checkin_em: agora } : {}),
-      };
-      const { error } = await supabase.from("bookings").update(payload).eq("id", booking.id);
+      const { error } = await supabase
+        .from("bookings")
+        .update({
+          status: passo.status,
+          ...(passo.status === "a_caminho" ? { checkin_em: agora } : {}),
+          ...(passo.status === "em_andamento" ? { iniciado_em: agora } : {}),
+          ...(passo.status === "finalizada" ? { finalizado_em: agora } : {}),
+        })
+        .eq("id", booking.id);
       if (error) throw error;
+      return passo.status;
     },
-    onSuccess: () => {
-      toast.success("Status atualizado.");
-      queryClient.invalidateQueries({ queryKey: ["servicos-profissional", profissionalId] });
+    onSuccess: (status, booking) => {
+      if (status === "finalizada") {
+        toast.success("Faxina finalizada!", {
+          description: "Avise o cliente pelo WhatsApp para liberar o pagamento.",
+        });
+        window.open(
+          linkWhatsApp(
+            booking.profiles?.telefone,
+            MENSAGENS.finalizada(booking.codigo ?? "LAR10"),
+          ),
+          "_blank",
+        );
+      } else {
+        toast.success("Status atualizado.");
+      }
+      atualizarLista();
     },
     onError: (erro: Error) => toast.error(erro.message),
   });
@@ -92,54 +167,80 @@ export function ServicosProfissional({ profissionalId, regiao }: Props) {
   }
 
   const lista = data ?? [];
-  const oportunidades = lista.filter((b) => b.status === "solicitada" && !b.profissional_id);
+  const pendentes = lista.filter((b) => PENDENTES.includes(b.status));
   const meus = lista.filter(
     (b) => b.profissional_id === profissionalId && ABERTOS.includes(b.status),
   );
   const concluidos = lista.filter(
-    (b) => b.profissional_id === profissionalId && !ABERTOS.includes(b.status),
+    (b) =>
+      b.profissional_id === profissionalId &&
+      !ABERTOS.includes(b.status) &&
+      !PENDENTES.includes(b.status),
   );
 
   return (
-    <Tabs defaultValue="oportunidades" className="mt-8">
-      <TabsList>
-        <TabsTrigger value="oportunidades">Oportunidades ({oportunidades.length})</TabsTrigger>
-        <TabsTrigger value="agenda">Minha agenda ({meus.length})</TabsTrigger>
-        <TabsTrigger value="historico">Histórico ({concluidos.length})</TabsTrigger>
+    <Tabs defaultValue="pedidos" className="mt-8">
+      <TabsList className="w-full">
+        <TabsTrigger value="pedidos" className="flex-1">
+          Pedidos ({pendentes.length})
+        </TabsTrigger>
+        <TabsTrigger value="agenda" className="flex-1">
+          Agenda ({meus.length})
+        </TabsTrigger>
+        <TabsTrigger value="historico" className="flex-1">
+          Histórico ({concluidos.length})
+        </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="oportunidades" className="mt-6 space-y-4">
-        {oportunidades.length === 0 && (
+      <TabsContent value="pedidos" className="mt-6 space-y-4">
+        {pendentes.length === 0 && (
           <Vazio
             icon={Inbox}
-            titulo="Nenhuma oportunidade agora"
-            texto="Assim que surgir uma solicitação na sua região, ela aparece aqui."
+            titulo="Nenhum pedido aguardando você"
+            texto="Quando um cliente escolher você, o pedido aparece aqui para aceitar ou recusar."
           />
         )}
-        {oportunidades.map((b) => (
-          <Cartao key={b.id} booking={b} onAvancar={() => avancar.mutate(b)} pendente={avancar.isPending} />
+        {pendentes.map((b) => (
+          <Cartao
+            key={b.id}
+            booking={b}
+            nomeProfissional={nomeProfissional}
+            onAceitar={() => aceitar.mutate(b)}
+            onRecusar={() => recusar.mutate(b)}
+            pendente={aceitar.isPending || recusar.isPending}
+          />
         ))}
       </TabsContent>
 
       <TabsContent value="agenda" className="mt-6 space-y-4">
-        {meus.length === 0 && <Vazio
+        {meus.length === 0 && (
+          <Vazio
             icon={CalendarCheck}
             titulo="Agenda livre"
-            texto="Aceite uma solicitação em Oportunidades para começar."
-          />}
+            texto="Aceite um pedido para ele aparecer na sua agenda."
+          />
+        )}
         {meus.map((b) => (
-          <Cartao key={b.id} booking={b} onAvancar={() => avancar.mutate(b)} pendente={avancar.isPending} />
+          <Cartao
+            key={b.id}
+            booking={b}
+            nomeProfissional={nomeProfissional}
+            onAvancar={() => avancar.mutate(b)}
+            pendente={avancar.isPending}
+          />
         ))}
       </TabsContent>
 
       <TabsContent value="historico" className="mt-6 space-y-4">
-        {concluidos.length === 0 && <Vazio
+        {concluidos.length === 0 && (
+          <Vazio
             icon={Sparkles}
             titulo="Sem histórico ainda"
             texto="Os serviços que você finalizar ficam registrados aqui."
-          />}
+          />
+        )}
         {concluidos.map((b) => (
-          <Cartao key={b.id} booking={b} />
+          <Cartao key={b.id} booking={b} nomeProfissional={nomeProfissional} />
         ))}
       </TabsContent>
     </Tabs>
@@ -152,63 +253,120 @@ function Vazio({ titulo, texto, icon }: { titulo: string; texto: string; icon: L
 
 function Cartao({
   booking,
+  nomeProfissional,
   onAvancar,
+  onAceitar,
+  onRecusar,
   pendente,
 }: {
   booking: BookingProf;
+  nomeProfissional: string;
   onAvancar?: () => void;
+  onAceitar?: () => void;
+  onRecusar?: () => void;
   pendente?: boolean;
 }) {
   const passo = PROXIMO[booking.status];
   const end = booking.enderecos;
+  const aceito = !PENDENTES.includes(booking.status);
+  const Icone = passo?.icone ?? Check;
 
   return (
     <Card>
-      <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+      <CardContent className="space-y-4 p-5">
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="secondary">{STATUS_LABEL[booking.status] ?? booking.status}</Badge>
+          {booking.codigo && (
+            <span className="text-xs text-muted-foreground">{booking.codigo}</span>
+          )}
+          <span className="ml-auto text-lg font-semibold">
+            {formatBRL(booking.valor_profissional)}
+          </span>
+        </div>
+
         <div className="space-y-2">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="secondary">{STATUS_LABEL[booking.status] ?? booking.status}</Badge>
-            {booking.codigo && (
-              <span className="text-xs text-muted-foreground">{booking.codigo}</span>
-            )}
-          </div>
           <p className="font-medium">
             {labelTipoLimpeza(booking.tipo_limpeza)} · {labelTipoImovel(booking.tipo_imovel)}
           </p>
           <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
             <span className="flex items-center gap-1.5">
               <CalendarDays className="size-4" />
-              {booking.data
-                ? new Date(`${booking.data}T00:00:00`).toLocaleDateString("pt-BR")
-                : "A combinar"}
+              {formatarData(booking.data)}
               {booking.hora ? ` · ${booking.hora.slice(0, 5)}` : ""}
             </span>
             <span className="flex items-center gap-1.5">
               <Clock className="size-4" />
               {booking.duracao_horas}h
             </span>
-            {end && (
-              <span className="flex items-center gap-1.5">
-                <MapPin className="size-4" />
-                {[end.bairro, end.cidade].filter(Boolean).join(", ")}
-              </span>
-            )}
+            <span className="flex items-center gap-1.5">
+              <MapPin className="size-4" />
+              {aceito && end?.rua
+                ? `${end.rua}, ${end.numero ?? "s/n"}${end.complemento ? ` - ${end.complemento}` : ""} · ${end.bairro ?? ""} ${end.cidade ?? ""}`
+                : [end?.bairro, end?.cidade].filter(Boolean).join(", ") || "Sua região"}
+            </span>
           </div>
           {booking.observacoes && (
             <p className="text-sm text-muted-foreground">Obs.: {booking.observacoes}</p>
           )}
-        </div>
-
-        <div className="flex flex-col items-start gap-2 sm:items-end">
-          <span className="text-lg font-semibold">{formatBRL(booking.valor_profissional)}</span>
-          <span className="text-xs text-muted-foreground">seu valor líquido</span>
-          {passo && onAvancar && (
-            <Button size="sm" disabled={pendente} onClick={onAvancar}>
-              {pendente && <Loader2 className="mr-2 size-4 animate-spin" />}
-              {passo.label}
-            </Button>
+          {!aceito && (
+            <p className="text-xs text-muted-foreground">
+              Endereço completo e contato do cliente liberados após o aceite.
+            </p>
           )}
         </div>
+
+        {aceito && booking.profiles?.telefone && (
+          <a
+            href={linkWhatsApp(
+              booking.profiles.telefone,
+              MENSAGENS.aceito(
+                nomeProfissional,
+                formatarData(booking.data),
+                booking.hora?.slice(0, 5) ?? "",
+              ),
+            )}
+            target="_blank"
+            rel="noreferrer"
+            className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-surface-tint px-4 text-sm font-semibold text-primary active:scale-[0.98]"
+          >
+            <MessageCircle className="size-4" />
+            Falar com {booking.profiles.nome?.split(" ")[0] ?? "o cliente"}
+          </a>
+        )}
+
+        {onAceitar && onRecusar && (
+          <div className="grid gap-2 sm:grid-cols-2">
+            <Button size="lg" disabled={pendente} onClick={onAceitar}>
+              {pendente ? (
+                <Loader2 className="mr-2 size-4 animate-spin" />
+              ) : (
+                <Check className="mr-2 size-4" />
+              )}
+              Aceitar serviço
+            </Button>
+            <Button size="lg" variant="outline" disabled={pendente} onClick={onRecusar}>
+              <X className="mr-2 size-4" />
+              Recusar
+            </Button>
+          </div>
+        )}
+
+        {passo && onAvancar && (
+          <Button size="lg" className="w-full" disabled={pendente} onClick={onAvancar}>
+            {pendente ? (
+              <Loader2 className="mr-2 size-4 animate-spin" />
+            ) : (
+              <Icone className="mr-2 size-4" />
+            )}
+            {passo.label}
+          </Button>
+        )}
+
+        {booking.status === "finalizada" && (
+          <p className="text-sm text-muted-foreground">
+            Aguardando o cliente confirmar a conclusão para liberar o pagamento.
+          </p>
+        )}
       </CardContent>
     </Card>
   );

@@ -29,6 +29,9 @@ export type Rascunho = {
   hora: string | null;
   observacoes: string;
   profissional_id: string | null;
+  /** "Deixe que a LAR10 escolha": sorteio entre as profissionais disponíveis. */
+  escolha_automatica: boolean;
+
 };
 
 export const RASCUNHO_INICIAL: Rascunho = {
@@ -58,7 +61,9 @@ export const RASCUNHO_INICIAL: Rascunho = {
   hora: null,
   observacoes: "",
   profissional_id: null,
+  escolha_automatica: false,
 };
+
 
 const CHAVE = "lar10:rascunho";
 

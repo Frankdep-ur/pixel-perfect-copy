@@ -1,4 +1,7 @@
 import { Link } from "@tanstack/react-router";
+import { LifeBuoy } from "lucide-react";
+
+import { linkSuporte } from "@/lib/whatsapp";
 
 const links = [
   { label: "Termos", to: "/termos" },
@@ -11,7 +14,7 @@ export function SiteFooter() {
     <footer className="bg-primary pb-[env(safe-area-inset-bottom)]">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-5 py-10 md:flex-row md:items-center md:justify-between">
         <span className="font-display text-lg font-bold text-primary-foreground">LAR10</span>
-        <nav className="flex flex-wrap gap-2 text-sm text-primary-foreground/75">
+        <nav className="flex flex-wrap items-center gap-2 text-sm text-primary-foreground/75">
           {links.map((link) => (
             <Link
               key={link.to}
@@ -21,6 +24,15 @@ export function SiteFooter() {
               {link.label}
             </Link>
           ))}
+          <a
+            href={linkSuporte()}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex min-h-12 items-center gap-2 rounded-xl border border-primary-foreground/25 px-3 font-semibold text-primary-foreground transition-colors duration-200 ease-out hover:text-accent active:scale-[0.98]"
+          >
+            <LifeBuoy className="size-4" />
+            Suporte
+          </a>
         </nav>
         <p className="text-sm text-primary-foreground/75">© 2026 LAR10</p>
       </div>

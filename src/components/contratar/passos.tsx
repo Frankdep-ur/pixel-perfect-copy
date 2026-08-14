@@ -12,13 +12,14 @@ import { cn } from "@/lib/utils";
 import {
   AREAS_EXTERNAS,
   DURACOES,
-  HORARIOS,
   TIPOS_IMOVEL,
   TIPOS_LIMPEZA,
   formatBRL,
 } from "@/lib/catalogo";
+import { dataMinimaAgendamento, ehDomingo, horariosPermitidos } from "@/lib/agenda";
 import { buscarCep, mascaraCep, type Rascunho } from "@/lib/contratacao";
 import { REGIOES, regiaoPorCidade } from "@/lib/regioes";
+
 
 type Props = {
   rascunho: Rascunho;
@@ -352,14 +353,23 @@ export function PassoDuracao({
             ativo={rascunho.duracao_horas === duracao.horas}
             onClick={() => atualizar({ duracao_horas: duracao.horas })}
           >
-            <span className="text-lg font-semibold">{duracao.label}</span>
+            <span className="inline-flex items-center gap-2">
+              <span className="text-lg font-semibold">{duracao.label}</span>
+              <span className="rounded-full bg-accent/12 px-2 py-0.5 text-xs font-semibold text-primary">
+                {duracao.nivel}
+              </span>
+            </span>
             <span className="text-sm text-muted-foreground">{duracao.descricao}</span>
             <span className="mt-1 text-sm font-medium text-primary">
               a partir de {formatBRL(precos[`preco_${duracao.horas}h`] ?? 0)}
             </span>
+            <span className="text-xs text-muted-foreground">
+              Início: {horariosPermitidos(duracao.horas).join(" · ")}
+            </span>
           </Cartao>
         ))}
       </div>
+
     </div>
   );
 }
@@ -439,15 +449,16 @@ export function PassoExtras({
 }
 
 export function PassoDataHora({ rascunho, atualizar }: Props) {
-  const hoje = new Date();
-  const minimo = new Date(hoje.getTime() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const minimo = dataMinimaAgendamento();
+  const horarios = horariosPermitidos(rascunho.duracao_horas);
+  const domingo = ehDomingo(rascunho.data);
 
   return (
     <div className="space-y-5">
       <div>
         <h2 className="text-2xl font-semibold tracking-tight">Quando você precisa?</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Agende com pelo menos 24 horas de antecedência.
+          Agende com pelo menos 24 horas de antecedência. Não atendemos domingos.
         </p>
       </div>
       <div className="space-y-2">
@@ -457,18 +468,31 @@ export function PassoDataHora({ rascunho, atualizar }: Props) {
           type="date"
           min={minimo}
           value={rascunho.data ?? ""}
-          onChange={(e) => atualizar({ data: e.target.value })}
+          onChange={(e) => {
+            const valor = e.target.value;
+            if (ehDomingo(valor)) {
+              toast.error("Não atendemos aos domingos", {
+                description: "Escolha um dia de segunda a sábado.",
+              });
+              atualizar({ data: null });
+              return;
+            }
+            atualizar({ data: valor });
+          }}
         />
+        {domingo && (
+          <p className="text-sm text-destructive">Escolha um dia de segunda a sábado.</p>
+        )}
       </div>
       <div className="space-y-2">
         <Label>Horário de início</Label>
-        <div className="grid grid-cols-3 gap-3 sm:grid-cols-5">
-          {HORARIOS.map((hora) => (
-            <Cartao
-              key={hora}
-              ativo={rascunho.hora === hora}
-              onClick={() => atualizar({ hora })}
-            >
+        <p className="text-sm text-muted-foreground">
+          Para {rascunho.duracao_horas ?? 4} horas de serviço, os horários possíveis são{" "}
+          {horarios.join(" e ")}.
+        </p>
+        <div className="grid grid-cols-3 gap-3">
+          {horarios.map((hora) => (
+            <Cartao key={hora} ativo={rascunho.hora === hora} onClick={() => atualizar({ hora })}>
               <span className="mx-auto text-sm font-medium">{hora}</span>
             </Cartao>
           ))}
@@ -477,6 +501,7 @@ export function PassoDataHora({ rascunho, atualizar }: Props) {
     </div>
   );
 }
+
 
 export function PassoObservacoes({ rascunho, atualizar }: Props) {
   return (

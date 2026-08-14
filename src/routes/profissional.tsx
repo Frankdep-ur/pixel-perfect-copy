@@ -16,6 +16,9 @@ import { PerfilProfissional } from "@/components/profissional/perfil-profissiona
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { EstadoVazio } from "@/components/estado-vazio";
 import { ServicosProfissional } from "@/components/profissional/servicos-profissional";
+import { DocumentosProfissional } from "@/components/profissional/documentos-profissional";
+import { BloqueiosProfissional } from "@/components/profissional/bloqueios-profissional";
+
 import { nomeRegiao } from "@/lib/regioes";
 import { useSession } from "@/hooks/use-auth";
 
@@ -46,9 +49,10 @@ function AreaProfissional() {
 
   useEffect(() => {
     if (!carregando && !user) {
-      navigate({ to: "/auth", search: { next: "/profissional" }, replace: true });
+      navigate({ to: "/profissional/entrar", search: { next: undefined }, replace: true });
     }
   }, [carregando, user, navigate]);
+
 
   const { data: perfil, isLoading } = useQuery({
     queryKey: ["meu-perfil-profissional", user?.id],
@@ -179,16 +183,31 @@ function AreaProfissional() {
               }}
             />
 
+            <DocumentosProfissional
+              profissionalId={perfil.id}
+              userId={perfil.user_id}
+              docIdentidade={perfil.doc_identidade_url ?? null}
+              docCpf={perfil.doc_cpf_url ?? null}
+              comprovante={perfil.comprovante_url ?? null}
+              telefoneRecado={perfil.telefone_recado ?? null}
+            />
+
+
+            <BloqueiosProfissional profissionalId={perfil.id} />
+
             {perfil.status === "aprovada" ? (
-              <ServicosProfissional profissionalId={perfil.id} regiao={perfil.regiao} />
+              <ServicosProfissional
+                profissionalId={perfil.id}
+                nomeProfissional={perfil.profiles?.nome ?? "sua profissional"}
+              />
             ) : (
               <EstadoVazio
                 icon={Clock3}
                 titulo="Cadastro em análise"
                 texto="A equipe LAR10 revisa seu perfil no painel administrativo (Admin → Profissionais). Assim que for aprovado, as solicitações da sua região aparecem aqui."
               />
-
             )}
+
 
           </>
         )}

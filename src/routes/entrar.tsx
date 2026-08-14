@@ -6,31 +6,31 @@ import { FormAcesso } from "@/components/auth/form-acesso";
 
 type Busca = { next: string | undefined };
 
-export const Route = createFileRoute("/auth")({
+export const Route = createFileRoute("/entrar")({
   validateSearch: (busca: Record<string, unknown>): Busca => ({
     next: typeof busca["next"] === "string" ? (busca["next"] as string) : undefined,
   }),
   head: () => ({
     meta: [
-      { title: "Entrar ou criar conta — LAR10" },
+      { title: "Acesso cliente — LAR10" },
       {
         name: "description",
         content:
-          "Acesse sua conta LAR10 para acompanhar suas contratações de limpeza em Santa Catarina.",
+          "Entre na sua conta de cliente LAR10 para contratar faxinas e acompanhar seus serviços em Santa Catarina.",
       },
-      { property: "og:title", content: "Entrar ou criar conta — LAR10" },
+      { property: "og:title", content: "Acesso cliente — LAR10" },
       {
         property: "og:description",
-        content: "Acesse sua conta LAR10 e acompanhe suas contratações de limpeza.",
+        content: "Entre para contratar faxinas e acompanhar seus serviços na LAR10.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: AuthPage,
+  component: EntrarCliente,
 });
 
-function AuthPage() {
+function EntrarCliente() {
   const { next } = Route.useSearch();
   return (
     <div className="flex min-h-dvh flex-col">

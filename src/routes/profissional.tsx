@@ -185,8 +185,9 @@ function AreaProfissional() {
               <EstadoVazio
                 icon={Clock3}
                 titulo="Cadastro em análise"
-                texto="Assim que seu cadastro for aprovado, as solicitações da sua região aparecem aqui."
+                texto="A equipe LAR10 revisa seu perfil no painel administrativo (Admin → Profissionais). Assim que for aprovado, as solicitações da sua região aparecem aqui."
               />
+
             )}
 
           </>

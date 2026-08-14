@@ -35,7 +35,19 @@ export const Route = createFileRoute("/minha-conta")({
   component: MinhaConta,
 });
 
-const ATIVOS = ["solicitada", "aceita", "confirmada", "a_caminho", "em_andamento", "finalizada"];
+const ATIVOS = [
+  "aguardando_aceite",
+  "sem_profissional",
+  "solicitada",
+  "aceita",
+  "confirmada",
+  "a_caminho",
+  "em_andamento",
+  "finalizada",
+];
+
+/** Só depois do aceite o cliente vê os dados da profissional. */
+const APOS_ACEITE = ["aceita", "confirmada", "a_caminho", "em_andamento", "finalizada", "concluida"];
 
 function MinhaConta() {
   const navigate = useNavigate();
@@ -54,7 +66,7 @@ function MinhaConta() {
       const { data: bookings, error } = await supabase
         .from("bookings")
         .select(
-          "*, enderecos(rua, numero, bairro, cidade), profissionais(id, user_id, profiles!profissionais_user_id_fkey(nome)), avaliacoes(id)",
+          "*, enderecos(rua, numero, bairro, cidade), profissionais(id, user_id, cidade, profiles!profissionais_user_id_fkey(nome, telefone, foto_url)), avaliacoes(id)",
         )
         .eq("cliente_id", user!.id)
         .order("criado_em", { ascending: false });

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Menu, UserRound, X } from "lucide-react";
+import { Menu, ShieldCheck, UserRound, X } from "lucide-react";
 
-import { useSession } from "@/hooks/use-auth";
+import { useSession, usePapeis } from "@/hooks/use-auth";
 
 const navLinks = [
   { label: "Como funciona", href: "/#como-funciona" },

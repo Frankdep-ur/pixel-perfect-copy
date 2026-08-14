@@ -251,15 +251,18 @@ export function SiteHeader() {
           </a>
         </nav>
 
-        <div className="px-5 pb-6">
-          <Link
-            to="/contratar"
-            onClick={() => setOpen(false)}
-            className="inline-flex min-h-14 w-full items-center justify-center rounded-xl bg-primary text-base font-semibold text-primary-foreground transition-all duration-200 ease-out active:scale-[0.98]"
-          >
-            Contratar agora
-          </Link>
-        </div>
+        {!ehProfissional && (
+          <div className="px-5 pb-6">
+            <Link
+              to="/contratar"
+              onClick={() => setOpen(false)}
+              className="inline-flex min-h-14 w-full items-center justify-center rounded-xl bg-primary text-base font-semibold text-primary-foreground transition-all duration-200 ease-out active:scale-[0.98]"
+            >
+              Contratar agora
+            </Link>
+          </div>
+        )}
+
       </div>
     </header>
   );

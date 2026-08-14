@@ -4,11 +4,12 @@ import { Menu, ShieldCheck, UserRound, X } from "lucide-react";
 
 import { useSession, usePapeis } from "@/hooks/use-auth";
 
-const navLinks = [
+const navLinksCliente = [
   { label: "Como funciona", href: "/#como-funciona" },
   { label: "Segurança", href: "/#seguranca" },
-  { label: "Seja profissional", href: "/seja-profissional" },
 ];
+
+const navLinksProfissional = { label: "Seja profissional", href: "/seja-profissional" };
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);

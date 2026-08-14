@@ -69,7 +69,12 @@ export const adminProfissionaisQuery = queryOptions({
         nome: perfil?.nome ?? "Sem nome",
         email: perfil?.email ?? null,
         telefone: perfil?.telefone ?? null,
+        telefone_recado: p.telefone_recado ?? null,
+        doc_identidade_url: p.doc_identidade_url ?? null,
+        doc_cpf_url: p.doc_cpf_url ?? null,
+        comprovante_url: p.comprovante_url ?? null,
         foto_url: perfil?.foto_url ?? null,
+
       };
     });
   },

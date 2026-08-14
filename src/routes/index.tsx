@@ -4,10 +4,15 @@ import {
   Check,
   ClipboardList,
   CalendarClock,
+  CalendarDays,
   Lock,
+  MapPin,
   ShieldCheck,
   Sparkles,
   Tag,
+  TrendingUp,
+  Users,
+  Wallet,
 } from "lucide-react";
 
 import heroSala from "@/assets/hero-sala.jpg";
@@ -76,7 +81,38 @@ const confianca = [
   { icon: Tag, texto: "Preço sem surpresa" },
 ];
 
-
+const vantagensProfissional = [
+  {
+    icon: CalendarDays,
+    titulo: "Agenda organizada",
+    texto: "Receba solicitações e gerencie seus horários em um só lugar.",
+  },
+  {
+    icon: MapPin,
+    titulo: "Clientes próximos",
+    texto: "Atenda apenas na sua região e dentro do raio que você escolher.",
+  },
+  {
+    icon: Wallet,
+    titulo: "Pagamento garantido",
+    texto: "O valor do serviço fica reservado e você recebe integralmente.",
+  },
+  {
+    icon: TrendingUp,
+    titulo: "Reputação que cresce",
+    texto: "Avaliações reais aumentam suas chances de ser escolhida.",
+  },
+  {
+    icon: ShieldCheck,
+    titulo: "Mais segurança",
+    texto: "Documentação verificada e suporte LAR10 em cada contratação.",
+  },
+  {
+    icon: Users,
+    titulo: "Comunidade",
+    texto: "Faça parte de uma rede de profissionais de confiança.",
+  },
+];
 
 function Home() {
   return (
@@ -84,7 +120,7 @@ function Home() {
       <SiteHeader />
 
       <main className="flex-1">
-        {/* Hero */}
+        {/* Hero — 100% focado no Cliente */}
         <section className="pb-14 pt-6 md:px-5 md:py-20">
           <div className="mx-auto grid w-full max-w-6xl items-center gap-8 md:grid-cols-2 md:gap-10">
             {/* Mobile: imagem full-bleed acima do texto */}
@@ -106,8 +142,8 @@ function Home() {
                 Sua casa limpa. Sua contratação segura. Seu tempo de volta.
               </h1>
               <p className="mt-5 text-base text-muted-foreground md:text-lg">
-                Encontre profissionais de limpeza, escolha o serviço ideal e contrate tudo
-                pelo LAR10.
+                Encontre profissionais de limpeza verificadas, escolha o serviço ideal e
+                contrate tudo pelo LAR10.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link
@@ -118,7 +154,7 @@ function Home() {
                 </Link>
                 <Link
                   to="/seja-profissional"
-                  className="inline-flex min-h-[52px] items-center justify-center rounded-xl border border-border bg-card px-7 text-base font-semibold text-primary transition-all duration-200 ease-out hover:bg-secondary active:scale-[0.98]"
+                  className="inline-flex min-h-[52px] items-center justify-center rounded-xl border border-border bg-card px-7 text-base font-semibold text-muted-foreground transition-all duration-200 ease-out hover:border-primary/30 hover:text-primary active:scale-[0.98]"
                 >
                   Quero ser profissional
                 </Link>
@@ -193,23 +229,63 @@ function Home() {
           </div>
         </section>
 
+        {/* Seção Profissional — jornada secundária, visualmente distinta */}
+        <section
+          id="profissionais"
+          className="relative overflow-hidden bg-primary px-5 py-16 md:py-24"
+        >
+          {/* Textura sutil de fundo */}
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[0.06]"
+            aria-hidden
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 20% 30%, oklch(0.9756 0.0026 106.45) 0%, transparent 25%), radial-gradient(circle at 80% 70%, oklch(0.9756 0.0026 106.45) 0%, transparent 30%)",
+            }}
+          />
 
-        {/* Faixa profissionais */}
-        <section id="profissionais" className="px-5 py-14 md:py-20">
-          <div className="mx-auto w-full max-w-6xl rounded-2xl bg-primary p-8 md:p-14">
-            <h2 className="max-w-2xl text-2xl text-primary-foreground md:text-4xl">
-              Transforme seu trabalho em novas oportunidades.
-            </h2>
-            <p className="mt-4 max-w-xl text-base text-primary-foreground/80">
-              Cadastre-se no LAR10, encontre novos clientes e organize sua agenda em um único
-              lugar.
-            </p>
-            <Link
-              to="/seja-profissional"
-              className="mt-8 inline-flex min-h-[52px] items-center justify-center rounded-xl bg-card px-7 text-base font-semibold text-primary transition-all duration-200 ease-out hover:opacity-90 active:scale-[0.98]"
-            >
-              Quero ser profissional LAR10
-            </Link>
+          <div className="relative mx-auto w-full max-w-6xl">
+            <div className="grid gap-10 md:grid-cols-2 md:items-center md:gap-16">
+              <div>
+                <span className="inline-flex items-center rounded-full bg-accent/15 px-3 py-1 text-xs font-semibold text-accent">
+                  Para profissionais de limpeza
+                </span>
+                <h2 className="mt-4 text-3xl text-primary-foreground md:text-4xl">
+                  Transforme suas faxinas em uma agenda organizada e clientes confiáveis.
+                </h2>
+                <p className="mt-4 max-w-lg text-base text-primary-foreground/80 md:text-lg">
+                  No LAR10 você recebe solicitações da sua região, escolhe quando trabalhar e
+                  tem a segurança de um pagamento garantido.
+                </p>
+                <Link
+                  to="/seja-profissional"
+                  className="mt-8 inline-flex min-h-[52px] items-center justify-center rounded-xl bg-card px-7 text-base font-semibold text-primary transition-all duration-200 ease-out hover:opacity-90 active:scale-[0.98]"
+                >
+                  Quero me cadastrar como profissional
+                </Link>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                {vantagensProfissional.map((item) => (
+                  <div
+                    key={item.titulo}
+                    className="rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5 p-5 backdrop-blur-sm transition-all duration-200 ease-out md:hover:bg-primary-foreground/10"
+                  >
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/15">
+                      <item.icon
+                        strokeWidth={1.5}
+                        className="h-5 w-5 text-accent"
+                        aria-hidden
+                      />
+                    </span>
+                    <h3 className="mt-4 text-base font-semibold text-primary-foreground">
+                      {item.titulo}
+                    </h3>
+                    <p className="mt-1 text-sm text-primary-foreground/70">{item.texto}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
       </main>
@@ -219,4 +295,3 @@ function Home() {
     </div>
   );
 }
-

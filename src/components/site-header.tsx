@@ -122,6 +122,16 @@ export function SiteHeader() {
             <UserRound className="size-5" />
             {user ? "Minha conta" : "Entrar"}
           </Link>
+          {ehAdmin && (
+            <Link
+              to="/admin"
+              onClick={() => setOpen(false)}
+              className="flex min-h-14 items-center gap-2 rounded-xl px-2 text-lg font-medium text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+            >
+              <ShieldCheck className="size-5" />
+              Admin
+            </Link>
+          )}
         </nav>
 
         <div className="px-5 pb-6">

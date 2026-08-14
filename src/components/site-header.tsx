@@ -116,12 +116,15 @@ export function SiteHeader() {
             </>
           )}
 
-          <Link
-            to="/contratar"
-            className="inline-flex h-12 items-center justify-center rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground transition-all duration-200 ease-out hover:bg-primary-hover active:scale-[0.98]"
-          >
-            Contratar agora
-          </Link>
+          {!ehProfissional && (
+            <Link
+              to="/contratar"
+              className="inline-flex h-12 items-center justify-center rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground transition-all duration-200 ease-out hover:bg-primary-hover active:scale-[0.98]"
+            >
+              Contratar agora
+            </Link>
+          )}
+
         </div>
 
         <button

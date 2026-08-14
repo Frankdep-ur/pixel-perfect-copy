@@ -27,6 +27,7 @@ import { Route as AdminExtrasRouteImport } from './routes/admin.extras'
 import { Route as AdminListaEsperaRouteImport } from './routes/admin.lista-espera'
 import { Route as AdminPrecosRouteImport } from './routes/admin.precos'
 import { Route as AdminProfissionaisRouteImport } from './routes/admin.profissionais'
+import { Route as AdminLoginRouteImport } from './routes/admin_.login'
 import { Route as ConfirmacaoIdRouteImport } from './routes/confirmacao.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -119,6 +120,11 @@ const AdminProfissionaisRoute = AdminProfissionaisRouteImport.update({
   path: '/profissionais',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin_/login',
+  path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConfirmacaoIdRoute = ConfirmacaoIdRouteImport.update({
   id: '/confirmacao/$id',
   path: '/confirmacao/$id',
@@ -143,6 +149,7 @@ export interface FileRoutesByFullPath {
   '/admin/lista-espera': typeof AdminListaEsperaRoute
   '/admin/precos': typeof AdminPrecosRoute
   '/admin/profissionais': typeof AdminProfissionaisRoute
+  '/admin/login': typeof AdminLoginRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
   '/admin/': typeof AdminIndexRoute
 }
@@ -163,6 +170,7 @@ export interface FileRoutesByTo {
   '/admin/lista-espera': typeof AdminListaEsperaRoute
   '/admin/precos': typeof AdminPrecosRoute
   '/admin/profissionais': typeof AdminProfissionaisRoute
+  '/admin/login': typeof AdminLoginRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
   '/admin': typeof AdminIndexRoute
 }
@@ -185,6 +193,7 @@ export interface FileRoutesById {
   '/admin/lista-espera': typeof AdminListaEsperaRoute
   '/admin/precos': typeof AdminPrecosRoute
   '/admin/profissionais': typeof AdminProfissionaisRoute
+  '/admin_/login': typeof AdminLoginRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
   '/admin/': typeof AdminIndexRoute
 }
@@ -208,6 +217,7 @@ export interface FileRouteTypes {
     | '/admin/lista-espera'
     | '/admin/precos'
     | '/admin/profissionais'
+    | '/admin/login'
     | '/confirmacao/$id'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -228,6 +238,7 @@ export interface FileRouteTypes {
     | '/admin/lista-espera'
     | '/admin/precos'
     | '/admin/profissionais'
+    | '/admin/login'
     | '/confirmacao/$id'
     | '/admin'
   id:
@@ -249,6 +260,7 @@ export interface FileRouteTypes {
     | '/admin/lista-espera'
     | '/admin/precos'
     | '/admin/profissionais'
+    | '/admin_/login'
     | '/confirmacao/$id'
     | '/admin/'
   fileRoutesById: FileRoutesById
@@ -264,6 +276,7 @@ export interface RootRouteChildren {
   ProfissionalRoute: typeof ProfissionalRoute
   SejaProfissionalRoute: typeof SejaProfissionalRoute
   TermosRoute: typeof TermosRoute
+  AdminLoginRoute: typeof AdminLoginRoute
   ConfirmacaoIdRoute: typeof ConfirmacaoIdRoute
 }
 
@@ -395,6 +408,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProfissionaisRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin_/login': {
+      id: '/admin_/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/confirmacao/$id': {
       id: '/confirmacao/$id'
       path: '/confirmacao/$id'
@@ -440,6 +460,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfissionalRoute: ProfissionalRoute,
   SejaProfissionalRoute: SejaProfissionalRoute,
   TermosRoute: TermosRoute,
+  AdminLoginRoute: AdminLoginRoute,
   ConfirmacaoIdRoute: ConfirmacaoIdRoute,
 }
 export const routeTree = rootRouteImport

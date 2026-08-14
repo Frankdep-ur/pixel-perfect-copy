@@ -170,7 +170,18 @@ export function SiteHeader() {
               Admin
             </Link>
           )}
+          {user && (
+            <button
+              type="button"
+              onClick={sair}
+              className="flex min-h-14 items-center gap-2 rounded-xl px-2 text-lg font-medium text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+            >
+              <LogOut className="size-5" />
+              Sair
+            </button>
+          )}
         </nav>
+
 
         <div className="px-5 pb-6">
           <Link

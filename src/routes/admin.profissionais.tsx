@@ -197,6 +197,16 @@ function AdminProfissionais() {
                   <p className="text-sm leading-relaxed text-muted-foreground">{selecionada.bio}</p>
                 )}
 
+                <FichaProfissional
+                  profissionalId={selecionada.id}
+                  documentos={[
+                    { label: "Identidade (RG/CNH)", url: selecionada.doc_identidade_url },
+                    { label: "CPF", url: selecionada.doc_cpf_url },
+                    { label: "Comprovante de residência", url: selecionada.comprovante_url },
+                  ]}
+                />
+
+
                 <div className="grid gap-2">
                   <Button
                     onClick={() =>

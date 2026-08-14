@@ -13,6 +13,8 @@ const navLinks = [
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const { user } = useSession();
+  const { data: papeis } = usePapeis(user);
+  const ehAdmin = (papeis ?? []).includes("admin");
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";

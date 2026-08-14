@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
-import { Menu, ShieldCheck, UserRound, X } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
+import { LogOut, Menu, ShieldCheck, UserRound, X } from "lucide-react";
 
+import { supabase } from "@/integrations/supabase/client";
 import { useSession, usePapeis } from "@/hooks/use-auth";
 
 const navLinksCliente = [
@@ -13,9 +15,20 @@ const navLinksProfissional = { label: "Seja profissional", href: "/seja-profissi
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { user } = useSession();
   const { data: papeis } = usePapeis(user);
   const ehAdmin = (papeis ?? []).includes("admin");
+
+  async function sair() {
+    setOpen(false);
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/", replace: true });
+  }
+
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";

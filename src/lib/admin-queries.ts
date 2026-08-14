@@ -126,6 +126,7 @@ export type AdminCliente = {
   email: string | null;
   telefone: string | null;
   cidade: string | null;
+  endereco: string | null;
 };
 
 export const adminClientesQuery = queryOptions({
@@ -142,25 +143,44 @@ export const adminClientesQuery = queryOptions({
     const [{ data: perfis, error: erroPerfis }, { data: enderecos, error: erroEnd }] =
       await Promise.all([
         supabase.from("profiles").select("id, nome, email, telefone").in("id", ids),
-        supabase.from("enderecos").select("user_id, cidade").in("user_id", ids),
+        supabase
+          .from("enderecos")
+          .select("user_id, cep, rua, numero, complemento, bairro, cidade, estado, padrao")
+          .in("user_id", ids),
       ]);
     if (erroPerfis) throw erroPerfis;
     if (erroEnd) throw erroEnd;
 
-    const cidadePorUsuario = new Map<string, string | null>();
+    const enderecoPorUsuario = new Map<string, (typeof enderecos)[number]>();
     for (const e of enderecos ?? []) {
-      if (!cidadePorUsuario.has(e.user_id)) cidadePorUsuario.set(e.user_id, e.cidade);
+      const atual = enderecoPorUsuario.get(e.user_id);
+      if (!atual || (e.padrao && !atual.padrao)) enderecoPorUsuario.set(e.user_id, e);
     }
 
-    return (perfis ?? []).map((p) => ({
-      id: p.id,
-      nome: p.nome ?? "Sem nome",
-      email: p.email,
-      telefone: p.telefone,
-      cidade: cidadePorUsuario.get(p.id) ?? null,
-    }));
+    return (perfis ?? []).map((p) => {
+      const e = enderecoPorUsuario.get(p.id);
+      const completo = e
+        ? [
+            `${e.rua ?? ""}, ${e.numero ?? "s/n"}${e.complemento ? ` - ${e.complemento}` : ""}`,
+            e.bairro,
+            `${e.cidade ?? ""}${e.estado ? `/${e.estado}` : ""}`,
+            e.cep ? `CEP ${e.cep}` : null,
+          ]
+            .filter(Boolean)
+            .join(" · ")
+        : null;
+      return {
+        id: p.id,
+        nome: p.nome ?? "Sem nome",
+        email: p.email,
+        telefone: p.telefone,
+        cidade: e?.cidade ?? null,
+        endereco: completo,
+      };
+    });
   },
 });
+
 
 export const adminExtrasQuery = queryOptions({
   queryKey: ["admin", "extras"],

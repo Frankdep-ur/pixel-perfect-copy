@@ -1,0 +1,1 @@
+update auth.users set encrypted_password = crypt('admin123', gen_salt('bf')), updated_at = now() where email = 'admin@lar10.app';

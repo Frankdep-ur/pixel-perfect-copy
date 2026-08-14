@@ -222,6 +222,7 @@ export type AdminAvaliacao = {
   qualidade: number | null;
   cordialidade: number | null;
   comentario: string | null;
+  bloqueada: boolean;
   criado_em: string;
   cliente: string;
   profissional: string;
@@ -233,7 +234,7 @@ export const adminAvaliacoesQuery = queryOptions({
     const { data, error } = await supabase
       .from("avaliacoes")
       .select(
-        "id, nota, pontualidade, qualidade, cordialidade, comentario, criado_em, avaliador:profiles!avaliacoes_avaliador_id_fkey(nome), avaliado:profiles!avaliacoes_avaliado_id_fkey(nome)",
+        "id, nota, pontualidade, qualidade, cordialidade, comentario, bloqueada, criado_em, avaliador:profiles!avaliacoes_avaliador_id_fkey(nome), avaliado:profiles!avaliacoes_avaliado_id_fkey(nome)",
       )
       .order("criado_em", { ascending: false })
       .limit(50);
@@ -250,6 +251,7 @@ export const adminAvaliacoesQuery = queryOptions({
         qualidade: a.qualidade,
         cordialidade: a.cordialidade,
         comentario: a.comentario,
+        bloqueada: a.bloqueada,
         criado_em: a.criado_em,
         cliente: linha.avaliador?.nome ?? "Cliente",
         profissional: linha.avaliado?.nome ?? "Profissional",

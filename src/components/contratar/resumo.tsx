@@ -58,10 +58,7 @@ export function Resumo({
             <span className="text-muted-foreground">Taxa administrativa</span>
             <span>{formatBRL(orcamento.taxaAdmin)}</span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Seguro do serviço</span>
-            <span>{formatBRL(orcamento.valorSeguro)}</span>
-          </div>
+
         </div>
 
         <Separator />
@@ -74,8 +71,10 @@ export function Resumo({
         </div>
         <p className="text-xs text-muted-foreground">
           A profissional recebe {formatBRL(orcamento.valorProfissional)} integralmente. A taxa
-          administrativa é somada ao valor do serviço, nunca descontada dela.
+          administrativa já inclui o seguro do serviço e é somada ao valor, nunca descontada da
+          profissional.
         </p>
+
       </CardContent>
     </Card>
   );

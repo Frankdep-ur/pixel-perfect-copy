@@ -53,6 +53,25 @@ export function Checkout({
         .single();
       if (erroEndereco) throw erroEndereco;
 
+      let profissionalId = rascunho.profissional_id;
+      if (rascunho.escolha_automatica || !profissionalId) {
+        const { data: sorteada, error: erroSorteio } = await supabase.rpc(
+          "sortear_profissional",
+          {
+            _regiao: endereco.regiao!,
+            _data: rascunho.data!,
+            ...(rascunho.tipo_limpeza ? { _tipo_limpeza: rascunho.tipo_limpeza } : {}),
+          },
+        );
+        if (erroSorteio) throw erroSorteio;
+        if (!sorteada) {
+          throw new Error(
+            "Nenhuma profissional disponível nessa data. Volte e escolha outro dia ou horário.",
+          );
+        }
+        profissionalId = sorteada;
+      }
+
       const pagamento = await processarPagamento(forma, orcamento.total);
       if (!pagamento.sucesso) throw new Error(pagamento.mensagem);
 
@@ -60,7 +79,7 @@ export function Checkout({
         .from("bookings")
         .insert({
           cliente_id: userId,
-          profissional_id: rascunho.profissional_id,
+          profissional_id: profissionalId,
           endereco_id: enderecoSalvo.id,
           regiao: endereco.regiao,
           tipo_imovel: rascunho.tipo_imovel,
@@ -75,9 +94,9 @@ export function Checkout({
           data: rascunho.data,
           hora: rascunho.hora,
           observacoes: rascunho.observacoes,
-          status: "solicitada",
+          status: "aguardando_aceite",
           valor_profissional: orcamento.valorProfissional,
-          taxa_admin: orcamento.taxaAdmin,
+          taxa_admin: orcamento.taxaAdminBase,
           valor_seguro: orcamento.valorSeguro,
           valor_extras: orcamento.valorExtras,
           valor_total: orcamento.total,
@@ -85,6 +104,7 @@ export function Checkout({
         .select("id, codigo")
         .single();
       if (erroBooking) throw erroBooking;
+
 
       const extrasEscolhidos = extras.filter((e) => rascunho.extras_ids.includes(e.id));
       if (extrasEscolhidos.length > 0) {
@@ -143,10 +163,11 @@ export function Checkout({
       <div className="flex items-start gap-3 rounded-xl bg-muted p-4 text-sm text-muted-foreground">
         <ShieldCheck className="mt-0.5 size-5 shrink-0 text-primary" />
         <p>
-          O serviço inclui seguro de {formatBRL(orcamento.valorSeguro)} e profissionais com
-          documentos verificados. O valor só é liberado após a conclusão do serviço.
+          A taxa administrativa já inclui o seguro do serviço e profissionais com documentos
+          verificados. O valor só é liberado depois que você confirma a conclusão da faxina.
         </p>
       </div>
+
 
       <Button className="w-full" size="lg" onClick={confirmar} disabled={processando}>
         {processando && <Loader2 className="mr-2 size-4 animate-spin" />}

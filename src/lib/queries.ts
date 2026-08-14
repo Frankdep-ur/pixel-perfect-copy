@@ -46,7 +46,52 @@ export type ProfissionalPublica = {
   foto_url: string | null;
 };
 
+/**
+ * Somente profissionais realmente disponíveis na data escolhida:
+ * a função no banco cruza região, dias bloqueados e compromissos já agendados.
+ */
+export function disponiveisQuery(
+  regiao: string | null,
+  data: string | null,
+  tipoLimpeza: string | null,
+) {
+  return queryOptions({
+    queryKey: ["profissionais-disponiveis", regiao, data, tipoLimpeza],
+    enabled: !!regiao && !!data,
+    queryFn: async (): Promise<ProfissionalPublica[]> => {
+      const { data: linhas, error } = await supabase.rpc("profissionais_disponiveis", {
+        _regiao: regiao!,
+        _data: data!,
+        ...(tipoLimpeza ? { _tipo_limpeza: tipoLimpeza } : {}),
+      });
+
+      if (error) throw error;
+      return (linhas ?? []).map((p) => ({
+        id: p.id,
+        user_id: p.user_id,
+        bio: p.bio,
+        anos_experiencia: p.anos_experiencia,
+        nota_media: Number(p.nota_media),
+        total_avaliacoes: p.total_avaliacoes,
+        total_servicos: p.total_servicos,
+        raio_km: p.raio_km,
+        cidade: p.cidade,
+        regiao: p.regiao,
+        cidades_atendidas: [],
+        latitude: p.latitude === null ? null : Number(p.latitude),
+        longitude: p.longitude === null ? null : Number(p.longitude),
+        tipos_limpeza: p.tipos_limpeza ?? [],
+        verificada: p.verificada,
+        disponivel: true,
+        nome: p.nome ?? "Profissional LAR10",
+        foto_url: p.foto_url ?? null,
+      }));
+    },
+  });
+}
+
 export function profissionaisQuery(regiao: string | null) {
+
   return queryOptions({
     queryKey: ["profissionais", regiao],
     enabled: !!regiao,

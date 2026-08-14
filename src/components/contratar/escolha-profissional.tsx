@@ -1,13 +1,14 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { BadgeCheck, MapPin, Star, Loader2 } from "lucide-react";
+import { BadgeCheck, MapPin, Shuffle, Star, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { labelTipoLimpeza } from "@/lib/catalogo";
-import { profissionaisQuery, type ProfissionalPublica } from "@/lib/queries";
+import { formatarDataLonga } from "@/lib/agenda";
+import { disponiveisQuery, type ProfissionalPublica } from "@/lib/queries";
 import { CENTRO_REGIAO, distanciaKm, type RegiaoId } from "@/lib/regioes";
 import type { Rascunho } from "@/lib/contratacao";
 
@@ -32,11 +33,6 @@ function ordenar(lista: ProfissionalPublica[], rascunho: Rascunho) {
       return { ...p, distancia };
     })
     .filter((p) => (p.distancia === null ? true : p.distancia <= p.raio_km))
-    .filter((p) =>
-      rascunho.tipo_limpeza && p.tipos_limpeza.length > 0
-        ? p.tipos_limpeza.includes(rascunho.tipo_limpeza)
-        : true,
-    )
     .sort((a, b) => {
       if (b.nota_media !== a.nota_media) return b.nota_media - a.nota_media;
       return (a.distancia ?? 999) - (b.distancia ?? 999);
@@ -44,10 +40,14 @@ function ordenar(lista: ProfissionalPublica[], rascunho: Rascunho) {
 }
 
 export function EscolhaProfissional({ rascunho, atualizar, onAvancar }: Props) {
-  const regiao = rascunho.endereco.regiao;
-  const { data, isLoading } = useQuery(profissionaisQuery(regiao));
+  const { data, isLoading } = useQuery(
+    disponiveisQuery(rascunho.endereco.regiao, rascunho.data, rascunho.tipo_limpeza),
+  );
 
   const lista = useMemo(() => ordenar(data ?? [], rascunho), [data, rascunho]);
+  const podeAvancar = rascunho.escolha_automatica
+    ? lista.length > 0
+    : !!rascunho.profissional_id;
 
   if (isLoading) {
     return (
@@ -62,28 +62,55 @@ export function EscolhaProfissional({ rascunho, atualizar, onAvancar }: Props) {
       <div>
         <h2 className="text-2xl font-semibold tracking-tight">Escolha sua profissional</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Profissionais verificadas que atendem {rascunho.endereco.cidade} e trabalham com
-          limpeza {labelTipoLimpeza(rascunho.tipo_limpeza).toLowerCase()}.
+          Disponíveis em {formatarDataLonga(rascunho.data)}
+          {rascunho.hora ? ` às ${rascunho.hora}` : ""} para limpeza{" "}
+          {labelTipoLimpeza(rascunho.tipo_limpeza).toLowerCase()} em{" "}
+          {rascunho.endereco.cidade || "sua região"}.
         </p>
       </div>
 
       {lista.length === 0 && (
         <div className="rounded-xl border border-border bg-card p-6 text-center">
-          <p className="font-medium">Nenhuma profissional disponível para esse filtro</p>
+          <p className="font-medium">Nenhuma profissional disponível nessa data</p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Tente outra data, outro tipo de limpeza, ou fale com a gente pelo WhatsApp.
+            Volte um passo e escolha outra data ou horário — mostramos apenas quem realmente
+            pode atender.
           </p>
         </div>
       )}
 
+      {lista.length > 0 && (
+        <button
+          type="button"
+          onClick={() => atualizar({ escolha_automatica: true, profissional_id: null })}
+          className={cn(
+            "flex w-full items-start gap-4 rounded-xl border-2 p-4 text-left transition-all",
+            rascunho.escolha_automatica
+              ? "border-primary bg-primary/5"
+              : "border-border bg-card hover:border-primary/60",
+          )}
+        >
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-accent/12">
+            <Shuffle className="size-5 text-primary" />
+          </span>
+          <span className="flex-1">
+            <span className="block font-semibold">Deixe que a LAR10 escolha</span>
+            <span className="mt-1 block text-sm text-muted-foreground">
+              Sorteamos entre as {lista.length} profissionais disponíveis e verificadas para o
+              seu horário.
+            </span>
+          </span>
+        </button>
+      )}
+
       <div className="space-y-3">
         {lista.map((p) => {
-          const ativo = rascunho.profissional_id === p.id;
+          const ativo = !rascunho.escolha_automatica && rascunho.profissional_id === p.id;
           return (
             <button
               key={p.id}
               type="button"
-              onClick={() => atualizar({ profissional_id: p.id })}
+              onClick={() => atualizar({ profissional_id: p.id, escolha_automatica: false })}
               className={cn(
                 "flex w-full items-start gap-4 rounded-xl border-2 bg-card p-4 text-left transition-all",
                 ativo ? "border-primary bg-primary/5" : "border-border hover:border-primary/60",
@@ -124,14 +151,12 @@ export function EscolhaProfissional({ rascunho, atualizar, onAvancar }: Props) {
         })}
       </div>
 
-      <Button
-        className="w-full"
-        size="lg"
-        disabled={!rascunho.profissional_id}
-        onClick={onAvancar}
-      >
+      <Button className="w-full" size="lg" disabled={!podeAvancar} onClick={onAvancar}>
         Continuar para o pagamento
       </Button>
+      <p className="text-center text-xs text-muted-foreground">
+        A profissional confirma o pedido antes de receber seus dados de contato e endereço.
+      </p>
     </div>
   );
 }

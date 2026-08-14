@@ -14,6 +14,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AjudaRouteImport } from './routes/ajuda'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContratarRouteImport } from './routes/contratar'
+import { Route as EntrarRouteImport } from './routes/entrar'
 import { Route as MinhaContaRouteImport } from './routes/minha-conta'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as ProfissionalRouteImport } from './routes/profissional'
@@ -29,6 +30,7 @@ import { Route as AdminPrecosRouteImport } from './routes/admin.precos'
 import { Route as AdminProfissionaisRouteImport } from './routes/admin.profissionais'
 import { Route as AdminLoginRouteImport } from './routes/admin_.login'
 import { Route as ConfirmacaoIdRouteImport } from './routes/confirmacao.$id'
+import { Route as ProfissionalEntrarRouteImport } from './routes/profissional_.entrar'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -53,6 +55,11 @@ const AuthRoute = AuthRouteImport.update({
 const ContratarRoute = ContratarRouteImport.update({
   id: '/contratar',
   path: '/contratar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EntrarRoute = EntrarRouteImport.update({
+  id: '/entrar',
+  path: '/entrar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MinhaContaRoute = MinhaContaRouteImport.update({
@@ -130,6 +137,11 @@ const ConfirmacaoIdRoute = ConfirmacaoIdRouteImport.update({
   path: '/confirmacao/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfissionalEntrarRoute = ProfissionalEntrarRouteImport.update({
+  id: '/profissional_/entrar',
+  path: '/profissional/entrar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -137,6 +149,7 @@ export interface FileRoutesByFullPath {
   '/ajuda': typeof AjudaRoute
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
+  '/entrar': typeof EntrarRoute
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
   '/profissional': typeof ProfissionalRoute
@@ -151,6 +164,7 @@ export interface FileRoutesByFullPath {
   '/admin/profissionais': typeof AdminProfissionaisRoute
   '/admin/login': typeof AdminLoginRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
+  '/profissional/entrar': typeof ProfissionalEntrarRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -158,6 +172,7 @@ export interface FileRoutesByTo {
   '/ajuda': typeof AjudaRoute
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
+  '/entrar': typeof EntrarRoute
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
   '/profissional': typeof ProfissionalRoute
@@ -172,6 +187,7 @@ export interface FileRoutesByTo {
   '/admin/profissionais': typeof AdminProfissionaisRoute
   '/admin/login': typeof AdminLoginRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
+  '/profissional/entrar': typeof ProfissionalEntrarRoute
   '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
@@ -181,6 +197,7 @@ export interface FileRoutesById {
   '/ajuda': typeof AjudaRoute
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
+  '/entrar': typeof EntrarRoute
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
   '/profissional': typeof ProfissionalRoute
@@ -195,6 +212,7 @@ export interface FileRoutesById {
   '/admin/profissionais': typeof AdminProfissionaisRoute
   '/admin_/login': typeof AdminLoginRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
+  '/profissional_/entrar': typeof ProfissionalEntrarRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -205,6 +223,7 @@ export interface FileRouteTypes {
     | '/ajuda'
     | '/auth'
     | '/contratar'
+    | '/entrar'
     | '/minha-conta'
     | '/privacidade'
     | '/profissional'
@@ -219,6 +238,7 @@ export interface FileRouteTypes {
     | '/admin/profissionais'
     | '/admin/login'
     | '/confirmacao/$id'
+    | '/profissional/entrar'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -226,6 +246,7 @@ export interface FileRouteTypes {
     | '/ajuda'
     | '/auth'
     | '/contratar'
+    | '/entrar'
     | '/minha-conta'
     | '/privacidade'
     | '/profissional'
@@ -240,6 +261,7 @@ export interface FileRouteTypes {
     | '/admin/profissionais'
     | '/admin/login'
     | '/confirmacao/$id'
+    | '/profissional/entrar'
     | '/admin'
   id:
     | '__root__'
@@ -248,6 +270,7 @@ export interface FileRouteTypes {
     | '/ajuda'
     | '/auth'
     | '/contratar'
+    | '/entrar'
     | '/minha-conta'
     | '/privacidade'
     | '/profissional'
@@ -262,6 +285,7 @@ export interface FileRouteTypes {
     | '/admin/profissionais'
     | '/admin_/login'
     | '/confirmacao/$id'
+    | '/profissional_/entrar'
     | '/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -271,6 +295,7 @@ export interface RootRouteChildren {
   AjudaRoute: typeof AjudaRoute
   AuthRoute: typeof AuthRoute
   ContratarRoute: typeof ContratarRoute
+  EntrarRoute: typeof EntrarRoute
   MinhaContaRoute: typeof MinhaContaRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   ProfissionalRoute: typeof ProfissionalRoute
@@ -278,6 +303,7 @@ export interface RootRouteChildren {
   TermosRoute: typeof TermosRoute
   AdminLoginRoute: typeof AdminLoginRoute
   ConfirmacaoIdRoute: typeof ConfirmacaoIdRoute
+  ProfissionalEntrarRoute: typeof ProfissionalEntrarRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -315,6 +341,13 @@ declare module '@tanstack/react-router' {
       path: '/contratar'
       fullPath: '/contratar'
       preLoaderRoute: typeof ContratarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/entrar': {
+      id: '/entrar'
+      path: '/entrar'
+      fullPath: '/entrar'
+      preLoaderRoute: typeof EntrarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/minha-conta': {
@@ -422,6 +455,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConfirmacaoIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profissional_/entrar': {
+      id: '/profissional_/entrar'
+      path: '/profissional/entrar'
+      fullPath: '/profissional/entrar'
+      preLoaderRoute: typeof ProfissionalEntrarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -455,6 +495,7 @@ const rootRouteChildren: RootRouteChildren = {
   AjudaRoute: AjudaRoute,
   AuthRoute: AuthRoute,
   ContratarRoute: ContratarRoute,
+  EntrarRoute: EntrarRoute,
   MinhaContaRoute: MinhaContaRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   ProfissionalRoute: ProfissionalRoute,
@@ -462,6 +503,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermosRoute: TermosRoute,
   AdminLoginRoute: AdminLoginRoute,
   ConfirmacaoIdRoute: ConfirmacaoIdRoute,
+  ProfissionalEntrarRoute: ProfissionalEntrarRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

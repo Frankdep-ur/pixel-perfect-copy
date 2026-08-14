@@ -18,10 +18,12 @@ export type Database = {
         Row: {
           avaliado_id: string
           avaliador_id: string
+          bloqueada: boolean
           booking_id: string
           comentario: string | null
           cordialidade: number | null
           criado_em: string
+          editada_em: string | null
           id: string
           nota: number
           pontualidade: number | null
@@ -30,10 +32,12 @@ export type Database = {
         Insert: {
           avaliado_id: string
           avaliador_id: string
+          bloqueada?: boolean
           booking_id: string
           comentario?: string | null
           cordialidade?: number | null
           criado_em?: string
+          editada_em?: string | null
           id?: string
           nota: number
           pontualidade?: number | null
@@ -42,10 +46,12 @@ export type Database = {
         Update: {
           avaliado_id?: string
           avaliador_id?: string
+          bloqueada?: boolean
           booking_id?: string
           comentario?: string | null
           cordialidade?: number | null
           criado_em?: string
+          editada_em?: string | null
           id?: string
           nota?: number
           pontualidade?: number | null
@@ -113,9 +119,11 @@ export type Database = {
       }
       bookings: {
         Row: {
+          aceito_em: string | null
           area_externa: string
           banheiros: number
           checkin_em: string | null
+          cliente_confirmado_em: string | null
           cliente_id: string
           codigo: string | null
           cozinha: boolean
@@ -129,9 +137,11 @@ export type Database = {
           iniciado_em: string | null
           observacoes: string | null
           outros_ambientes: string | null
+          pagamento_liberado_em: string | null
           problema_relatado: string | null
           profissional_id: string | null
           quartos: number
+          recusadas: string[]
           regiao: string | null
           salas: number
           status: string
@@ -144,9 +154,11 @@ export type Database = {
           valor_total: number
         }
         Insert: {
+          aceito_em?: string | null
           area_externa?: string
           banheiros?: number
           checkin_em?: string | null
+          cliente_confirmado_em?: string | null
           cliente_id: string
           codigo?: string | null
           cozinha?: boolean
@@ -160,9 +172,11 @@ export type Database = {
           iniciado_em?: string | null
           observacoes?: string | null
           outros_ambientes?: string | null
+          pagamento_liberado_em?: string | null
           problema_relatado?: string | null
           profissional_id?: string | null
           quartos?: number
+          recusadas?: string[]
           regiao?: string | null
           salas?: number
           status?: string
@@ -175,9 +189,11 @@ export type Database = {
           valor_total?: number
         }
         Update: {
+          aceito_em?: string | null
           area_externa?: string
           banheiros?: number
           checkin_em?: string | null
+          cliente_confirmado_em?: string | null
           cliente_id?: string
           codigo?: string | null
           cozinha?: boolean
@@ -191,9 +207,11 @@ export type Database = {
           iniciado_em?: string | null
           observacoes?: string | null
           outros_ambientes?: string | null
+          pagamento_liberado_em?: string | null
           problema_relatado?: string | null
           profissional_id?: string | null
           quartos?: number
+          recusadas?: string[]
           regiao?: string | null
           salas?: number
           status?: string
@@ -368,6 +386,48 @@ export type Database = {
         }
         Relationships: []
       }
+      mensagens_profissional: {
+        Row: {
+          autor_id: string | null
+          criado_em: string
+          id: string
+          lida_em: string | null
+          mensagem: string
+          profissional_user_id: string
+        }
+        Insert: {
+          autor_id?: string | null
+          criado_em?: string
+          id?: string
+          lida_em?: string | null
+          mensagem: string
+          profissional_user_id: string
+        }
+        Update: {
+          autor_id?: string | null
+          criado_em?: string
+          id?: string
+          lida_em?: string | null
+          mensagem?: string
+          profissional_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mensagens_profissional_autor_id_fkey"
+            columns: ["autor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mensagens_profissional_profissional_user_id_fkey"
+            columns: ["profissional_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pricing_config: {
         Row: {
           chave: string
@@ -428,6 +488,8 @@ export type Database = {
           comprovante_url: string | null
           criado_em: string
           disponivel: boolean
+          doc_cpf_url: string | null
+          doc_identidade_url: string | null
           documento_url: string | null
           id: string
           latitude: number | null
@@ -436,6 +498,7 @@ export type Database = {
           raio_km: number
           regiao: string | null
           status: string
+          telefone_recado: string | null
           tipos_limpeza: string[]
           total_avaliacoes: number
           total_servicos: number
@@ -450,6 +513,8 @@ export type Database = {
           comprovante_url?: string | null
           criado_em?: string
           disponivel?: boolean
+          doc_cpf_url?: string | null
+          doc_identidade_url?: string | null
           documento_url?: string | null
           id?: string
           latitude?: number | null
@@ -458,6 +523,7 @@ export type Database = {
           raio_km?: number
           regiao?: string | null
           status?: string
+          telefone_recado?: string | null
           tipos_limpeza?: string[]
           total_avaliacoes?: number
           total_servicos?: number
@@ -472,6 +538,8 @@ export type Database = {
           comprovante_url?: string | null
           criado_em?: string
           disponivel?: boolean
+          doc_cpf_url?: string | null
+          doc_identidade_url?: string | null
           documento_url?: string | null
           id?: string
           latitude?: number | null
@@ -480,6 +548,7 @@ export type Database = {
           raio_km?: number
           regiao?: string | null
           status?: string
+          telefone_recado?: string | null
           tipos_limpeza?: string[]
           total_avaliacoes?: number
           total_servicos?: number
@@ -492,6 +561,38 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: true
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profissional_bloqueios: {
+        Row: {
+          criado_em: string
+          data: string
+          id: string
+          motivo: string | null
+          profissional_id: string
+        }
+        Insert: {
+          criado_em?: string
+          data: string
+          id?: string
+          motivo?: string | null
+          profissional_id: string
+        }
+        Update: {
+          criado_em?: string
+          data?: string
+          id?: string
+          motivo?: string | null
+          profissional_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profissional_bloqueios_profissional_id_fkey"
+            columns: ["profissional_id"]
+            isOneToOne: false
+            referencedRelation: "profissionais"
             referencedColumns: ["id"]
           },
         ]
@@ -525,6 +626,32 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      profissionais_disponiveis: {
+        Args: { _data: string; _regiao: string; _tipo_limpeza?: string }
+        Returns: {
+          anos_experiencia: number
+          bio: string
+          cidade: string
+          foto_url: string
+          id: string
+          latitude: number
+          longitude: number
+          nome: string
+          nota_media: number
+          raio_km: number
+          regiao: string
+          tipos_limpeza: string[]
+          total_avaliacoes: number
+          total_servicos: number
+          user_id: string
+          verificada: boolean
+        }[]
+      }
+      recusar_booking: { Args: { _booking_id: string }; Returns: string }
+      sortear_profissional: {
+        Args: { _data: string; _regiao: string; _tipo_limpeza?: string }
+        Returns: string
       }
     }
     Enums: {

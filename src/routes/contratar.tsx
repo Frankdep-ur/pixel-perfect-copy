@@ -28,7 +28,9 @@ import {
   salvarRascunho,
   type Rascunho,
 } from "@/lib/contratacao";
+import { ehDomingo, horarioValido } from "@/lib/agenda";
 import { useSession } from "@/hooks/use-auth";
+
 
 export const Route = createFileRoute("/contratar")({
   head: () => ({
@@ -69,10 +71,27 @@ function Contratar() {
   function atualizar(parcial: Partial<Rascunho>) {
     setRascunho((atual) => {
       const proximo = { ...atual, ...parcial };
+      // Trocar a duração muda os horários possíveis (4h: 07/08/13, 6h e 8h: 07/08).
+      if (
+        parcial.duracao_horas !== undefined &&
+        parcial.duracao_horas !== atual.duracao_horas &&
+        !horarioValido(parcial.duracao_horas, proximo.hora)
+      ) {
+        proximo.hora = null;
+      }
+      // Mudou data, horário ou tipo de limpeza: a disponibilidade precisa ser recalculada.
+      if (
+        parcial.data !== undefined ||
+        parcial.hora !== undefined ||
+        parcial.tipo_limpeza !== undefined
+      ) {
+        proximo.profissional_id = null;
+      }
       salvarRascunho(proximo);
       return proximo;
     });
   }
+
 
   const listaExtras = useMemo(
     () => (extras ?? []).map((e) => ({ ...e, preco: Number(e.preco) })),
@@ -110,7 +129,12 @@ function Contratar() {
       case 6:
         return true;
       case 7:
-        return !!rascunho.data && !!rascunho.hora;
+        return (
+          !!rascunho.data &&
+          !ehDomingo(rascunho.data) &&
+          horarioValido(rascunho.duracao_horas, rascunho.hora)
+        );
+
       default:
         return true;
     }

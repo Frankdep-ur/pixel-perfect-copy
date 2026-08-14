@@ -33,8 +33,8 @@ export type PerfilProfissionalEdicao = {
 export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdicao }) {
   const queryClient = useQueryClient();
   const [foto, setFoto] = useState(perfil.foto_url);
-  const [nome, setNome] = useState(perfil.nome ?? "");
-  const [telefone, setTelefone] = useState(perfil.telefone ?? "");
+  const nome = perfil.nome ?? "";
+  const telefone = perfil.telefone ?? "";
   const [bio, setBio] = useState(perfil.bio ?? "");
   const [anos, setAnos] = useState(String(perfil.anos_experiencia));
   const [raio, setRaio] = useState(String(perfil.raio_km));
@@ -44,6 +44,7 @@ export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdica
   const [cidades, setCidades] = useState<string[]>(perfil.cidades_atendidas ?? []);
   const [cidade, setCidade] = useState(perfil.cidade ?? "");
   const [tipos, setTipos] = useState<string[]>(perfil.tipos_limpeza ?? []);
+
 
   function alternar(lista: string[], set: (v: string[]) => void, valor: string) {
     set(lista.includes(valor) ? lista.filter((v) => v !== valor) : [...lista, valor]);
@@ -58,13 +59,10 @@ export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdica
 
       const { error: erroPerfil } = await supabase
         .from("profiles")
-        .update({
-          nome: nome.trim(),
-          telefone: telefone.trim() || null,
-          foto_url: fotoFinal,
-        })
+        .update({ foto_url: fotoFinal })
         .eq("id", perfil.user_id);
       if (erroPerfil) throw erroPerfil;
+
 
       const { error } = await supabase
         .from("profissionais")
@@ -107,20 +105,23 @@ export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdica
           }}
         />
 
+        <div className="space-y-3 rounded-xl bg-surface-tint p-4 text-sm">
+          <p className="font-semibold text-foreground">Dados cadastrais</p>
+          <div className="grid gap-2 sm:grid-cols-2">
+            <p className="text-muted-foreground">
+              Nome: <span className="font-medium text-foreground">{nome || "—"}</span>
+            </p>
+            <p className="text-muted-foreground">
+              WhatsApp: <span className="font-medium text-foreground">{telefone || "—"}</span>
+            </p>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Nome, telefone, e-mail e documentos só podem ser alterados pela equipe LAR10 — fale
+            com o suporte se algo estiver errado.
+          </p>
+        </div>
+
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="p-nome">Nome completo</Label>
-            <Input id="p-nome" value={nome} onChange={(e) => setNome(e.target.value)} />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="p-tel">WhatsApp</Label>
-            <Input
-              id="p-tel"
-              value={telefone}
-              onChange={(e) => setTelefone(e.target.value)}
-              placeholder="(48) 99999-0000"
-            />
-          </div>
           <div className="space-y-2">
             <Label htmlFor="p-anos">Anos de experiência</Label>
             <Input
@@ -142,6 +143,7 @@ export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdica
             />
           </div>
         </div>
+
 
         <div className="space-y-2">
           <Label htmlFor="p-bio">Sobre você</Label>

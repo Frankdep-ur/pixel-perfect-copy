@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   ListPlus,
   Loader2,
+  LogOut,
   MailQuestion,
   Sparkles,
   Star,
@@ -13,7 +14,9 @@ import {
   UserCheck,
 } from "lucide-react";
 
+import { supabase } from "@/integrations/supabase/client";
 import { useSession, usePapeis } from "@/hooks/use-auth";
+
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -92,12 +95,24 @@ function AdminLayout() {
             );
           })}
         </nav>
-        <div className="hidden px-5 py-4 text-xs text-primary-foreground/60 lg:block">
+        <div className="flex items-center justify-between gap-3 px-5 py-4 text-xs text-primary-foreground/60">
           <Link to="/" className="hover:text-primary-foreground">
             ← Voltar ao site
           </Link>
+          <button
+            type="button"
+            onClick={async () => {
+              await supabase.auth.signOut();
+              navigate({ to: "/admin/login", replace: true });
+            }}
+            className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 hover:text-primary-foreground"
+          >
+            <LogOut className="size-3.5" strokeWidth={1.5} aria-hidden />
+            Sair
+          </button>
         </div>
       </aside>
+
 
       <main className="w-full flex-1 px-4 py-6 lg:px-8 lg:py-8">
         <Outlet />

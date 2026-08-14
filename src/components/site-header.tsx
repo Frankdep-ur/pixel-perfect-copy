@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
-import { Menu, ShieldCheck, UserRound, X } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
+import { LogOut, Menu, ShieldCheck, UserRound, X } from "lucide-react";
 
+import { supabase } from "@/integrations/supabase/client";
 import { useSession, usePapeis } from "@/hooks/use-auth";
 
 const navLinksCliente = [
@@ -13,9 +15,20 @@ const navLinksProfissional = { label: "Seja profissional", href: "/seja-profissi
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { user } = useSession();
   const { data: papeis } = usePapeis(user);
   const ehAdmin = (papeis ?? []).includes("admin");
+
+  async function sair() {
+    setOpen(false);
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/", replace: true });
+  }
+
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -71,6 +84,17 @@ export function SiteHeader() {
             <UserRound className="size-4" />
             {user ? "Minha conta" : "Entrar"}
           </Link>
+          {user && (
+            <button
+              type="button"
+              onClick={sair}
+              className="inline-flex h-12 items-center gap-2 rounded-xl px-3 text-sm font-medium text-muted-foreground transition-colors duration-200 ease-out hover:text-primary active:scale-[0.98]"
+            >
+              <LogOut className="size-4" />
+              Sair
+            </button>
+          )}
+
           <Link
             to="/contratar"
             className="inline-flex h-12 items-center justify-center rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground transition-all duration-200 ease-out hover:bg-primary-hover active:scale-[0.98]"
@@ -146,7 +170,18 @@ export function SiteHeader() {
               Admin
             </Link>
           )}
+          {user && (
+            <button
+              type="button"
+              onClick={sair}
+              className="flex min-h-14 items-center gap-2 rounded-xl px-2 text-lg font-medium text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+            >
+              <LogOut className="size-5" />
+              Sair
+            </button>
+          )}
         </nav>
+
 
         <div className="px-5 pb-6">
           <Link

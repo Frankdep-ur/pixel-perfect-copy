@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Menu, UserRound, X } from "lucide-react";
+import { Menu, ShieldCheck, UserRound, X } from "lucide-react";
 
-import { useSession } from "@/hooks/use-auth";
+import { useSession, usePapeis } from "@/hooks/use-auth";
 
 const navLinks = [
   { label: "Como funciona", href: "/#como-funciona" },
@@ -13,6 +13,8 @@ const navLinks = [
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const { user } = useSession();
+  const { data: papeis } = usePapeis(user);
+  const ehAdmin = (papeis ?? []).includes("admin");
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -45,6 +47,15 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
+          {ehAdmin && (
+            <Link
+              to="/admin"
+              className="inline-flex h-12 items-center gap-2 rounded-xl px-3 text-sm font-medium text-muted-foreground transition-colors duration-200 ease-out hover:text-primary active:scale-[0.98]"
+            >
+              <ShieldCheck className="size-4" />
+              Admin
+            </Link>
+          )}
           <Link
             to={user ? "/minha-conta" : "/auth"}
             search={{ next: undefined }}
@@ -111,6 +122,16 @@ export function SiteHeader() {
             <UserRound className="size-5" />
             {user ? "Minha conta" : "Entrar"}
           </Link>
+          {ehAdmin && (
+            <Link
+              to="/admin"
+              onClick={() => setOpen(false)}
+              className="flex min-h-14 items-center gap-2 rounded-xl px-2 text-lg font-medium text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+            >
+              <ShieldCheck className="size-5" />
+              Admin
+            </Link>
+          )}
         </nav>
 
         <div className="px-5 pb-6">

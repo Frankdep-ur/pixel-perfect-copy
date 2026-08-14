@@ -47,6 +47,15 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
+          {ehAdmin && (
+            <Link
+              to="/admin"
+              className="inline-flex h-12 items-center gap-2 rounded-xl px-3 text-sm font-medium text-muted-foreground transition-colors duration-200 ease-out hover:text-primary active:scale-[0.98]"
+            >
+              <ShieldCheck className="size-4" />
+              Admin
+            </Link>
+          )}
           <Link
             to={user ? "/minha-conta" : "/auth"}
             search={{ next: undefined }}

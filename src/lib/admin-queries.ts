@@ -22,8 +22,13 @@ export type AdminProfissional = {
   nome: string;
   email: string | null;
   telefone: string | null;
+  telefone_recado: string | null;
+  doc_identidade_url: string | null;
+  doc_cpf_url: string | null;
+  comprovante_url: string | null;
   foto_url: string | null;
 };
+
 
 export const adminProfissionaisQuery = queryOptions({
   queryKey: ["admin", "profissionais"],

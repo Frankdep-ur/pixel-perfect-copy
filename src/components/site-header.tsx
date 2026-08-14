@@ -84,6 +84,17 @@ export function SiteHeader() {
             <UserRound className="size-4" />
             {user ? "Minha conta" : "Entrar"}
           </Link>
+          {user && (
+            <button
+              type="button"
+              onClick={sair}
+              className="inline-flex h-12 items-center gap-2 rounded-xl px-3 text-sm font-medium text-muted-foreground transition-colors duration-200 ease-out hover:text-primary active:scale-[0.98]"
+            >
+              <LogOut className="size-4" />
+              Sair
+            </button>
+          )}
+
           <Link
             to="/contratar"
             className="inline-flex h-12 items-center justify-center rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground transition-all duration-200 ease-out hover:bg-primary-hover active:scale-[0.98]"

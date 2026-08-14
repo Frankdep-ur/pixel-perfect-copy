@@ -49,7 +49,7 @@ function AreaProfissional() {
 
   useEffect(() => {
     if (!carregando && !user) {
-      navigate({ to: "/profissional/entrar", replace: true });
+      navigate({ to: "/profissional/entrar", search: { next: undefined }, replace: true });
     }
   }, [carregando, user, navigate]);
 
@@ -186,13 +186,12 @@ function AreaProfissional() {
             <DocumentosProfissional
               profissionalId={perfil.id}
               userId={perfil.user_id}
-              docs={{
-                doc_identidade_url: perfil.doc_identidade_url ?? null,
-                doc_cpf_url: perfil.doc_cpf_url ?? null,
-                comprovante_url: perfil.comprovante_url ?? null,
-                telefone_recado: perfil.telefone_recado ?? null,
-              }}
+              docIdentidade={perfil.doc_identidade_url ?? null}
+              docCpf={perfil.doc_cpf_url ?? null}
+              comprovante={perfil.comprovante_url ?? null}
+              telefoneRecado={perfil.telefone_recado ?? null}
             />
+
 
             <BloqueiosProfissional profissionalId={perfil.id} />
 

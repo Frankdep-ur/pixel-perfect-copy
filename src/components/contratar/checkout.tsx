@@ -36,22 +36,29 @@ export function Checkout({
     setProcessando(true);
     try {
       const endereco = rascunho.endereco;
-      const { data: enderecoSalvo, error: erroEndereco } = await supabase
-        .from("enderecos")
-        .insert({
-          user_id: userId,
-          cep: endereco.cep,
-          rua: endereco.rua,
-          numero: endereco.numero,
-          complemento: endereco.complemento,
-          bairro: endereco.bairro,
-          cidade: endereco.cidade,
-          estado: endereco.estado,
-          regiao: endereco.regiao,
-        })
-        .select("id")
-        .single();
-      if (erroEndereco) throw erroEndereco;
+      let enderecoId = rascunho.endereco_id;
+
+      // Imóvel já salvo na conta: reaproveitamos, sem duplicar endereços.
+      if (!enderecoId) {
+        const { data: enderecoSalvo, error: erroEndereco } = await supabase
+          .from("enderecos")
+          .insert({
+            user_id: userId,
+            cep: endereco.cep,
+            rua: endereco.rua,
+            numero: endereco.numero,
+            complemento: endereco.complemento,
+            bairro: endereco.bairro,
+            cidade: endereco.cidade,
+            estado: endereco.estado,
+            regiao: endereco.regiao,
+          })
+          .select("id")
+          .single();
+        if (erroEndereco) throw erroEndereco;
+        enderecoId = enderecoSalvo.id;
+      }
+
 
       let profissionalId = rascunho.profissional_id;
       if (rascunho.escolha_automatica || !profissionalId) {

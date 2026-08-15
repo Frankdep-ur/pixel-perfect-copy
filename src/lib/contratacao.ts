@@ -14,7 +14,10 @@ export type EnderecoRascunho = {
 };
 
 export type Rascunho = {
+  /** Imóvel salvo na conta do cliente escolhido para esta limpeza. */
+  endereco_id: string | null;
   endereco: EnderecoRascunho;
+
   tipo_imovel: string | null;
   quartos: number;
   salas: number;
@@ -35,7 +38,9 @@ export type Rascunho = {
 };
 
 export const RASCUNHO_INICIAL: Rascunho = {
+  endereco_id: null,
   endereco: {
+
     cep: "",
     rua: "",
     numero: "",

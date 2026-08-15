@@ -281,6 +281,7 @@ export type Database = {
       }
       enderecos: {
         Row: {
+          apelido: string | null
           bairro: string | null
           cep: string | null
           cidade: string | null
@@ -297,6 +298,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          apelido?: string | null
           bairro?: string | null
           cep?: string | null
           cidade?: string | null
@@ -313,6 +315,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          apelido?: string | null
           bairro?: string | null
           cep?: string | null
           cidade?: string | null
@@ -362,6 +365,39 @@ export type Database = {
           minutos_adicionais?: number
           nome?: string
           preco?: number
+        }
+        Relationships: []
+      }
+      home_slides: {
+        Row: {
+          ativo: boolean
+          atualizado_em: string
+          criado_em: string
+          id: string
+          imagem_url: string
+          legenda: string | null
+          ordem: number
+          titulo: string | null
+        }
+        Insert: {
+          ativo?: boolean
+          atualizado_em?: string
+          criado_em?: string
+          id?: string
+          imagem_url: string
+          legenda?: string | null
+          ordem?: number
+          titulo?: string | null
+        }
+        Update: {
+          ativo?: boolean
+          atualizado_em?: string
+          criado_em?: string
+          id?: string
+          imagem_url?: string
+          legenda?: string | null
+          ordem?: number
+          titulo?: string | null
         }
         Relationships: []
       }

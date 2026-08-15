@@ -14,6 +14,9 @@ import { toast } from "sonner";
 import { MENSAGENS, linkWhatsApp } from "@/lib/whatsapp";
 
 import { EstadoVazio } from "@/components/estado-vazio";
+import { MeusImoveis } from "@/components/cliente/meus-imoveis";
+import { MeuPerfil } from "@/components/cliente/meu-perfil";
+
 
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/site-header";
@@ -114,10 +117,13 @@ function MinhaConta() {
 
         {!isLoading && data && (
           <Tabs defaultValue="ativas" className="mt-8">
-            <TabsList>
+            <TabsList className="flex-wrap">
               <TabsTrigger value="ativas">Em andamento ({ativas.length})</TabsTrigger>
               <TabsTrigger value="historico">Histórico ({historico.length})</TabsTrigger>
+              <TabsTrigger value="imoveis">Meus imóveis</TabsTrigger>
+              <TabsTrigger value="perfil">Meus dados</TabsTrigger>
             </TabsList>
+
 
             <TabsContent value="ativas" className="mt-6 space-y-3">
               {ativas.length === 0 && (
@@ -148,7 +154,19 @@ function MinhaConta() {
                 <CartaoBooking key={b.id} booking={b} userId={user!.id} />
               ))}
             </TabsContent>
+
+            <TabsContent value="imoveis" className="mt-6">
+              <p className="mb-4 text-sm text-muted-foreground">
+                Cadastre quantos imóveis quiser. Na contratação, é só escolher onde será a limpeza.
+              </p>
+              <MeusImoveis userId={user!.id} />
+            </TabsContent>
+
+            <TabsContent value="perfil" className="mt-6">
+              <MeuPerfil userId={user!.id} />
+            </TabsContent>
           </Tabs>
+
         )}
       </main>
       <SiteFooter />

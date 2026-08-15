@@ -65,8 +65,16 @@ function Contratar() {
     setRascunho(carregarRascunho());
   }, []);
 
+  // Contratar exige conta: sem login, mandamos para entrar/criar conta.
+  useEffect(() => {
+    if (!carregando && !user) {
+      navigate({ to: "/auth", search: { next: "/contratar" }, replace: true });
+    }
+  }, [carregando, user, navigate]);
+
   const { data: precos } = useQuery(pricingQuery);
   const { data: extras } = useQuery(extrasQuery);
+
 
   function atualizar(parcial: Partial<Rascunho>) {
     setRascunho((atual) => {
@@ -117,7 +125,7 @@ function Contratar() {
   const podeAvancar = (() => {
     switch (passo) {
       case 1:
-        return !!rascunho.endereco.regiao && !!rascunho.endereco.rua && !!rascunho.endereco.numero;
+        return !!rascunho.endereco_id && !!rascunho.endereco.regiao;
       case 2:
         return !!rascunho.tipo_imovel;
       case 3:
@@ -171,7 +179,7 @@ function Contratar() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  if (!precos || !extras || carregando) {
+  if (!precos || !extras || carregando || !user) {
     return (
       <div className="flex min-h-screen flex-col">
         <SiteHeader />
@@ -203,7 +211,10 @@ function Contratar() {
           <div>
             {fase === "passos" && (
               <>
-                {passo === 1 && <PassoEndereco rascunho={rascunho} atualizar={atualizar} />}
+                {passo === 1 && (
+                  <PassoEndereco rascunho={rascunho} atualizar={atualizar} userId={user!.id} />
+                )}
+
                 {passo === 2 && <PassoImovel rascunho={rascunho} atualizar={atualizar} />}
                 {passo === 3 && <PassoTamanho rascunho={rascunho} atualizar={atualizar} />}
                 {passo === 4 && (

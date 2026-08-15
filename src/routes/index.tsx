@@ -11,15 +11,16 @@ import {
   Sparkles,
   Tag,
   TrendingUp,
+  UserPlus,
   Users,
   Wallet,
 } from "lucide-react";
 
-import heroSala from "@/assets/hero-sala.jpg";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CtaFixoMobile } from "@/components/cta-fixo-mobile";
-import { ProfissionaisRegiao } from "@/components/profissionais-regiao";
+import { HeroCarrossel } from "@/components/hero-carrossel";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -65,6 +66,34 @@ const passos = [
     texto: "A profissional cuida do resto",
   },
 ];
+
+const jornada = [
+  {
+    icon: UserPlus,
+    titulo: "Crie sua conta",
+    texto:
+      "Cadastro rápido com seus dados e seus imóveis salvos. Na próxima contratação, é só escolher o imóvel.",
+  },
+  {
+    icon: ClipboardList,
+    titulo: "Monte o serviço",
+    texto:
+      "Informe tamanho do imóvel, duração (4h, 6h ou 8h), tipo de limpeza e extras. O preço aparece na hora.",
+  },
+  {
+    icon: ShieldCheck,
+    titulo: "Contrate com segurança",
+    texto:
+      "Escolha a profissional ou deixe a LAR10 escolher. O pagamento fica protegido na plataforma até a conclusão.",
+  },
+  {
+    icon: Sparkles,
+    titulo: "Serviço realizado",
+    texto:
+      "Você acompanha início e fim da faxina, confirma a conclusão e avalia a profissional. Simples e tranquilo.",
+  },
+];
+
 
 const seguranca = [
   "Profissionais verificadas",
@@ -123,16 +152,11 @@ function Home() {
         {/* Hero — 100% focado no Cliente */}
         <section className="pb-14 pt-6 md:px-5 md:py-20">
           <div className="mx-auto grid w-full max-w-6xl items-center gap-8 md:grid-cols-2 md:gap-10">
-            {/* Mobile: imagem full-bleed acima do texto */}
-            <div className="order-1 -mx-0 h-[40vh] overflow-hidden rounded-b-[24px] md:order-2 md:h-auto md:rounded-2xl md:shadow-[0_24px_48px_rgba(14,59,54,0.12)]">
-              <img
-                src={heroSala}
-                alt="Sala de estar clara e organizada após a limpeza"
-                width={1280}
-                height={1280}
-                className="h-full w-full object-cover"
-              />
+            {/* Mobile: carrossel full-bleed acima do texto (até 3 imagens) */}
+            <div className="order-1 -mx-0 overflow-hidden rounded-b-[24px] md:order-2 md:rounded-2xl md:shadow-[0_24px_48px_rgba(14,59,54,0.12)]">
+              <HeroCarrossel />
             </div>
+
 
             <div className="order-2 px-5 md:order-1 md:px-0">
               <h1
@@ -207,8 +231,43 @@ function Home() {
           </div>
         </section>
 
-        {/* Profissionais da sua região */}
-        <ProfissionaisRegiao />
+        {/* Como funciona — versão institucional, passo a passo tranquilo */}
+        <section id="jornada" className="bg-background py-14 md:py-20">
+          <div className="mx-auto w-full max-w-6xl px-5">
+            <h2 className="text-2xl text-foreground md:text-3xl">
+              Do cadastro à casa limpa, sem surpresas
+            </h2>
+            <p className="mt-2 max-w-2xl text-base text-muted-foreground">
+              Um processo simples, transparente e acompanhado pela LAR10 do início ao fim.
+            </p>
+
+            <ol className="mt-8 grid gap-5 md:grid-cols-2">
+              {jornada.map((item, i) => (
+                <li key={item.titulo} className="lar-card flex gap-4 p-5">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--accent-soft)] font-display text-base font-bold text-primary">
+                    {i + 1}
+                  </span>
+                  <div>
+                    <h3 className="flex items-center gap-2 text-lg leading-[1.4] text-foreground">
+                      <item.icon strokeWidth={1.5} className="h-5 w-5 text-accent" aria-hidden />
+                      {item.titulo}
+                    </h3>
+                    <p className="mt-2 text-sm text-muted-foreground">{item.texto}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+
+            <p className="mt-6 rounded-2xl bg-surface-tint px-5 py-4 text-sm text-muted-foreground">
+              Não quer escolher? Marque a opção{" "}
+              <strong className="text-foreground">
+                “Deixe que a LAR10 escolha a profissional ideal para o seu perfil”
+              </strong>{" "}
+              e nós indicamos uma profissional verificada e disponível para a sua data.
+            </p>
+          </div>
+        </section>
+
 
         {/* Segurança — invertida */}
         <section id="seguranca" className="bg-primary px-5 py-14 md:py-20">

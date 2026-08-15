@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Loader2, Minus, Plus, Search } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Loader2, MapPin, Minus, Plus } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -17,8 +18,12 @@ import {
   formatBRL,
 } from "@/lib/catalogo";
 import { dataMinimaAgendamento, ehDomingo, horariosPermitidos } from "@/lib/agenda";
-import { buscarCep, mascaraCep, type Rascunho } from "@/lib/contratacao";
-import { REGIOES, regiaoPorCidade } from "@/lib/regioes";
+import { type Rascunho } from "@/lib/contratacao";
+import { FormEndereco } from "@/components/enderecos/form-endereco";
+import { enderecosQuery, resumoEndereco, type Endereco } from "@/lib/enderecos";
+import { REGIOES } from "@/lib/regioes";
+import type { RegiaoId } from "@/lib/regioes";
+
 
 
 type Props = {
@@ -49,149 +54,96 @@ function Cartao({
   );
 }
 
-export function PassoEndereco({ rascunho, atualizar }: Props) {
-  const [buscando, setBuscando] = useState(false);
-  const endereco = rascunho.endereco;
+export function PassoEndereco({
+  rascunho,
+  atualizar,
+  userId,
+}: Props & { userId: string }) {
+  const queryClient = useQueryClient();
+  const { data: enderecos, isLoading } = useQuery(enderecosQuery(userId));
+  const [novo, setNovo] = useState(false);
 
-  async function consultar() {
-    setBuscando(true);
-    try {
-      const dados = await buscarCep(endereco.cep);
-      const cidade = dados.localidade ?? "";
-      const regiao = regiaoPorCidade(cidade);
-      atualizar({
-        endereco: {
-          ...endereco,
-          rua: dados.logradouro ?? "",
-          bairro: dados.bairro ?? "",
-          cidade,
-          estado: dados.uf ?? "",
-          regiao,
-        },
-      });
-      if (!regiao) {
-        toast.info("Ainda não atendemos esta cidade", {
-          description: "Você pode entrar na lista de espera na página inicial.",
-        });
-      }
-    } catch (erro) {
-      toast.error(erro instanceof Error ? erro.message : "Erro ao consultar o CEP.");
-    } finally {
-      setBuscando(false);
-    }
+  function escolher(e: Endereco) {
+    atualizar({
+      endereco_id: e.id,
+      endereco: {
+        cep: e.cep ?? "",
+        rua: e.rua ?? "",
+        numero: e.numero ?? "",
+        complemento: e.complemento ?? "",
+        bairro: e.bairro ?? "",
+        cidade: e.cidade ?? "",
+        estado: e.estado ?? "",
+        regiao: (e.regiao as RegiaoId | null) ?? null,
+        latitude: null,
+        longitude: null,
+      },
+    });
   }
 
-  function set(campo: keyof typeof endereco, valor: string) {
-    atualizar({ endereco: { ...endereco, [campo]: valor } });
-  }
+  const lista = enderecos ?? [];
+  const semImoveis = !isLoading && lista.length === 0;
 
   return (
     <div className="space-y-5">
       <div>
         <h2 className="text-2xl font-semibold tracking-tight">Onde será a limpeza?</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Atendemos {REGIOES.grande_floripa.nome} e {REGIOES.balneario.nome}.
+          Escolha um dos seus imóveis. Atendemos {REGIOES.grande_floripa.nome} e{" "}
+          {REGIOES.balneario.nome}.
         </p>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="cep">CEP</Label>
-        <div className="flex gap-2">
-          <Input
-            id="cep"
-            inputMode="numeric"
-            placeholder="88000-000"
-            value={endereco.cep}
-            onChange={(e) => set("cep", mascaraCep(e.target.value))}
-          />
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={consultar}
-            disabled={buscando || endereco.cep.replace(/\D/g, "").length !== 8}
-          >
-            {buscando ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <Search className="size-4" />
-            )}
-            Buscar
-          </Button>
+      {isLoading && (
+        <div className="flex justify-center py-8">
+          <Loader2 className="size-5 animate-spin text-primary" />
         </div>
-      </div>
+      )}
 
-      <div className="grid gap-4 sm:grid-cols-[2fr_1fr]">
-        <div className="space-y-2">
-          <Label htmlFor="rua">Rua</Label>
-          <Input id="rua" value={endereco.rua} onChange={(e) => set("rua", e.target.value)} />
+      {lista.length > 0 && (
+        <div className="grid gap-3">
+          {lista.map((e) => (
+            <Cartao
+              key={e.id}
+              ativo={rascunho.endereco_id === e.id}
+              onClick={() => escolher(e)}
+            >
+              <span className="flex items-center gap-2 text-sm font-semibold">
+                <MapPin className="size-4 text-primary" />
+                {e.apelido ?? "Meu imóvel"}
+              </span>
+              <span className="text-sm text-muted-foreground">{resumoEndereco(e)}</span>
+            </Cartao>
+          ))}
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="numero">Número</Label>
-          <Input
-            id="numero"
-            value={endereco.numero}
-            onChange={(e) => set("numero", e.target.value)}
-          />
-        </div>
-      </div>
+      )}
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="complemento">Complemento</Label>
-          <Input
-            id="complemento"
-            placeholder="Apto, bloco, referência"
-            value={endereco.complemento}
-            onChange={(e) => set("complemento", e.target.value)}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="bairro">Bairro</Label>
-          <Input
-            id="bairro"
-            value={endereco.bairro}
-            onChange={(e) => set("bairro", e.target.value)}
-          />
-        </div>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-[2fr_1fr]">
-        <div className="space-y-2">
-          <Label htmlFor="cidade">Cidade</Label>
-          <Input
-            id="cidade"
-            value={endereco.cidade}
-            onChange={(e) => {
-              atualizar({
-                endereco: {
-                  ...endereco,
-                  cidade: e.target.value,
-                  regiao: regiaoPorCidade(e.target.value),
-                },
-              });
+      {(novo || semImoveis) && (
+        <div className="rounded-2xl border border-border bg-card p-4">
+          <p className="mb-4 text-sm font-semibold">
+            {semImoveis ? "Cadastre seu primeiro imóvel" : "Novo imóvel"}
+          </p>
+          <FormEndereco
+            userId={userId}
+            onSalvo={(salvo) => {
+              queryClient.invalidateQueries({ queryKey: ["enderecos"] });
+              escolher(salvo);
+              setNovo(false);
             }}
+            {...(semImoveis ? {} : { onCancelar: () => setNovo(false) })}
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="estado">Estado</Label>
-          <Input
-            id="estado"
-            maxLength={2}
-            value={endereco.estado}
-            onChange={(e) => set("estado", e.target.value.toUpperCase())}
-          />
-        </div>
-      </div>
+      )}
 
-      {endereco.cidade && !endereco.regiao && (
-        <p className="rounded-lg bg-muted p-3 text-sm text-muted-foreground">
-          Ainda não atendemos <strong>{endereco.cidade}</strong>. Você pode continuar
-          navegando, mas a contratação está disponível apenas nas regiões atendidas.
-        </p>
+      {!novo && !semImoveis && (
+        <Button type="button" variant="outline" onClick={() => setNovo(true)} className="gap-2">
+          <Plus className="size-4" /> Cadastrar outro imóvel
+        </Button>
       )}
     </div>
   );
 }
+
 
 export function PassoImovel({ rascunho, atualizar }: Props) {
   return (

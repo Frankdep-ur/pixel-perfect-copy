@@ -87,7 +87,7 @@ export function Checkout({
         .insert({
           cliente_id: userId,
           profissional_id: profissionalId,
-          endereco_id: enderecoSalvo.id,
+          endereco_id: enderecoId,
           regiao: endereco.regiao,
           tipo_imovel: rascunho.tipo_imovel,
           quartos: rascunho.quartos,

@@ -203,8 +203,43 @@ function Home() {
           </div>
         </section>
 
-        {/* Profissionais da sua região */}
-        <ProfissionaisRegiao />
+        {/* Como funciona — versão institucional, passo a passo tranquilo */}
+        <section id="jornada" className="bg-background py-14 md:py-20">
+          <div className="mx-auto w-full max-w-6xl px-5">
+            <h2 className="text-2xl text-foreground md:text-3xl">
+              Do cadastro à casa limpa, sem surpresas
+            </h2>
+            <p className="mt-2 max-w-2xl text-base text-muted-foreground">
+              Um processo simples, transparente e acompanhado pela LAR10 do início ao fim.
+            </p>
+
+            <ol className="mt-8 grid gap-5 md:grid-cols-2">
+              {jornada.map((item, i) => (
+                <li key={item.titulo} className="lar-card flex gap-4 p-5">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--accent-soft)] font-display text-base font-bold text-primary">
+                    {i + 1}
+                  </span>
+                  <div>
+                    <h3 className="flex items-center gap-2 text-lg leading-[1.4] text-foreground">
+                      <item.icon strokeWidth={1.5} className="h-5 w-5 text-accent" aria-hidden />
+                      {item.titulo}
+                    </h3>
+                    <p className="mt-2 text-sm text-muted-foreground">{item.texto}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+
+            <p className="mt-6 rounded-2xl bg-surface-tint px-5 py-4 text-sm text-muted-foreground">
+              Não quer escolher? Marque a opção{" "}
+              <strong className="text-foreground">
+                “Deixe que a LAR10 escolha a profissional ideal para o seu perfil”
+              </strong>{" "}
+              e nós indicamos uma profissional verificada e disponível para a sua data.
+            </p>
+          </div>
+        </section>
+
 
         {/* Segurança — invertida */}
         <section id="seguranca" className="bg-primary px-5 py-14 md:py-20">

@@ -22,6 +22,7 @@ import { Route as SejaProfissionalRouteImport } from './routes/seja-profissional
 import { Route as TermosRouteImport } from './routes/termos'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminAvaliacoesRouteImport } from './routes/admin.avaliacoes'
+import { Route as AdminCarrosselRouteImport } from './routes/admin.carrossel'
 import { Route as AdminClientesRouteImport } from './routes/admin.clientes'
 import { Route as AdminContratacoesRouteImport } from './routes/admin.contratacoes'
 import { Route as AdminExtrasRouteImport } from './routes/admin.extras'
@@ -97,6 +98,11 @@ const AdminAvaliacoesRoute = AdminAvaliacoesRouteImport.update({
   path: '/avaliacoes',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminCarrosselRoute = AdminCarrosselRouteImport.update({
+  id: '/carrossel',
+  path: '/carrossel',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminClientesRoute = AdminClientesRouteImport.update({
   id: '/clientes',
   path: '/clientes',
@@ -156,6 +162,7 @@ export interface FileRoutesByFullPath {
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
+  '/admin/carrossel': typeof AdminCarrosselRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/contratacoes': typeof AdminContratacoesRoute
   '/admin/extras': typeof AdminExtrasRoute
@@ -179,6 +186,7 @@ export interface FileRoutesByTo {
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
+  '/admin/carrossel': typeof AdminCarrosselRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/contratacoes': typeof AdminContratacoesRoute
   '/admin/extras': typeof AdminExtrasRoute
@@ -204,6 +212,7 @@ export interface FileRoutesById {
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
+  '/admin/carrossel': typeof AdminCarrosselRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/contratacoes': typeof AdminContratacoesRoute
   '/admin/extras': typeof AdminExtrasRoute
@@ -230,6 +239,7 @@ export interface FileRouteTypes {
     | '/seja-profissional'
     | '/termos'
     | '/admin/avaliacoes'
+    | '/admin/carrossel'
     | '/admin/clientes'
     | '/admin/contratacoes'
     | '/admin/extras'
@@ -253,6 +263,7 @@ export interface FileRouteTypes {
     | '/seja-profissional'
     | '/termos'
     | '/admin/avaliacoes'
+    | '/admin/carrossel'
     | '/admin/clientes'
     | '/admin/contratacoes'
     | '/admin/extras'
@@ -277,6 +288,7 @@ export interface FileRouteTypes {
     | '/seja-profissional'
     | '/termos'
     | '/admin/avaliacoes'
+    | '/admin/carrossel'
     | '/admin/clientes'
     | '/admin/contratacoes'
     | '/admin/extras'
@@ -399,6 +411,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAvaliacoesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/carrossel': {
+      id: '/admin/carrossel'
+      path: '/carrossel'
+      fullPath: '/admin/carrossel'
+      preLoaderRoute: typeof AdminCarrosselRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/clientes': {
       id: '/admin/clientes'
       path: '/clientes'
@@ -467,6 +486,7 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminAvaliacoesRoute: typeof AdminAvaliacoesRoute
+  AdminCarrosselRoute: typeof AdminCarrosselRoute
   AdminClientesRoute: typeof AdminClientesRoute
   AdminContratacoesRoute: typeof AdminContratacoesRoute
   AdminExtrasRoute: typeof AdminExtrasRoute
@@ -478,6 +498,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAvaliacoesRoute: AdminAvaliacoesRoute,
+  AdminCarrosselRoute: AdminCarrosselRoute,
   AdminClientesRoute: AdminClientesRoute,
   AdminContratacoesRoute: AdminContratacoesRoute,
   AdminExtrasRoute: AdminExtrasRoute,

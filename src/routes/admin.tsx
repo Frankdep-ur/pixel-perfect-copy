@@ -44,6 +44,8 @@ const ITENS = [
   { to: "/admin/extras", label: "Extras", icon: ListPlus },
   { to: "/admin/lista-espera", label: "Lista de espera", icon: MailQuestion },
   { to: "/admin/avaliacoes", label: "Avaliações", icon: Star },
+  { to: "/admin/carrossel", label: "Carrossel", icon: Images },
+
 ] as const;
 
 function AdminLayout() {

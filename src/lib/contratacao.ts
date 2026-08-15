@@ -38,7 +38,9 @@ export type Rascunho = {
 };
 
 export const RASCUNHO_INICIAL: Rascunho = {
+  endereco_id: null,
   endereco: {
+
     cep: "",
     rua: "",
     numero: "",

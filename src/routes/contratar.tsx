@@ -211,7 +211,10 @@ function Contratar() {
           <div>
             {fase === "passos" && (
               <>
-                {passo === 1 && <PassoEndereco rascunho={rascunho} atualizar={atualizar} />}
+                {passo === 1 && (
+                  <PassoEndereco rascunho={rascunho} atualizar={atualizar} userId={user!.id} />
+                )}
+
                 {passo === 2 && <PassoImovel rascunho={rascunho} atualizar={atualizar} />}
                 {passo === 3 && <PassoTamanho rascunho={rascunho} atualizar={atualizar} />}
                 {passo === 4 && (

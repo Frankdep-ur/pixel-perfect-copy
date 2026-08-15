@@ -114,10 +114,13 @@ function MinhaConta() {
 
         {!isLoading && data && (
           <Tabs defaultValue="ativas" className="mt-8">
-            <TabsList>
+            <TabsList className="flex-wrap">
               <TabsTrigger value="ativas">Em andamento ({ativas.length})</TabsTrigger>
               <TabsTrigger value="historico">Histórico ({historico.length})</TabsTrigger>
+              <TabsTrigger value="imoveis">Meus imóveis</TabsTrigger>
+              <TabsTrigger value="perfil">Meus dados</TabsTrigger>
             </TabsList>
+
 
             <TabsContent value="ativas" className="mt-6 space-y-3">
               {ativas.length === 0 && (

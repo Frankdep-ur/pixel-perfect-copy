@@ -39,8 +39,10 @@ export function SiteHeader() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-card/80 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
+    <>
+    <header className="sticky top-0 z-40 border-b border-border bg-card/80 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
       <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-5 md:h-16">
+
         <Link
           to="/"
           onClick={() => setOpen(false)}
@@ -137,9 +139,11 @@ export function SiteHeader() {
           {open ? <X strokeWidth={1.5} /> : <Menu strokeWidth={1.5} />}
         </button>
       </div>
+      </header>
 
-      {/* Painel de tela cheia no mobile */}
+      {/* Painel de tela cheia no mobile — fora do header para não herdar o backdrop-blur */}
       <div
+
         className={`fixed inset-0 z-50 flex flex-col bg-background pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)] transition-transform duration-200 ease-out md:hidden ${
           open ? "translate-x-0" : "pointer-events-none translate-x-full"
         }`}
@@ -264,6 +268,7 @@ export function SiteHeader() {
         )}
 
       </div>
-    </header>
+    </>
+
   );
 }

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Loader2, Minus, Plus, Search } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Loader2, MapPin, Minus, Plus } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -17,8 +18,12 @@ import {
   formatBRL,
 } from "@/lib/catalogo";
 import { dataMinimaAgendamento, ehDomingo, horariosPermitidos } from "@/lib/agenda";
-import { buscarCep, mascaraCep, type Rascunho } from "@/lib/contratacao";
-import { REGIOES, regiaoPorCidade } from "@/lib/regioes";
+import { type Rascunho } from "@/lib/contratacao";
+import { FormEndereco } from "@/components/enderecos/form-endereco";
+import { enderecosQuery, resumoEndereco, type Endereco } from "@/lib/enderecos";
+import { REGIOES } from "@/lib/regioes";
+import type { RegiaoId } from "@/lib/regioes";
+
 
 
 type Props = {

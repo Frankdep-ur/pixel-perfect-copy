@@ -14,6 +14,9 @@ import { toast } from "sonner";
 import { MENSAGENS, linkWhatsApp } from "@/lib/whatsapp";
 
 import { EstadoVazio } from "@/components/estado-vazio";
+import { MeusImoveis } from "@/components/cliente/meus-imoveis";
+import { MeuPerfil } from "@/components/cliente/meu-perfil";
+
 
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/site-header";

@@ -151,7 +151,19 @@ function MinhaConta() {
                 <CartaoBooking key={b.id} booking={b} userId={user!.id} />
               ))}
             </TabsContent>
+
+            <TabsContent value="imoveis" className="mt-6">
+              <p className="mb-4 text-sm text-muted-foreground">
+                Cadastre quantos imóveis quiser. Na contratação, é só escolher onde será a limpeza.
+              </p>
+              <MeusImoveis userId={user!.id} />
+            </TabsContent>
+
+            <TabsContent value="perfil" className="mt-6">
+              <MeuPerfil userId={user!.id} />
+            </TabsContent>
           </Tabs>
+
         )}
       </main>
       <SiteFooter />

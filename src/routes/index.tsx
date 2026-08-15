@@ -11,15 +11,16 @@ import {
   Sparkles,
   Tag,
   TrendingUp,
+  UserPlus,
   Users,
   Wallet,
 } from "lucide-react";
 
-import heroSala from "@/assets/hero-sala.jpg";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CtaFixoMobile } from "@/components/cta-fixo-mobile";
-import { ProfissionaisRegiao } from "@/components/profissionais-regiao";
+import { HeroCarrossel } from "@/components/hero-carrossel";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({

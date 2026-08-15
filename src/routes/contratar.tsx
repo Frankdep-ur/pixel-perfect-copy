@@ -179,7 +179,7 @@ function Contratar() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  if (!precos || !extras || carregando) {
+  if (!precos || !extras || carregando || !user) {
     return (
       <div className="flex min-h-screen flex-col">
         <SiteHeader />

@@ -67,6 +67,34 @@ const passos = [
   },
 ];
 
+const jornada = [
+  {
+    icon: UserPlus,
+    titulo: "Crie sua conta",
+    texto:
+      "Cadastro rápido com seus dados e seus imóveis salvos. Na próxima contratação, é só escolher o imóvel.",
+  },
+  {
+    icon: ClipboardList,
+    titulo: "Monte o serviço",
+    texto:
+      "Informe tamanho do imóvel, duração (4h, 6h ou 8h), tipo de limpeza e extras. O preço aparece na hora.",
+  },
+  {
+    icon: ShieldCheck,
+    titulo: "Contrate com segurança",
+    texto:
+      "Escolha a profissional ou deixe a LAR10 escolher. O pagamento fica protegido na plataforma até a conclusão.",
+  },
+  {
+    icon: Sparkles,
+    titulo: "Serviço realizado",
+    texto:
+      "Você acompanha início e fim da faxina, confirma a conclusão e avalia a profissional. Simples e tranquilo.",
+  },
+];
+
+
 const seguranca = [
   "Profissionais verificadas",
   "Pagamento seguro pela plataforma",

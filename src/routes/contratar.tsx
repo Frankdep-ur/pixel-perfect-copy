@@ -65,8 +65,16 @@ function Contratar() {
     setRascunho(carregarRascunho());
   }, []);
 
+  // Contratar exige conta: sem login, mandamos para entrar/criar conta.
+  useEffect(() => {
+    if (!carregando && !user) {
+      navigate({ to: "/auth", search: { next: "/contratar" }, replace: true });
+    }
+  }, [carregando, user, navigate]);
+
   const { data: precos } = useQuery(pricingQuery);
   const { data: extras } = useQuery(extrasQuery);
+
 
   function atualizar(parcial: Partial<Rascunho>) {
     setRascunho((atual) => {

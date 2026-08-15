@@ -124,16 +124,11 @@ function Home() {
         {/* Hero — 100% focado no Cliente */}
         <section className="pb-14 pt-6 md:px-5 md:py-20">
           <div className="mx-auto grid w-full max-w-6xl items-center gap-8 md:grid-cols-2 md:gap-10">
-            {/* Mobile: imagem full-bleed acima do texto */}
-            <div className="order-1 -mx-0 h-[40vh] overflow-hidden rounded-b-[24px] md:order-2 md:h-auto md:rounded-2xl md:shadow-[0_24px_48px_rgba(14,59,54,0.12)]">
-              <img
-                src={heroSala}
-                alt="Sala de estar clara e organizada após a limpeza"
-                width={1280}
-                height={1280}
-                className="h-full w-full object-cover"
-              />
+            {/* Mobile: carrossel full-bleed acima do texto (até 3 imagens) */}
+            <div className="order-1 -mx-0 overflow-hidden rounded-b-[24px] md:order-2 md:rounded-2xl md:shadow-[0_24px_48px_rgba(14,59,54,0.12)]">
+              <HeroCarrossel />
             </div>
+
 
             <div className="order-2 px-5 md:order-1 md:px-0">
               <h1

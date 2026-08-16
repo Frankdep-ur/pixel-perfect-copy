@@ -5,7 +5,7 @@ import { Loader2, XCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Painel, TituloSecao } from "@/components/admin/ui";
 import { Badge } from "@/components/ui/badge";
-import { formatBRL } from "@/lib/pricing";
+import { formatBRL } from "@/lib/catalogo";
 
 export const Route = createFileRoute("/admin/cancelamentos")({
   component: AdminCancelamentos,
@@ -47,7 +47,7 @@ function AdminCancelamentos() {
     <div className="space-y-6">
       <TituloSecao
         titulo="Cancelamentos"
-        descricao="Todos os serviços cancelados, com autor e motivo informado."
+        texto="Todos os serviços cancelados, com autor e motivo informado."
       />
 
       {isLoading && (

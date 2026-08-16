@@ -247,6 +247,51 @@ export type Database = {
           },
         ]
       }
+      cancelamentos: {
+        Row: {
+          autor_id: string | null
+          booking_id: string
+          criado_em: string
+          id: string
+          motivo: string | null
+          papel: string
+          valor_total: number
+        }
+        Insert: {
+          autor_id?: string | null
+          booking_id: string
+          criado_em?: string
+          id?: string
+          motivo?: string | null
+          papel?: string
+          valor_total?: number
+        }
+        Update: {
+          autor_id?: string | null
+          booking_id?: string
+          criado_em?: string
+          id?: string
+          motivo?: string | null
+          papel?: string
+          valor_total?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cancelamentos_autor_id_fkey"
+            columns: ["autor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cancelamentos_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       disponibilidade: {
         Row: {
           dia_semana: number
@@ -422,6 +467,48 @@ export type Database = {
         }
         Relationships: []
       }
+      mensagens: {
+        Row: {
+          autor_id: string
+          booking_id: string
+          conteudo: string
+          criado_em: string
+          id: string
+          lida_em: string | null
+        }
+        Insert: {
+          autor_id: string
+          booking_id: string
+          conteudo: string
+          criado_em?: string
+          id?: string
+          lida_em?: string | null
+        }
+        Update: {
+          autor_id?: string
+          booking_id?: string
+          conteudo?: string
+          criado_em?: string
+          id?: string
+          lida_em?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mensagens_autor_id_fkey"
+            columns: ["autor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mensagens_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mensagens_profissional: {
         Row: {
           autor_id: string | null
@@ -517,7 +604,7 @@ export type Database = {
       }
       profissionais: {
         Row: {
-          anos_experiencia: number
+          anos_experiencia: number | null
           bio: string | null
           cidade: string | null
           cidades_atendidas: string[]
@@ -531,7 +618,10 @@ export type Database = {
           latitude: number | null
           longitude: number | null
           nota_media: number
-          raio_km: number
+          pix_chave: string | null
+          pix_tipo: string | null
+          pix_titular: string | null
+          raio_km: number | null
           regiao: string | null
           status: string
           telefone_recado: string | null
@@ -542,7 +632,7 @@ export type Database = {
           verificada: boolean
         }
         Insert: {
-          anos_experiencia?: number
+          anos_experiencia?: number | null
           bio?: string | null
           cidade?: string | null
           cidades_atendidas?: string[]
@@ -556,7 +646,10 @@ export type Database = {
           latitude?: number | null
           longitude?: number | null
           nota_media?: number
-          raio_km?: number
+          pix_chave?: string | null
+          pix_tipo?: string | null
+          pix_titular?: string | null
+          raio_km?: number | null
           regiao?: string | null
           status?: string
           telefone_recado?: string | null
@@ -567,7 +660,7 @@ export type Database = {
           verificada?: boolean
         }
         Update: {
-          anos_experiencia?: number
+          anos_experiencia?: number | null
           bio?: string | null
           cidade?: string | null
           cidades_atendidas?: string[]
@@ -581,7 +674,10 @@ export type Database = {
           latitude?: number | null
           longitude?: number | null
           nota_media?: number
-          raio_km?: number
+          pix_chave?: string | null
+          pix_tipo?: string | null
+          pix_titular?: string | null
+          raio_km?: number | null
           regiao?: string | null
           status?: string
           telefone_recado?: string | null
@@ -633,6 +729,24 @@ export type Database = {
           },
         ]
       }
+      site_config: {
+        Row: {
+          atualizado_em: string
+          chave: string
+          valor: Json
+        }
+        Insert: {
+          atualizado_em?: string
+          chave: string
+          valor?: Json
+        }
+        Update: {
+          atualizado_em?: string
+          chave?: string
+          valor?: Json
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -661,6 +775,10 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      participa_booking: {
+        Args: { _booking_id: string; _user_id: string }
         Returns: boolean
       }
       profissionais_disponiveis: {

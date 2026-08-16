@@ -613,6 +613,7 @@ export type Database = {
           disponivel: boolean
           doc_cpf_url: string | null
           doc_identidade_url: string | null
+          doc_tipo: string | null
           documento_url: string | null
           id: string
           latitude: number | null
@@ -641,6 +642,7 @@ export type Database = {
           disponivel?: boolean
           doc_cpf_url?: string | null
           doc_identidade_url?: string | null
+          doc_tipo?: string | null
           documento_url?: string | null
           id?: string
           latitude?: number | null
@@ -669,6 +671,7 @@ export type Database = {
           disponivel?: boolean
           doc_cpf_url?: string | null
           doc_identidade_url?: string | null
+          doc_tipo?: string | null
           documento_url?: string | null
           id?: string
           latitude?: number | null

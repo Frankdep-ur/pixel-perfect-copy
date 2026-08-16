@@ -35,13 +35,13 @@ import { useSession } from "@/hooks/use-auth";
 export const Route = createFileRoute("/contratar")({
   head: () => ({
     meta: [
-      { title: "Contratar limpeza — LAR10" },
+      { title: "Contratar limpeza — Lar77" },
       {
         name: "description",
         content:
           "Monte seu serviço de limpeza em 8 passos, veja o preço na hora e escolha uma profissional verificada em Santa Catarina.",
       },
-      { property: "og:title", content: "Contratar limpeza — LAR10" },
+      { property: "og:title", content: "Contratar limpeza — Lar77" },
       {
         property: "og:description",
         content:

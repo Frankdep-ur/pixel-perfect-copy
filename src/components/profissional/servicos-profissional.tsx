@@ -114,7 +114,7 @@ export function ServicosProfissional({ profissionalId, nomeProfissional }: Props
       toast.success("Serviço recusado.", {
         description: novo
           ? "Já repassamos automaticamente para outra profissional."
-          : "A equipe LAR10 vai procurar outra profissional.",
+          : "A equipe Lar77 vai procurar outra profissional.",
       });
       atualizarLista();
     },
@@ -146,7 +146,7 @@ export function ServicosProfissional({ profissionalId, nomeProfissional }: Props
         window.open(
           linkWhatsApp(
             booking.profiles?.telefone,
-            MENSAGENS.finalizada(booking.codigo ?? "LAR10"),
+            MENSAGENS.finalizada(booking.codigo ?? "Lar77"),
           ),
           "_blank",
         );

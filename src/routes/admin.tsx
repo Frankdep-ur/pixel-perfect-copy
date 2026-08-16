@@ -23,14 +23,14 @@ import { useSession, usePapeis } from "@/hooks/use-auth";
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
-      { title: "Painel administrativo — LAR10" },
+      { title: "Painel administrativo — Lar77" },
       {
         name: "description",
         content:
-          "Painel interno da LAR10: métricas, aprovação de profissionais, contratações, preços e extras.",
+          "Painel interno da Lar77: métricas, aprovação de profissionais, contratações, preços e extras.",
       },
-      { property: "og:title", content: "Painel administrativo — LAR10" },
-      { property: "og:description", content: "Painel interno de operação da LAR10." },
+      { property: "og:title", content: "Painel administrativo — Lar77" },
+      { property: "og:description", content: "Painel interno de operação da Lar77." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -78,7 +78,7 @@ function AdminLayout() {
       <aside className="border-b border-border bg-primary text-primary-foreground lg:sticky lg:top-0 lg:h-dvh lg:w-64 lg:shrink-0 lg:border-b-0 lg:border-r">
         <div className="flex items-center gap-2 px-5 py-4">
           <Sparkles className="size-5" strokeWidth={1.5} aria-hidden />
-          <span className="text-lg font-semibold tracking-tight">LAR10 Admin</span>
+          <span className="text-lg font-semibold tracking-tight">Lar77 Admin</span>
         </div>
         <nav className="flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-col lg:overflow-visible">
           {ITENS.map((item) => {

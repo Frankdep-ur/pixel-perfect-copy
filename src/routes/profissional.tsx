@@ -25,13 +25,13 @@ import { useSession } from "@/hooks/use-auth";
 export const Route = createFileRoute("/profissional")({
   head: () => ({
     meta: [
-      { title: "Área da profissional — LAR10" },
+      { title: "Área da profissional — Lar77" },
       {
         name: "description",
         content:
-          "Gerencie seus serviços de limpeza, aceite solicitações e acompanhe seus ganhos no LAR10.",
+          "Gerencie seus serviços de limpeza, aceite solicitações e acompanhe seus ganhos no Lar77.",
       },
-      { property: "og:title", content: "Área da profissional — LAR10" },
+      { property: "og:title", content: "Área da profissional — Lar77" },
       {
         property: "og:description",
         content: "Aceite solicitações, atualize o andamento do serviço e acompanhe sua nota.",
@@ -125,7 +125,7 @@ function AreaProfissional() {
                 </Avatar>
                 <div className="space-y-3">
                   <h2 className="text-2xl font-bold tracking-tight text-foreground">
-                    {perfil.profiles?.nome ?? "Profissional LAR10"}
+                    {perfil.profiles?.nome ?? "Profissional Lar77"}
                   </h2>
                   <div className="flex flex-wrap items-center gap-2">
                     {perfil.status === "aprovada" ? (
@@ -204,7 +204,7 @@ function AreaProfissional() {
               <EstadoVazio
                 icon={Clock3}
                 titulo="Cadastro em análise"
-                texto="A equipe LAR10 revisa seu perfil no painel administrativo (Admin → Profissionais). Assim que for aprovado, as solicitações da sua região aparecem aqui."
+                texto="A equipe Lar77 revisa seu perfil no painel administrativo (Admin → Profissionais). Assim que for aprovado, as solicitações da sua região aparecem aqui."
               />
             )}
 

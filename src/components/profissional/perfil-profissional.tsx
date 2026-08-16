@@ -116,7 +116,7 @@ export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdica
             </p>
           </div>
           <p className="text-xs text-muted-foreground">
-            Nome, telefone, e-mail e documentos só podem ser alterados pela equipe LAR10 — fale
+            Nome, telefone, e-mail e documentos só podem ser alterados pela equipe Lar77 — fale
             com o suporte se algo estiver errado.
           </p>
         </div>

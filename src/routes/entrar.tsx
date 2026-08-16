@@ -12,16 +12,16 @@ export const Route = createFileRoute("/entrar")({
   }),
   head: () => ({
     meta: [
-      { title: "Acesso cliente — LAR10" },
+      { title: "Acesso cliente — Lar77" },
       {
         name: "description",
         content:
-          "Entre na sua conta de cliente LAR10 para contratar faxinas e acompanhar seus serviços em Santa Catarina.",
+          "Entre na sua conta de cliente Lar77 para contratar faxinas e acompanhar seus serviços em Santa Catarina.",
       },
-      { property: "og:title", content: "Acesso cliente — LAR10" },
+      { property: "og:title", content: "Acesso cliente — Lar77" },
       {
         property: "og:description",
-        content: "Entre para contratar faxinas e acompanhar seus serviços na LAR10.",
+        content: "Entre para contratar faxinas e acompanhar seus serviços na Lar77.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

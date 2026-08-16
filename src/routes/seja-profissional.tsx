@@ -6,16 +6,16 @@ import { PlaceholderPage } from "@/components/placeholder-page";
 export const Route = createFileRoute("/seja-profissional")({
   head: () => ({
     meta: [
-      { title: "Seja profissional LAR10 — cadastro" },
+      { title: "Seja profissional Lar77 — cadastro" },
       {
         name: "description",
         content:
-          "Cadastre-se como profissional de limpeza no LAR10, encontre clientes e organize sua agenda.",
+          "Cadastre-se como profissional de limpeza no Lar77, encontre clientes e organize sua agenda.",
       },
-      { property: "og:title", content: "Seja profissional LAR10" },
+      { property: "og:title", content: "Seja profissional Lar77" },
       {
         property: "og:description",
-        content: "Transforme seu trabalho em novas oportunidades com o LAR10.",
+        content: "Transforme seu trabalho em novas oportunidades com o Lar77.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

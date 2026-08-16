@@ -104,7 +104,7 @@ export function MeuPerfil({ userId }: { userId: string }) {
         </div>
         <p className="text-xs text-muted-foreground">
           Nome e documentos não podem ser alterados. Se houver algum erro, fale com o suporte
-          LAR10.
+          Lar77.
         </p>
 
         <div className="grid gap-4 sm:grid-cols-2">

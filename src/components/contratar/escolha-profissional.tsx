@@ -94,7 +94,7 @@ export function EscolhaProfissional({ rascunho, atualizar, onAvancar }: Props) {
             <Shuffle className="size-5 text-primary" />
           </span>
           <span className="flex-1">
-            <span className="block font-semibold">Deixe que a LAR10 escolha</span>
+            <span className="block font-semibold">Deixe que a Lar77 escolha</span>
             <span className="mt-1 block text-sm text-muted-foreground">
               Sorteamos entre as {lista.length} profissionais disponíveis e verificadas para o
               seu horário.

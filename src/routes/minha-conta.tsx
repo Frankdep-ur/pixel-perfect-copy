@@ -32,12 +32,12 @@ import { useSession } from "@/hooks/use-auth";
 export const Route = createFileRoute("/minha-conta")({
   head: () => ({
     meta: [
-      { title: "Minha conta — LAR10" },
+      { title: "Minha conta — Lar77" },
       {
         name: "description",
-        content: "Acompanhe suas limpezas contratadas, histórico e avaliações no LAR10.",
+        content: "Acompanhe suas limpezas contratadas, histórico e avaliações no Lar77.",
       },
-      { property: "og:title", content: "Minha conta — LAR10" },
+      { property: "og:title", content: "Minha conta — Lar77" },
       {
         property: "og:description",
         content: "Acompanhe suas limpezas contratadas, histórico e avaliações.",
@@ -293,7 +293,7 @@ function CartaoBooking({ booking, userId }: { booking: BookingLista; userId: str
                 </span>
               )}
               <div className="text-sm">
-                <p className="font-semibold">{prof.profiles?.nome ?? "Profissional LAR10"}</p>
+                <p className="font-semibold">{prof.profiles?.nome ?? "Profissional Lar77"}</p>
                 <p className="text-muted-foreground">{prof.profiles?.telefone ?? "—"}</p>
                 <p className="text-muted-foreground">{prof.cidade ?? ""}</p>
               </div>
@@ -302,7 +302,7 @@ function CartaoBooking({ booking, userId }: { booking: BookingLista; userId: str
               <a
                 href={linkWhatsApp(
                   prof.profiles?.telefone,
-                  MENSAGENS.clienteParaProfissional(booking.codigo ?? "LAR10"),
+                  MENSAGENS.clienteParaProfissional(booking.codigo ?? "Lar77"),
                 )}
                 target="_blank"
                 rel="noreferrer"

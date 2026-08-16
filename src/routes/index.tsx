@@ -25,17 +25,17 @@ import { HeroCarrossel } from "@/components/hero-carrossel";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "LAR10 — Contrate diaristas com segurança em SC" },
+      { title: "Lar77 — Contrate diaristas com segurança em SC" },
       {
         name: "description",
         content:
-          "Encontre profissionais de limpeza verificadas, escolha o serviço ideal e contrate com pagamento seguro pela plataforma LAR10.",
+          "Encontre profissionais de limpeza verificadas, escolha o serviço ideal e contrate com pagamento seguro pela plataforma Lar77.",
       },
-      { property: "og:title", content: "LAR10 — Contrate diaristas com segurança" },
+      { property: "og:title", content: "Lar77 — Contrate diaristas com segurança" },
       {
         property: "og:description",
         content:
-          "Profissionais verificadas, preço transparente e acompanhamento em tempo real. Contrate sua faxina pelo LAR10.",
+          "Profissionais verificadas, preço transparente e acompanhamento em tempo real. Contrate sua faxina pelo Lar77.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -84,7 +84,7 @@ const jornada = [
     icon: ShieldCheck,
     titulo: "Contrate com segurança",
     texto:
-      "Escolha a profissional ou deixe a LAR10 escolher. O pagamento fica protegido na plataforma até a conclusão.",
+      "Escolha a profissional ou deixe a Lar77 escolher. O pagamento fica protegido na plataforma até a conclusão.",
   },
   {
     icon: Sparkles,
@@ -101,7 +101,7 @@ const seguranca = [
   "Acompanhamento em tempo real",
   "Sistema de avaliação",
   "Proteção incluída em toda contratação",
-  "Suporte LAR10",
+  "Suporte Lar77",
 ];
 
 const confianca = [
@@ -134,7 +134,7 @@ const vantagensProfissional = [
   {
     icon: ShieldCheck,
     titulo: "Mais segurança",
-    texto: "Documentação verificada e suporte LAR10 em cada contratação.",
+    texto: "Documentação verificada e suporte Lar77 em cada contratação.",
   },
   {
     icon: Users,
@@ -167,7 +167,7 @@ function Home() {
               </h1>
               <p className="mt-5 text-base text-muted-foreground md:text-lg">
                 Encontre profissionais de limpeza verificadas, escolha o serviço ideal e
-                contrate tudo pelo LAR10.
+                contrate tudo pelo Lar77.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link
@@ -238,7 +238,7 @@ function Home() {
               Do cadastro à casa limpa, sem surpresas
             </h2>
             <p className="mt-2 max-w-2xl text-base text-muted-foreground">
-              Um processo simples, transparente e acompanhado pela LAR10 do início ao fim.
+              Um processo simples, transparente e acompanhado pela Lar77 do início ao fim.
             </p>
 
             <ol className="mt-8 grid gap-5 md:grid-cols-2">
@@ -261,7 +261,7 @@ function Home() {
             <p className="mt-6 rounded-2xl bg-surface-tint px-5 py-4 text-sm text-muted-foreground">
               Não quer escolher? Marque a opção{" "}
               <strong className="text-foreground">
-                “Deixe que a LAR10 escolha a profissional ideal para o seu perfil”
+                “Deixe que a Lar77 escolha a profissional ideal para o seu perfil”
               </strong>{" "}
               e nós indicamos uma profissional verificada e disponível para a sua data.
             </p>
@@ -313,7 +313,7 @@ function Home() {
                   Transforme suas faxinas em uma agenda organizada e clientes confiáveis.
                 </h2>
                 <p className="mt-4 max-w-lg text-base text-primary-foreground/80 md:text-lg">
-                  No LAR10 você recebe solicitações da sua região, escolhe quando trabalhar e
+                  No Lar77 você recebe solicitações da sua região, escolhe quando trabalhar e
                   tem a segurança de um pagamento garantido.
                 </p>
                 <Link

@@ -48,7 +48,7 @@ export function SiteHeader() {
           onClick={() => setOpen(false)}
           className="font-display text-xl font-bold text-primary transition-transform duration-200 ease-out active:scale-[0.98]"
         >
-          LAR10
+          Lar77
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
@@ -150,7 +150,7 @@ export function SiteHeader() {
         aria-hidden={!open}
       >
         <div className="flex h-14 items-center justify-between px-5">
-          <span className="font-display text-xl font-bold text-primary">LAR10</span>
+          <span className="font-display text-xl font-bold text-primary">Lar77</span>
           <button
             type="button"
             aria-label="Fechar menu"

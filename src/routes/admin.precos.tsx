@@ -16,7 +16,7 @@ export const Route = createFileRoute("/admin/precos")({
 
 const LABELS: Record<string, string> = {
   valor_hora_profissional: "Valor da hora da profissional (R$)",
-  taxa_admin_percentual: "Taxa LAR10 (fração, ex.: 0,15)",
+  taxa_admin_percentual: "Taxa Lar77 (fração, ex.: 0,15)",
   valor_seguro: "Proteção por faxina (R$)",
   adicional_quarto: "Adicional por quarto (R$)",
   adicional_banheiro: "Adicional por banheiro (R$)",

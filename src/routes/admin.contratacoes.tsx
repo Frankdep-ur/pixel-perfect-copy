@@ -194,7 +194,7 @@ function AdminContratacoes() {
                   {[
                     ["Serviço", selecionada.valor_profissional],
                     ["Extras", selecionada.valor_extras],
-                    ["Taxa LAR10", selecionada.taxa_admin],
+                    ["Taxa Lar77", selecionada.taxa_admin],
                     ["Proteção", selecionada.valor_seguro],
                   ].map(([label, valor]) => (
                     <div key={label as string} className="flex justify-between gap-4">

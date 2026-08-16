@@ -133,7 +133,7 @@ export function FichaProfissional({
           onChange={(e) => setTexto(e.target.value)}
           maxLength={500}
           rows={3}
-          placeholder="Anotação visível apenas para a equipe LAR10."
+          placeholder="Anotação visível apenas para a equipe Lar77."
         />
         <Button
           size="sm"

@@ -57,7 +57,7 @@ export function DocumentosProfissional({
           <ShieldCheck className="size-5 text-primary" /> Documentos e contato de emergência
         </CardTitle>
         <p className="text-sm text-muted-foreground">
-          Os documentos são vistos apenas pela equipe LAR10 e são obrigatórios para aprovação.
+          Os documentos são vistos apenas pela equipe Lar77 e são obrigatórios para aprovação.
           Depois de enviados, só a equipe pode alterá-los.
         </p>
       </CardHeader>

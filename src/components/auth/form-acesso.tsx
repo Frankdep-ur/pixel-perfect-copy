@@ -40,7 +40,7 @@ const CONFIG: Record<
     titulo: "Acesso profissional",
     subtitulo: "Entre para receber pedidos da sua região e gerenciar sua agenda.",
     destino: "/profissional",
-    ctaCriar: "Quero trabalhar com a LAR10",
+    ctaCriar: "Quero trabalhar com a Lar77",
     rotaOposta: "/entrar",
     labelOposta: "Quero contratar uma faxina",
   },
@@ -102,7 +102,7 @@ export function FormAcesso({ papel, next }: Props) {
       toast.error("Não foi possível criar a conta", { description: descricao });
       return;
     }
-    toast.success("Conta criada!", { description: "Bem-vinda ao LAR10." });
+    toast.success("Conta criada!", { description: "Bem-vinda ao Lar77." });
     router.invalidate();
     navigate({ to: destino, replace: true });
   }

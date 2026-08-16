@@ -180,6 +180,9 @@ function AreaProfissional() {
                 nome: perfil.profiles?.nome ?? null,
                 telefone: perfil.profiles?.telefone ?? null,
                 foto_url: perfil.profiles?.foto_url ?? null,
+                pix_tipo: perfil.pix_tipo ?? null,
+                pix_chave: perfil.pix_chave ?? null,
+                pix_titular: perfil.pix_titular ?? null,
               }}
             />
 
@@ -190,6 +193,7 @@ function AreaProfissional() {
               docCpf={perfil.doc_cpf_url ?? null}
               comprovante={perfil.comprovante_url ?? null}
               telefoneRecado={perfil.telefone_recado ?? null}
+              docTipo={perfil.doc_tipo ?? null}
             />
 
 
@@ -199,6 +203,7 @@ function AreaProfissional() {
               <ServicosProfissional
                 profissionalId={perfil.id}
                 nomeProfissional={perfil.profiles?.nome ?? "sua profissional"}
+                userId={perfil.user_id}
               />
             ) : (
               <EstadoVazio

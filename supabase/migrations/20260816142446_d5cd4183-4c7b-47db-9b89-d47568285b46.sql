@@ -1,0 +1,1 @@
+ALTER TABLE public.profissionais ADD COLUMN IF NOT EXISTS doc_tipo text;

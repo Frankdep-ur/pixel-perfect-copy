@@ -29,11 +29,11 @@ export type ProfissionalPublica = {
   id: string;
   user_id: string;
   bio: string | null;
-  anos_experiencia: number;
+  anos_experiencia: number | null;
   nota_media: number;
   total_avaliacoes: number;
   total_servicos: number;
-  raio_km: number;
+  raio_km: number | null;
   cidade: string | null;
   regiao: string | null;
   cidades_atendidas: string[];
@@ -83,7 +83,7 @@ export function disponiveisQuery(
         tipos_limpeza: p.tipos_limpeza ?? [],
         verificada: p.verificada,
         disponivel: true,
-        nome: p.nome ?? "Profissional LAR10",
+        nome: p.nome ?? "Profissional Lar77",
         foto_url: p.foto_url ?? null,
       }));
     },
@@ -124,7 +124,7 @@ export function profissionaisQuery(regiao: string | null) {
           tipos_limpeza: p.tipos_limpeza ?? [],
           verificada: p.verificada,
           disponivel: p.disponivel,
-          nome: perfil?.nome ?? "Profissional LAR10",
+          nome: perfil?.nome ?? "Profissional Lar77",
           foto_url: perfil?.foto_url ?? null,
         };
       });

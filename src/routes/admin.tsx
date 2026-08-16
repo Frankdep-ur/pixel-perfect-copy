@@ -11,26 +11,30 @@ import {
   LogOut,
   MailQuestion,
   Sparkles,
+  Settings,
+  LifeBuoy,
   Star,
   Users,
+  XCircle,
   UserCheck,
 } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useSession, usePapeis } from "@/hooks/use-auth";
+import { linkSuporte } from "@/lib/whatsapp";
 
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
-      { title: "Painel administrativo — LAR10" },
+      { title: "Painel administrativo — Lar77" },
       {
         name: "description",
         content:
-          "Painel interno da LAR10: métricas, aprovação de profissionais, contratações, preços e extras.",
+          "Painel interno da Lar77: métricas, aprovação de profissionais, contratações, preços e extras.",
       },
-      { property: "og:title", content: "Painel administrativo — LAR10" },
-      { property: "og:description", content: "Painel interno de operação da LAR10." },
+      { property: "og:title", content: "Painel administrativo — Lar77" },
+      { property: "og:description", content: "Painel interno de operação da Lar77." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -47,6 +51,8 @@ const ITENS = [
   { to: "/admin/lista-espera", label: "Lista de espera", icon: MailQuestion },
   { to: "/admin/avaliacoes", label: "Avaliações", icon: Star },
   { to: "/admin/carrossel", label: "Carrossel", icon: Images },
+  { to: "/admin/cancelamentos", label: "Cancelamentos", icon: XCircle },
+  { to: "/admin/config", label: "Configurações", icon: Settings },
 
 ] as const;
 
@@ -78,7 +84,7 @@ function AdminLayout() {
       <aside className="border-b border-border bg-primary text-primary-foreground lg:sticky lg:top-0 lg:h-dvh lg:w-64 lg:shrink-0 lg:border-b-0 lg:border-r">
         <div className="flex items-center gap-2 px-5 py-4">
           <Sparkles className="size-5" strokeWidth={1.5} aria-hidden />
-          <span className="text-lg font-semibold tracking-tight">LAR10 Admin</span>
+          <span className="text-lg font-semibold tracking-tight">Lar77 Admin</span>
         </div>
         <nav className="flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-col lg:overflow-visible">
           {ITENS.map((item) => {
@@ -99,6 +105,17 @@ function AdminLayout() {
             );
           })}
         </nav>
+        <div className="px-3 pb-2">
+          <a
+            href={linkSuporte("Olá! Sou do time Lar77 e preciso de suporte.")}
+            target="_blank"
+            rel="noreferrer"
+            className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-medium text-primary-foreground/75 hover:bg-primary-foreground/10 hover:text-primary-foreground"
+          >
+            <LifeBuoy className="size-4" strokeWidth={1.5} aria-hidden />
+            Suporte
+          </a>
+        </div>
         <div className="flex items-center justify-between gap-3 px-5 py-4 text-xs text-primary-foreground/60">
           <Link to="/" className="hover:text-primary-foreground">
             ← Voltar ao site

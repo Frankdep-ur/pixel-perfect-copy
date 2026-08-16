@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { Toaster } from "../components/ui/sonner";
+import { TemaSite } from "../components/tema-site";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -84,17 +85,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "theme-color", content: "#0E3B36" },
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
-      { name: "apple-mobile-web-app-title", content: "LAR10" },
+      { name: "apple-mobile-web-app-title", content: "Lar77" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
 
-      { title: "LAR10 — Contratação de diaristas com segurança" },
+      { title: "Lar77 — Contratação de diaristas com segurança" },
       {
         name: "description",
         content:
           "Marketplace brasileiro para contratar profissionais de limpeza verificadas com pagamento seguro.",
       },
-      { name: "author", content: "LAR10" },
-      { property: "og:title", content: "LAR10 — Contratação de diaristas com segurança" },
+      { name: "author", content: "Lar77" },
+      { property: "og:title", content: "Lar77 — Contratação de diaristas com segurança" },
       {
         property: "og:description",
         content:
@@ -146,6 +147,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <TemaSite />
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
       <Toaster />

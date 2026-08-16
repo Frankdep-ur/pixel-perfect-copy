@@ -17,6 +17,7 @@ type Props = {
   docCpf: string | null;
   comprovante: string | null;
   telefoneRecado: string | null;
+  docTipo: string | null;
 };
 
 export function DocumentosProfissional({
@@ -26,9 +27,11 @@ export function DocumentosProfissional({
   docCpf,
   comprovante,
   telefoneRecado,
+  docTipo,
 }: Props) {
   const queryClient = useQueryClient();
   const [recado, setRecado] = useState(telefoneRecado ?? "");
+  const [tipo, setTipo] = useState(docTipo ?? "rg");
 
   const salvar = useMutation({
     mutationFn: async (campos: {
@@ -36,6 +39,7 @@ export function DocumentosProfissional({
       doc_cpf_url?: string;
       comprovante_url?: string;
       telefone_recado?: string | null;
+      doc_tipo?: string;
     }) => {
       const { error } = await supabase
         .from("profissionais")
@@ -57,27 +61,45 @@ export function DocumentosProfissional({
           <ShieldCheck className="size-5 text-primary" /> Documentos e contato de emergência
         </CardTitle>
         <p className="text-sm text-muted-foreground">
-          Os documentos são vistos apenas pela equipe LAR10 e são obrigatórios para aprovação.
+          Os documentos são vistos apenas pela equipe Lar77 e são obrigatórios para aprovação.
           Depois de enviados, só a equipe pode alterá-los.
         </p>
       </CardHeader>
       <CardContent className="space-y-3">
+        <div className="space-y-2">
+          <Label htmlFor="doc-tipo">Documento de identidade enviado</Label>
+          <select
+            id="doc-tipo"
+            value={tipo}
+            onChange={(e) => {
+              setTipo(e.target.value);
+              salvar.mutate({ doc_tipo: e.target.value });
+            }}
+            className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+          >
+            <option value="cnh">CNH (dispensa o envio do CPF)</option>
+            <option value="rg">RG (é preciso enviar o CPF também)</option>
+          </select>
+        </div>
+
         <UploadDocumento
           userId={userId}
           pasta="identidade"
-          titulo="RG ou CNH"
+          titulo={tipo === "cnh" ? "CNH" : "RG"}
           descricao="Foto legível da frente e do verso, ou PDF."
           url={docIdentidade}
           onChange={(url) => salvar.mutate({ doc_identidade_url: url })}
         />
-        <UploadDocumento
-          userId={userId}
-          pasta="cpf"
-          titulo="CPF"
-          descricao="Documento com o número do CPF (pode ser a própria CNH)."
-          url={docCpf}
-          onChange={(url) => salvar.mutate({ doc_cpf_url: url })}
-        />
+        {tipo !== "cnh" && (
+          <UploadDocumento
+            userId={userId}
+            pasta="cpf"
+            titulo="CPF"
+            descricao="Obrigatório para quem envia RG."
+            url={docCpf}
+            onChange={(url) => salvar.mutate({ doc_cpf_url: url })}
+          />
+        )}
         <UploadDocumento
           userId={userId}
           pasta="residencia"

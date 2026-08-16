@@ -12,16 +12,16 @@ export const Route = createFileRoute("/profissional_/entrar")({
   }),
   head: () => ({
     meta: [
-      { title: "Acesso profissional — LAR10" },
+      { title: "Acesso profissional — Lar77" },
       {
         name: "description",
         content:
-          "Entre na área da profissional LAR10 para receber pedidos de faxina da sua região e organizar sua agenda.",
+          "Entre na área da profissional Lar77 para receber pedidos de faxina da sua região e organizar sua agenda.",
       },
-      { property: "og:title", content: "Acesso profissional — LAR10" },
+      { property: "og:title", content: "Acesso profissional — Lar77" },
       {
         property: "og:description",
-        content: "Receba pedidos da sua região e organize sua agenda com a LAR10.",
+        content: "Receba pedidos da sua região e organize sua agenda com a Lar77.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

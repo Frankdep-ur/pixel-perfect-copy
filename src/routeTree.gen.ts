@@ -22,8 +22,10 @@ import { Route as SejaProfissionalRouteImport } from './routes/seja-profissional
 import { Route as TermosRouteImport } from './routes/termos'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminAvaliacoesRouteImport } from './routes/admin.avaliacoes'
+import { Route as AdminCancelamentosRouteImport } from './routes/admin.cancelamentos'
 import { Route as AdminCarrosselRouteImport } from './routes/admin.carrossel'
 import { Route as AdminClientesRouteImport } from './routes/admin.clientes'
+import { Route as AdminConfigRouteImport } from './routes/admin.config'
 import { Route as AdminContratacoesRouteImport } from './routes/admin.contratacoes'
 import { Route as AdminExtrasRouteImport } from './routes/admin.extras'
 import { Route as AdminListaEsperaRouteImport } from './routes/admin.lista-espera'
@@ -98,6 +100,11 @@ const AdminAvaliacoesRoute = AdminAvaliacoesRouteImport.update({
   path: '/avaliacoes',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminCancelamentosRoute = AdminCancelamentosRouteImport.update({
+  id: '/cancelamentos',
+  path: '/cancelamentos',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminCarrosselRoute = AdminCarrosselRouteImport.update({
   id: '/carrossel',
   path: '/carrossel',
@@ -106,6 +113,11 @@ const AdminCarrosselRoute = AdminCarrosselRouteImport.update({
 const AdminClientesRoute = AdminClientesRouteImport.update({
   id: '/clientes',
   path: '/clientes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminConfigRoute = AdminConfigRouteImport.update({
+  id: '/config',
+  path: '/config',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminContratacoesRoute = AdminContratacoesRouteImport.update({
@@ -162,8 +174,10 @@ export interface FileRoutesByFullPath {
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
+  '/admin/cancelamentos': typeof AdminCancelamentosRoute
   '/admin/carrossel': typeof AdminCarrosselRoute
   '/admin/clientes': typeof AdminClientesRoute
+  '/admin/config': typeof AdminConfigRoute
   '/admin/contratacoes': typeof AdminContratacoesRoute
   '/admin/extras': typeof AdminExtrasRoute
   '/admin/lista-espera': typeof AdminListaEsperaRoute
@@ -186,8 +200,10 @@ export interface FileRoutesByTo {
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
+  '/admin/cancelamentos': typeof AdminCancelamentosRoute
   '/admin/carrossel': typeof AdminCarrosselRoute
   '/admin/clientes': typeof AdminClientesRoute
+  '/admin/config': typeof AdminConfigRoute
   '/admin/contratacoes': typeof AdminContratacoesRoute
   '/admin/extras': typeof AdminExtrasRoute
   '/admin/lista-espera': typeof AdminListaEsperaRoute
@@ -212,8 +228,10 @@ export interface FileRoutesById {
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
+  '/admin/cancelamentos': typeof AdminCancelamentosRoute
   '/admin/carrossel': typeof AdminCarrosselRoute
   '/admin/clientes': typeof AdminClientesRoute
+  '/admin/config': typeof AdminConfigRoute
   '/admin/contratacoes': typeof AdminContratacoesRoute
   '/admin/extras': typeof AdminExtrasRoute
   '/admin/lista-espera': typeof AdminListaEsperaRoute
@@ -239,8 +257,10 @@ export interface FileRouteTypes {
     | '/seja-profissional'
     | '/termos'
     | '/admin/avaliacoes'
+    | '/admin/cancelamentos'
     | '/admin/carrossel'
     | '/admin/clientes'
+    | '/admin/config'
     | '/admin/contratacoes'
     | '/admin/extras'
     | '/admin/lista-espera'
@@ -263,8 +283,10 @@ export interface FileRouteTypes {
     | '/seja-profissional'
     | '/termos'
     | '/admin/avaliacoes'
+    | '/admin/cancelamentos'
     | '/admin/carrossel'
     | '/admin/clientes'
+    | '/admin/config'
     | '/admin/contratacoes'
     | '/admin/extras'
     | '/admin/lista-espera'
@@ -288,8 +310,10 @@ export interface FileRouteTypes {
     | '/seja-profissional'
     | '/termos'
     | '/admin/avaliacoes'
+    | '/admin/cancelamentos'
     | '/admin/carrossel'
     | '/admin/clientes'
+    | '/admin/config'
     | '/admin/contratacoes'
     | '/admin/extras'
     | '/admin/lista-espera'
@@ -411,6 +435,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAvaliacoesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/cancelamentos': {
+      id: '/admin/cancelamentos'
+      path: '/cancelamentos'
+      fullPath: '/admin/cancelamentos'
+      preLoaderRoute: typeof AdminCancelamentosRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/carrossel': {
       id: '/admin/carrossel'
       path: '/carrossel'
@@ -423,6 +454,13 @@ declare module '@tanstack/react-router' {
       path: '/clientes'
       fullPath: '/admin/clientes'
       preLoaderRoute: typeof AdminClientesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/config': {
+      id: '/admin/config'
+      path: '/config'
+      fullPath: '/admin/config'
+      preLoaderRoute: typeof AdminConfigRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/contratacoes': {
@@ -486,8 +524,10 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminAvaliacoesRoute: typeof AdminAvaliacoesRoute
+  AdminCancelamentosRoute: typeof AdminCancelamentosRoute
   AdminCarrosselRoute: typeof AdminCarrosselRoute
   AdminClientesRoute: typeof AdminClientesRoute
+  AdminConfigRoute: typeof AdminConfigRoute
   AdminContratacoesRoute: typeof AdminContratacoesRoute
   AdminExtrasRoute: typeof AdminExtrasRoute
   AdminListaEsperaRoute: typeof AdminListaEsperaRoute
@@ -498,8 +538,10 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAvaliacoesRoute: AdminAvaliacoesRoute,
+  AdminCancelamentosRoute: AdminCancelamentosRoute,
   AdminCarrosselRoute: AdminCarrosselRoute,
   AdminClientesRoute: AdminClientesRoute,
+  AdminConfigRoute: AdminConfigRoute,
   AdminContratacoesRoute: AdminContratacoesRoute,
   AdminExtrasRoute: AdminExtrasRoute,
   AdminListaEsperaRoute: AdminListaEsperaRoute,

@@ -11,13 +11,13 @@ import { Label } from "@/components/ui/label";
 export const Route = createFileRoute("/admin_/login")({
   head: () => ({
     meta: [
-      { title: "Login administrativo — LAR10" },
+      { title: "Login administrativo — Lar77" },
       {
         name: "description",
-        content: "Área restrita: acesso ao painel administrativo da LAR10.",
+        content: "Área restrita: acesso ao painel administrativo da Lar77.",
       },
-      { property: "og:title", content: "Login administrativo — LAR10" },
-      { property: "og:description", content: "Acesso restrito ao painel interno da LAR10." },
+      { property: "og:title", content: "Login administrativo — Lar77" },
+      { property: "og:description", content: "Acesso restrito ao painel interno da Lar77." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -97,11 +97,11 @@ function AdminLoginPage() {
       <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-card)]">
         <div className="flex items-center gap-2 text-primary">
           <ShieldCheck className="size-5" strokeWidth={1.5} aria-hidden />
-          <span className="font-display text-lg font-bold">LAR10 Admin</span>
+          <span className="font-display text-lg font-bold">Lar77 Admin</span>
         </div>
         <h1 className="mt-4 text-2xl font-semibold tracking-tight">Acesso administrativo</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Área restrita à equipe LAR10. Entre com suas credenciais de administrador.
+          Área restrita à equipe Lar77. Entre com suas credenciais de administrador.
         </p>
 
         <form className="mt-6 space-y-4" onSubmit={entrar}>

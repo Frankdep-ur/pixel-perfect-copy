@@ -25,13 +25,13 @@ import { useSession } from "@/hooks/use-auth";
 export const Route = createFileRoute("/profissional")({
   head: () => ({
     meta: [
-      { title: "Área da profissional — LAR10" },
+      { title: "Área da profissional — Lar77" },
       {
         name: "description",
         content:
-          "Gerencie seus serviços de limpeza, aceite solicitações e acompanhe seus ganhos no LAR10.",
+          "Gerencie seus serviços de limpeza, aceite solicitações e acompanhe seus ganhos no Lar77.",
       },
-      { property: "og:title", content: "Área da profissional — LAR10" },
+      { property: "og:title", content: "Área da profissional — Lar77" },
       {
         property: "og:description",
         content: "Aceite solicitações, atualize o andamento do serviço e acompanhe sua nota.",
@@ -125,7 +125,7 @@ function AreaProfissional() {
                 </Avatar>
                 <div className="space-y-3">
                   <h2 className="text-2xl font-bold tracking-tight text-foreground">
-                    {perfil.profiles?.nome ?? "Profissional LAR10"}
+                    {perfil.profiles?.nome ?? "Profissional Lar77"}
                   </h2>
                   <div className="flex flex-wrap items-center gap-2">
                     {perfil.status === "aprovada" ? (
@@ -144,7 +144,7 @@ function AreaProfissional() {
                   <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                     <span className="flex items-center gap-1.5">
                       <MapPin className="size-4" />
-                      {nomeRegiao(perfil.regiao)} · até {perfil.raio_km} km
+                      {nomeRegiao(perfil.regiao)} · até {perfil.raio_km ?? "—"} km
                     </span>
                     <span className="flex items-center gap-1.5">
                       <Star className="size-4 fill-accent text-accent" />
@@ -180,6 +180,9 @@ function AreaProfissional() {
                 nome: perfil.profiles?.nome ?? null,
                 telefone: perfil.profiles?.telefone ?? null,
                 foto_url: perfil.profiles?.foto_url ?? null,
+                pix_tipo: perfil.pix_tipo ?? null,
+                pix_chave: perfil.pix_chave ?? null,
+                pix_titular: perfil.pix_titular ?? null,
               }}
             />
 
@@ -190,6 +193,7 @@ function AreaProfissional() {
               docCpf={perfil.doc_cpf_url ?? null}
               comprovante={perfil.comprovante_url ?? null}
               telefoneRecado={perfil.telefone_recado ?? null}
+              docTipo={perfil.doc_tipo ?? null}
             />
 
 
@@ -199,12 +203,13 @@ function AreaProfissional() {
               <ServicosProfissional
                 profissionalId={perfil.id}
                 nomeProfissional={perfil.profiles?.nome ?? "sua profissional"}
+                userId={perfil.user_id}
               />
             ) : (
               <EstadoVazio
                 icon={Clock3}
                 titulo="Cadastro em análise"
-                texto="A equipe LAR10 revisa seu perfil no painel administrativo (Admin → Profissionais). Assim que for aprovado, as solicitações da sua região aparecem aqui."
+                texto="A equipe Lar77 revisa seu perfil no painel administrativo (Admin → Profissionais). Assim que for aprovado, as solicitações da sua região aparecem aqui."
               />
             )}
 

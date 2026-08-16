@@ -6,12 +6,12 @@ export type AdminProfissional = {
   id: string;
   user_id: string;
   bio: string | null;
-  anos_experiencia: number;
+  anos_experiencia: number | null;
   status: string;
   nota_media: number;
   total_avaliacoes: number;
   total_servicos: number;
-  raio_km: number;
+  raio_km: number | null;
   cidade: string | null;
   regiao: string | null;
   cidades_atendidas: string[];

@@ -6,15 +6,15 @@ import { PlaceholderPage } from "@/components/placeholder-page";
 export const Route = createFileRoute("/ajuda")({
   head: () => ({
     meta: [
-      { title: "Ajuda — LAR10" },
+      { title: "Ajuda — Lar77" },
       {
         name: "description",
-        content: "Central de ajuda do LAR10: dúvidas sobre contratação, pagamento e serviços.",
+        content: "Central de ajuda do Lar77: dúvidas sobre contratação, pagamento e serviços.",
       },
-      { property: "og:title", content: "Ajuda — LAR10" },
+      { property: "og:title", content: "Ajuda — Lar77" },
       {
         property: "og:description",
-        content: "Central de ajuda do LAR10. Conteúdo em preparação.",
+        content: "Central de ajuda do Lar77. Conteúdo em preparação.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

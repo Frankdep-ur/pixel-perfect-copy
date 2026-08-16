@@ -10,6 +10,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
+function mascaraCpf(valor: string) {
+  const d = valor.replace(/\D/g, "").slice(0, 11);
+  return d
+    .replace(/(\d{3})(\d)/, "$1.$2")
+    .replace(/(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
+    .replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
+}
+
 export type PapelAcesso = "cliente" | "profissional";
 
 type Props = {
@@ -40,7 +48,7 @@ const CONFIG: Record<
     titulo: "Acesso profissional",
     subtitulo: "Entre para receber pedidos da sua região e gerenciar sua agenda.",
     destino: "/profissional",
-    ctaCriar: "Quero trabalhar com a LAR10",
+    ctaCriar: "Quero trabalhar com a Lar77",
     rotaOposta: "/entrar",
     labelOposta: "Quero contratar uma faxina",
   },
@@ -61,6 +69,7 @@ export function FormAcesso({ papel, next }: Props) {
   const [senha, setSenha] = useState("");
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
+  const [cpf, setCpf] = useState("");
   const [enviando, setEnviando] = useState(false);
 
   useEffect(() => {
@@ -84,12 +93,17 @@ export function FormAcesso({ papel, next }: Props) {
 
   async function cadastrar(e: React.FormEvent) {
     e.preventDefault();
+    const cpfDigitos = cpf.replace(/\D/g, "");
+    if (cpfDigitos.length !== 11) {
+      toast.error("Informe um CPF válido", { description: "O CPF deve ter 11 dígitos." });
+      return;
+    }
     setEnviando(true);
     const { error } = await supabase.auth.signUp({
       email,
       password: senha,
       options: {
-        data: { nome, telefone, role: papel },
+        data: { nome, telefone, cpf: cpfDigitos, role: papel },
         emailRedirectTo: `${window.location.origin}${destino}`,
       },
     });
@@ -102,7 +116,7 @@ export function FormAcesso({ papel, next }: Props) {
       toast.error("Não foi possível criar a conta", { description: descricao });
       return;
     }
-    toast.success("Conta criada!", { description: "Bem-vinda ao LAR10." });
+    toast.success("Conta criada!", { description: "Bem-vinda ao Lar77." });
     router.invalidate();
     navigate({ to: destino, replace: true });
   }
@@ -192,6 +206,20 @@ export function FormAcesso({ papel, next }: Props) {
                 onChange={(e) => setTelefone(e.target.value)}
                 placeholder="(48) 99999-9999"
               />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="cpf-novo">CPF</Label>
+              <Input
+                id="cpf-novo"
+                inputMode="numeric"
+                required
+                value={cpf}
+                onChange={(e) => setCpf(mascaraCpf(e.target.value))}
+                placeholder="000.000.000-00"
+              />
+              <p className="text-xs text-muted-foreground">
+                Obrigatório para validarmos sua conta na Lar77.
+              </p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="email-novo">E-mail</Label>

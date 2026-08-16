@@ -13,15 +13,15 @@ import { formatBRL, labelTipoLimpeza } from "@/lib/catalogo";
 export const Route = createFileRoute("/confirmacao/$id")({
   head: () => ({
     meta: [
-      { title: "Contratação confirmada — LAR10" },
+      { title: "Contratação confirmada — Lar77" },
       {
         name: "description",
-        content: "Sua limpeza foi agendada com uma profissional verificada do LAR10.",
+        content: "Sua limpeza foi agendada com uma profissional verificada do Lar77.",
       },
-      { property: "og:title", content: "Contratação confirmada — LAR10" },
+      { property: "og:title", content: "Contratação confirmada — Lar77" },
       {
         property: "og:description",
-        content: "Sua limpeza foi agendada com uma profissional verificada do LAR10.",
+        content: "Sua limpeza foi agendada com uma profissional verificada do Lar77.",
       },
       { name: "robots", content: "noindex" },
     ],

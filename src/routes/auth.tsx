@@ -12,16 +12,16 @@ export const Route = createFileRoute("/auth")({
   }),
   head: () => ({
     meta: [
-      { title: "Entrar ou criar conta — LAR10" },
+      { title: "Entrar ou criar conta — Lar77" },
       {
         name: "description",
         content:
-          "Acesse sua conta LAR10 para acompanhar suas contratações de limpeza em Santa Catarina.",
+          "Acesse sua conta Lar77 para acompanhar suas contratações de limpeza em Santa Catarina.",
       },
-      { property: "og:title", content: "Entrar ou criar conta — LAR10" },
+      { property: "og:title", content: "Entrar ou criar conta — Lar77" },
       {
         property: "og:description",
-        content: "Acesse sua conta LAR10 e acompanhe suas contratações de limpeza.",
+        content: "Acesse sua conta Lar77 e acompanhe suas contratações de limpeza.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

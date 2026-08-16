@@ -19,7 +19,7 @@ export function HeroCarrossel() {
       <figure className="h-full w-full overflow-hidden">
         <img
           src={slide.imagem_url}
-          alt={slide.titulo ?? "Profissional de limpeza LAR10"}
+          alt={slide.titulo ?? "Profissional de limpeza Lar77"}
           className="h-full w-full object-cover"
         />
       </figure>
@@ -33,7 +33,7 @@ export function HeroCarrossel() {
           <CarouselItem key={slide.id} className="relative h-full pl-0">
             <img
               src={slide.imagem_url}
-              alt={slide.titulo ?? "Profissional de limpeza LAR10"}
+              alt={slide.titulo ?? "Profissional de limpeza Lar77"}
               className="h-[40vh] w-full object-cover md:h-[520px]"
             />
             {(slide.titulo || slide.legenda) && (

@@ -20,17 +20,17 @@ export function linkWhatsApp(telefone: string | null | undefined, mensagem: stri
   return `https://wa.me/${numero}?text=${texto}`;
 }
 
-export function linkSuporte(mensagem = "Olá! Preciso de ajuda com a LAR10.") {
+export function linkSuporte(mensagem = "Olá! Preciso de ajuda com a Lar77.") {
   return linkWhatsApp(WHATSAPP_SUPORTE, mensagem);
 }
 
 export const MENSAGENS = {
   novoPedido: (codigo: string, data: string, hora: string) =>
-    `Olá! Você recebeu um novo pedido de faxina na LAR10 (${codigo}) para ${data} às ${hora}. Entre no app para aceitar.`,
+    `Olá! Você recebeu um novo pedido de faxina na Lar77 (${codigo}) para ${data} às ${hora}. Entre no app para aceitar.`,
   aceito: (nome: string, data: string, hora: string) =>
-    `Olá! Sou ${nome}, sua profissional LAR10. Confirmei sua faxina para ${data} às ${hora}. Qualquer dúvida me chame por aqui.`,
+    `Olá! Sou ${nome}, sua profissional Lar77. Confirmei sua faxina para ${data} às ${hora}. Qualquer dúvida me chame por aqui.`,
   finalizada: (codigo: string) =>
-    `Olá! A faxina ${codigo} foi finalizada. Confirme a conclusão no app da LAR10 para liberar o pagamento. Obrigada!`,
+    `Olá! A faxina ${codigo} foi finalizada. Confirme a conclusão no app da Lar77 para liberar o pagamento. Obrigada!`,
   clienteParaProfissional: (codigo: string) =>
-    `Olá! Sou o cliente da faxina ${codigo} da LAR10. Podemos combinar os detalhes?`,
+    `Olá! Sou o cliente da faxina ${codigo} da Lar77. Podemos combinar os detalhes?`,
 };

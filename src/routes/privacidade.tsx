@@ -6,15 +6,15 @@ import { PlaceholderPage } from "@/components/placeholder-page";
 export const Route = createFileRoute("/privacidade")({
   head: () => ({
     meta: [
-      { title: "Privacidade — LAR10" },
+      { title: "Privacidade — Lar77" },
       {
         name: "description",
-        content: "Como o LAR10 trata os dados de clientes e profissionais de limpeza.",
+        content: "Como o Lar77 trata os dados de clientes e profissionais de limpeza.",
       },
-      { property: "og:title", content: "Privacidade — LAR10" },
+      { property: "og:title", content: "Privacidade — Lar77" },
       {
         property: "og:description",
-        content: "Política de privacidade do LAR10. Documento em preparação.",
+        content: "Política de privacidade do Lar77. Documento em preparação.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

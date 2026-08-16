@@ -32,7 +32,7 @@ export type Rascunho = {
   hora: string | null;
   observacoes: string;
   profissional_id: string | null;
-  /** "Deixe que a LAR10 escolha": sorteio entre as profissionais disponíveis. */
+  /** "Deixe que a Lar77 escolha": sorteio entre as profissionais disponíveis. */
   escolha_automatica: boolean;
 
 };

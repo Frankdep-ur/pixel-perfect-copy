@@ -69,7 +69,7 @@ export function BloqueiosProfissional({ profissionalId }: { profissionalId: stri
           <CalendarOff className="size-5 text-primary" /> Minha indisponibilidade
         </CardTitle>
         <p className="text-sm text-muted-foreground">
-          Toque nos dias em que você não pode atender. Domingos já são bloqueados pela LAR10.
+          Toque nos dias em que você não pode atender. Domingos já são bloqueados pela Lar77.
         </p>
       </CardHeader>
       <CardContent>

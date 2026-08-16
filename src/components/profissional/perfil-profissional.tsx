@@ -19,8 +19,8 @@ export type PerfilProfissionalEdicao = {
   id: string;
   user_id: string;
   bio: string | null;
-  anos_experiencia: number;
-  raio_km: number;
+  anos_experiencia: number | null;
+  raio_km: number | null;
   regiao: string | null;
   cidade: string | null;
   cidades_atendidas: string[];
@@ -28,7 +28,17 @@ export type PerfilProfissionalEdicao = {
   nome: string | null;
   telefone: string | null;
   foto_url: string | null;
+  pix_tipo: string | null;
+  pix_chave: string | null;
+  pix_titular: string | null;
 };
+
+const TIPOS_PIX = [
+  { id: "cpf", label: "CPF" },
+  { id: "telefone", label: "Telefone" },
+  { id: "email", label: "E-mail" },
+  { id: "aleatoria", label: "Chave aleatória" },
+];
 
 export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdicao }) {
   const queryClient = useQueryClient();
@@ -36,14 +46,17 @@ export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdica
   const nome = perfil.nome ?? "";
   const telefone = perfil.telefone ?? "";
   const [bio, setBio] = useState(perfil.bio ?? "");
-  const [anos, setAnos] = useState(String(perfil.anos_experiencia));
-  const [raio, setRaio] = useState(String(perfil.raio_km));
+  const [anos, setAnos] = useState(perfil.anos_experiencia === null ? "" : String(perfil.anos_experiencia));
+  const [raio, setRaio] = useState(perfil.raio_km === null ? "" : String(perfil.raio_km));
   const [regiao, setRegiao] = useState<RegiaoId>(
     (perfil.regiao as RegiaoId) in REGIOES ? (perfil.regiao as RegiaoId) : "grande_floripa",
   );
   const [cidades, setCidades] = useState<string[]>(perfil.cidades_atendidas ?? []);
   const [cidade, setCidade] = useState(perfil.cidade ?? "");
   const [tipos, setTipos] = useState<string[]>(perfil.tipos_limpeza ?? []);
+  const [pixTipo, setPixTipo] = useState(perfil.pix_tipo ?? "cpf");
+  const [pixChave, setPixChave] = useState(perfil.pix_chave ?? "");
+  const [pixTitular, setPixTitular] = useState(perfil.pix_titular ?? nome);
 
 
   function alternar(lista: string[], set: (v: string[]) => void, valor: string) {
@@ -56,6 +69,16 @@ export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdica
       if (!nome.trim()) throw new Error("Informe seu nome completo.");
       if (cidades.length === 0) throw new Error("Escolha ao menos uma cidade atendida.");
       if (tipos.length === 0) throw new Error("Escolha ao menos um tipo de limpeza.");
+      if (!anos.trim()) throw new Error("Informe seus anos de experiência.");
+      if (!raio.trim() || Number(raio) <= 0)
+        throw new Error("Informe a distância máxima que você atende (km).");
+      if (!pixChave.trim()) throw new Error("Informe sua chave PIX para recebimento.");
+      if (!pixTitular.trim()) throw new Error("Informe o nome do titular da conta PIX.");
+      if (
+        nome.trim() &&
+        pixTitular.trim().toLowerCase() !== nome.trim().toLowerCase()
+      )
+        throw new Error("O titular do PIX deve ser exatamente o mesmo nome do seu cadastro.");
 
       const { error: erroPerfil } = await supabase
         .from("profiles")
@@ -68,8 +91,11 @@ export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdica
         .from("profissionais")
         .update({
           bio: bio.trim() || null,
-          anos_experiencia: Number(anos) || 0,
-          raio_km: Number(raio) || 15,
+          anos_experiencia: Number(anos),
+          raio_km: Number(raio),
+          pix_tipo: pixTipo,
+          pix_chave: pixChave.trim(),
+          pix_titular: pixTitular.trim(),
           regiao,
           cidade: cidade || cidades[0] || null,
           cidades_atendidas: cidades,
@@ -116,14 +142,14 @@ export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdica
             </p>
           </div>
           <p className="text-xs text-muted-foreground">
-            Nome, telefone, e-mail e documentos só podem ser alterados pela equipe LAR10 — fale
+            Nome, telefone, e-mail e documentos só podem ser alterados pela equipe Lar77 — fale
             com o suporte se algo estiver errado.
           </p>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="p-anos">Anos de experiência</Label>
+            <Label htmlFor="p-anos">Anos de experiência *</Label>
             <Input
               id="p-anos"
               type="number"
@@ -133,7 +159,7 @@ export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdica
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="p-raio">Distância máxima (km)</Label>
+            <Label htmlFor="p-raio">Distância máxima que atende (km) *</Label>
             <Input
               id="p-raio"
               type="number"
@@ -231,6 +257,51 @@ export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdica
                 </span>
               </label>
             ))}
+          </div>
+        </div>
+
+        <div className="space-y-3 rounded-xl border border-border p-4">
+          <div>
+            <Label>Conta PIX para recebimento *</Label>
+            <p className="mt-1 text-xs text-muted-foreground">
+              A conta precisa estar no mesmo nome do seu cadastro. É por aqui que a Lar77
+              repassa os seus pagamentos.
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="p-pix-tipo">Tipo de chave</Label>
+              <select
+                id="p-pix-tipo"
+                value={pixTipo}
+                onChange={(e) => setPixTipo(e.target.value)}
+                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+              >
+                {TIPOS_PIX.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="p-pix-chave">Chave PIX</Label>
+              <Input
+                id="p-pix-chave"
+                value={pixChave}
+                onChange={(e) => setPixChave(e.target.value)}
+                placeholder="Sua chave PIX"
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="p-pix-titular">Nome do titular</Label>
+            <Input
+              id="p-pix-titular"
+              value={pixTitular}
+              onChange={(e) => setPixTitular(e.target.value)}
+              placeholder="Igual ao nome do cadastro"
+            />
           </div>
         </div>
 

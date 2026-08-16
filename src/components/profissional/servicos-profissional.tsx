@@ -7,7 +7,6 @@ import {
   Inbox,
   Loader2,
   MapPin,
-  MessageCircle,
   Play,
   Sparkles,
   X,
@@ -23,9 +22,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { STATUS_LABEL, formatBRL, labelTipoImovel, labelTipoLimpeza } from "@/lib/catalogo";
 import { formatarData } from "@/lib/agenda";
-import { MENSAGENS, linkWhatsApp } from "@/lib/whatsapp";
+import { MENSAGENS } from "@/lib/whatsapp";
+import { ChatServico } from "@/components/chat-servico";
 
-type Props = { profissionalId: string; nomeProfissional: string };
+type Props = { profissionalId: string; nomeProfissional: string; userId: string };
 
 const PENDENTES = ["aguardando_aceite", "solicitada"];
 const ABERTOS = ["aceita", "confirmada", "a_caminho", "em_andamento", "finalizada"];
@@ -60,7 +60,7 @@ const PROXIMO: Record<string, { status: string; label: string; icone: LucideIcon
   em_andamento: { status: "finalizada", label: "Faxina finalizada", icone: Check },
 };
 
-export function ServicosProfissional({ profissionalId, nomeProfissional }: Props) {
+export function ServicosProfissional({ profissionalId, nomeProfissional, userId }: Props) {
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
@@ -114,7 +114,7 @@ export function ServicosProfissional({ profissionalId, nomeProfissional }: Props
       toast.success("Serviço recusado.", {
         description: novo
           ? "Já repassamos automaticamente para outra profissional."
-          : "A equipe LAR10 vai procurar outra profissional.",
+          : "A equipe Lar77 vai procurar outra profissional.",
       });
       atualizarLista();
     },
@@ -141,15 +141,13 @@ export function ServicosProfissional({ profissionalId, nomeProfissional }: Props
     onSuccess: (status, booking) => {
       if (status === "finalizada") {
         toast.success("Faxina finalizada!", {
-          description: "Avise o cliente pelo WhatsApp para liberar o pagamento.",
+          description: "Avisamos o cliente pelo chat para liberar o pagamento.",
         });
-        window.open(
-          linkWhatsApp(
-            booking.profiles?.telefone,
-            MENSAGENS.finalizada(booking.codigo ?? "LAR10"),
-          ),
-          "_blank",
-        );
+        void supabase.from("mensagens").insert({
+          booking_id: booking.id,
+          autor_id: userId,
+          conteudo: MENSAGENS.finalizada(booking.codigo ?? "Lar77"),
+        });
       } else {
         toast.success("Status atualizado.");
       }
@@ -205,6 +203,7 @@ export function ServicosProfissional({ profissionalId, nomeProfissional }: Props
             key={b.id}
             booking={b}
             nomeProfissional={nomeProfissional}
+            userId={userId}
             onAceitar={() => aceitar.mutate(b)}
             onRecusar={() => recusar.mutate(b)}
             pendente={aceitar.isPending || recusar.isPending}
@@ -225,6 +224,7 @@ export function ServicosProfissional({ profissionalId, nomeProfissional }: Props
             key={b.id}
             booking={b}
             nomeProfissional={nomeProfissional}
+            userId={userId}
             onAvancar={() => avancar.mutate(b)}
             pendente={avancar.isPending}
           />
@@ -240,7 +240,7 @@ export function ServicosProfissional({ profissionalId, nomeProfissional }: Props
           />
         )}
         {concluidos.map((b) => (
-          <Cartao key={b.id} booking={b} nomeProfissional={nomeProfissional} />
+          <Cartao key={b.id} booking={b} nomeProfissional={nomeProfissional} userId={userId} />
         ))}
       </TabsContent>
     </Tabs>
@@ -254,6 +254,7 @@ function Vazio({ titulo, texto, icon }: { titulo: string; texto: string; icon: L
 function Cartao({
   booking,
   nomeProfissional,
+  userId,
   onAvancar,
   onAceitar,
   onRecusar,
@@ -261,6 +262,7 @@ function Cartao({
 }: {
   booking: BookingProf;
   nomeProfissional: string;
+  userId: string;
   onAvancar?: () => void;
   onAceitar?: () => void;
   onRecusar?: () => void;
@@ -315,23 +317,13 @@ function Cartao({
           )}
         </div>
 
-        {aceito && booking.profiles?.telefone && (
-          <a
-            href={linkWhatsApp(
-              booking.profiles.telefone,
-              MENSAGENS.aceito(
-                nomeProfissional,
-                formatarData(booking.data),
-                booking.hora?.slice(0, 5) ?? "",
-              ),
-            )}
-            target="_blank"
-            rel="noreferrer"
-            className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-surface-tint px-4 text-sm font-semibold text-primary active:scale-[0.98]"
-          >
-            <MessageCircle className="size-4" />
-            Falar com {booking.profiles.nome?.split(" ")[0] ?? "o cliente"}
-          </a>
+        {aceito && (
+          <ChatServico
+            bookingId={booking.id}
+            userId={userId}
+            titulo={`Chat · ${booking.codigo ?? "serviço"}`}
+            interlocutor={booking.profiles?.nome?.split(" ")[0] ?? "o cliente"}
+          />
         )}
 
         {onAceitar && onRecusar && (

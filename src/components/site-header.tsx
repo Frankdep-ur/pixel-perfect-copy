@@ -6,13 +6,9 @@ import { LifeBuoy, LogOut, Menu, ShieldCheck, Sparkles, UserRound, X } from "luc
 import { supabase } from "@/integrations/supabase/client";
 import { useSession, usePapeis } from "@/hooks/use-auth";
 import { linkSuporte } from "@/lib/whatsapp";
+import logoLar77 from "@/assets/logo-lar77.png.asset.json";
 
-const navLinksCliente = [
-  { label: "Como funciona", href: "/#como-funciona" },
-  { label: "Segurança", href: "/#seguranca" },
-];
-
-const navLinksProfissional = { label: "Seja profissional", href: "/seja-profissional" };
+const navLinksCliente = [{ label: "Como funciona", href: "/#como-funciona" }];
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -46,9 +42,10 @@ export function SiteHeader() {
         <Link
           to="/"
           onClick={() => setOpen(false)}
-          className="font-display text-xl font-bold text-primary transition-transform duration-200 ease-out active:scale-[0.98]"
+          className="flex items-center gap-2 transition-transform duration-200 ease-out active:scale-[0.98]"
         >
-          Lar77
+          <img src={logoLar77.url} alt="Lar77 — diaristas de confiança" className="h-9 w-auto" />
+          <span className="sr-only">Lar77</span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
@@ -61,12 +58,15 @@ export function SiteHeader() {
               {link.label}
             </a>
           ))}
-          <Link
-            to={navLinksProfissional.href}
-            className="text-sm font-medium text-muted-foreground transition-colors duration-200 ease-out hover:text-primary"
+          <a
+            href={linkSuporte()}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors duration-200 ease-out hover:text-primary"
           >
-            {navLinksProfissional.label}
-          </Link>
+            <LifeBuoy className="size-4" />
+            Suporte
+          </a>
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
@@ -150,7 +150,7 @@ export function SiteHeader() {
         aria-hidden={!open}
       >
         <div className="flex h-14 items-center justify-between px-5">
-          <span className="font-display text-xl font-bold text-primary">Lar77</span>
+          <img src={logoLar77.url} alt="Lar77" className="h-9 w-auto" />
           <button
             type="button"
             aria-label="Fechar menu"
@@ -172,14 +172,6 @@ export function SiteHeader() {
               {link.label}
             </a>
           ))}
-          <Link
-            to={navLinksProfissional.href}
-            onClick={() => setOpen(false)}
-            className="flex min-h-14 items-center rounded-xl px-2 text-lg font-medium text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
-          >
-            {navLinksProfissional.label}
-          </Link>
-
           <span className="mt-4 px-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             Acessos
           </span>

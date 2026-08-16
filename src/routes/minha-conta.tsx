@@ -6,16 +6,16 @@ import {
   CheckCircle2,
   Loader2,
   MapPin,
-  MessageCircle,
   Plus,
   Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
-import { MENSAGENS, linkWhatsApp } from "@/lib/whatsapp";
 
 import { EstadoVazio } from "@/components/estado-vazio";
 import { MeusImoveis } from "@/components/cliente/meus-imoveis";
 import { MeuPerfil } from "@/components/cliente/meu-perfil";
+import { ChatServico } from "@/components/chat-servico";
+import { CancelarServico } from "@/components/cancelar-servico";
 
 
 import { supabase } from "@/integrations/supabase/client";
@@ -58,6 +58,9 @@ const ATIVOS = [
   "em_andamento",
   "finalizada",
 ];
+
+/** Serviços que o cliente ainda pode cancelar. */
+const CANCELAVEIS = ["aguardando_aceite", "sem_profissional", "solicitada", "aceita", "confirmada"];
 
 /** Só depois do aceite o cliente vê os dados da profissional. */
 const APOS_ACEITE = ["aceita", "confirmada", "a_caminho", "em_andamento", "finalizada", "concluida"];
@@ -141,6 +144,7 @@ function MinhaConta() {
             </TabsContent>
 
             <TabsContent value="historico" className="mt-6 space-y-3">
+              {historico.length > 0 && <RelatorioHistorico bookings={historico} />}
               {historico.length === 0 && (
                 <EstadoVazio
                   icon={Sparkles}
@@ -261,6 +265,15 @@ function CartaoBooking({ booking, userId }: { booking: BookingLista; userId: str
               />
             )}
             {jaAvaliou && <span className="text-xs text-muted-foreground">Serviço avaliado</span>}
+            {CANCELAVEIS.includes(booking.status) && (
+              <CancelarServico
+                bookingId={booking.id}
+                userId={userId}
+                papel="cliente"
+                valorTotal={Number(booking.valor_total)}
+                invalidar={["minhas-contratacoes"]}
+              />
+            )}
           </div>
         </div>
 
@@ -298,18 +311,12 @@ function CartaoBooking({ booking, userId }: { booking: BookingLista; userId: str
                 <p className="text-muted-foreground">{prof.cidade ?? ""}</p>
               </div>
             </div>
-            <Button asChild variant="outline" size="sm" className="gap-2">
-              <a
-                href={linkWhatsApp(
-                  prof.profiles?.telefone,
-                  MENSAGENS.clienteParaProfissional(booking.codigo ?? "Lar77"),
-                )}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <MessageCircle className="size-4" /> WhatsApp
-              </a>
-            </Button>
+            <ChatServico
+              bookingId={booking.id}
+              userId={userId}
+              titulo={`Chat · ${booking.codigo ?? "serviço"}`}
+              interlocutor={prof.profiles?.nome?.split(" ")[0] ?? "a profissional"}
+            />
           </div>
         )}
 
@@ -334,6 +341,63 @@ function CartaoBooking({ booking, userId }: { booking: BookingLista; userId: str
             </Button>
           </div>
         )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function RelatorioHistorico({ bookings }: { bookings: BookingLista[] }) {
+  const total = bookings.reduce((soma, b) => soma + Number(b.valor_total), 0);
+
+  return (
+    <Card>
+      <CardContent className="space-y-4 pt-6">
+        <div className="flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <h2 className="text-lg font-semibold">Relatório de serviços</h2>
+            <p className="text-sm text-muted-foreground">
+              {bookings.length} serviço(s) registrados na sua conta.
+            </p>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Total investido:{" "}
+            <span className="text-lg font-semibold text-primary">{formatBRL(total)}</span>
+          </p>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[560px] text-left text-sm">
+            <thead className="text-xs uppercase tracking-wide text-muted-foreground">
+              <tr>
+                <th className="pb-2 pr-3">Data</th>
+                <th className="pb-2 pr-3">Horário</th>
+                <th className="pb-2 pr-3">Imóvel</th>
+                <th className="pb-2 pr-3">Profissional</th>
+                <th className="pb-2 text-right">Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {bookings.map((b) => (
+                <tr key={b.id} className="border-t border-border">
+                  <td className="py-2 pr-3">
+                    {b.data ? new Date(`${b.data}T12:00:00`).toLocaleDateString("pt-BR") : "—"}
+                  </td>
+                  <td className="py-2 pr-3">{b.hora ? b.hora.slice(0, 5) : "—"}</td>
+                  <td className="py-2 pr-3">
+                    {b.enderecos
+                      ? [b.enderecos.rua, b.enderecos.numero].filter(Boolean).join(", ") ||
+                        [b.enderecos.bairro, b.enderecos.cidade].filter(Boolean).join(", ")
+                      : "—"}
+                  </td>
+                  <td className="py-2 pr-3">{b.profissionais?.profiles?.nome ?? "—"}</td>
+                  <td className="py-2 text-right font-medium">
+                    {formatBRL(Number(b.valor_total))}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </CardContent>
     </Card>
   );

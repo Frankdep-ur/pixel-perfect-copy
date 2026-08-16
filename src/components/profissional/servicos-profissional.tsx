@@ -146,7 +146,7 @@ export function ServicosProfissional({ profissionalId, nomeProfissional, userId 
         void supabase.from("mensagens").insert({
           booking_id: booking.id,
           autor_id: userId,
-          texto: MENSAGENS.finalizada(booking.codigo ?? "Lar77"),
+          conteudo: MENSAGENS.finalizada(booking.codigo ?? "Lar77"),
         });
       } else {
         toast.success("Status atualizado.");

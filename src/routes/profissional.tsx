@@ -144,7 +144,7 @@ function AreaProfissional() {
                   <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                     <span className="flex items-center gap-1.5">
                       <MapPin className="size-4" />
-                      {nomeRegiao(perfil.regiao)} · até {perfil.raio_km} km
+                      {nomeRegiao(perfil.regiao)} · até {perfil.raio_km ?? "—"} km
                     </span>
                     <span className="flex items-center gap-1.5">
                       <Star className="size-4 fill-accent text-accent" />

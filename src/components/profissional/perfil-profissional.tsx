@@ -19,8 +19,8 @@ export type PerfilProfissionalEdicao = {
   id: string;
   user_id: string;
   bio: string | null;
-  anos_experiencia: number;
-  raio_km: number;
+  anos_experiencia: number | null;
+  raio_km: number | null;
   regiao: string | null;
   cidade: string | null;
   cidades_atendidas: string[];
@@ -36,8 +36,8 @@ export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdica
   const nome = perfil.nome ?? "";
   const telefone = perfil.telefone ?? "";
   const [bio, setBio] = useState(perfil.bio ?? "");
-  const [anos, setAnos] = useState(String(perfil.anos_experiencia));
-  const [raio, setRaio] = useState(String(perfil.raio_km));
+  const [anos, setAnos] = useState(perfil.anos_experiencia === null ? "" : String(perfil.anos_experiencia));
+  const [raio, setRaio] = useState(perfil.raio_km === null ? "" : String(perfil.raio_km));
   const [regiao, setRegiao] = useState<RegiaoId>(
     (perfil.regiao as RegiaoId) in REGIOES ? (perfil.regiao as RegiaoId) : "grande_floripa",
   );

@@ -32,7 +32,7 @@ function ordenar(lista: ProfissionalPublica[], rascunho: Rascunho) {
           : null;
       return { ...p, distancia };
     })
-    .filter((p) => (p.distancia === null ? true : p.distancia <= p.raio_km))
+    .filter((p) => (p.distancia === null ? true : p.distancia <= (p.raio_km ?? 15)))
     .sort((a, b) => {
       if (b.nota_media !== a.nota_media) return b.nota_media - a.nota_media;
       return (a.distancia ?? 999) - (b.distancia ?? 999);

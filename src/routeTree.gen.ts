@@ -25,6 +25,7 @@ import { Route as AdminAvaliacoesRouteImport } from './routes/admin.avaliacoes'
 import { Route as AdminCancelamentosRouteImport } from './routes/admin.cancelamentos'
 import { Route as AdminCarrosselRouteImport } from './routes/admin.carrossel'
 import { Route as AdminClientesRouteImport } from './routes/admin.clientes'
+import { Route as AdminConfigRouteImport } from './routes/admin.config'
 import { Route as AdminContratacoesRouteImport } from './routes/admin.contratacoes'
 import { Route as AdminExtrasRouteImport } from './routes/admin.extras'
 import { Route as AdminListaEsperaRouteImport } from './routes/admin.lista-espera'
@@ -114,6 +115,11 @@ const AdminClientesRoute = AdminClientesRouteImport.update({
   path: '/clientes',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminConfigRoute = AdminConfigRouteImport.update({
+  id: '/config',
+  path: '/config',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminContratacoesRoute = AdminContratacoesRouteImport.update({
   id: '/contratacoes',
   path: '/contratacoes',
@@ -171,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/admin/cancelamentos': typeof AdminCancelamentosRoute
   '/admin/carrossel': typeof AdminCarrosselRoute
   '/admin/clientes': typeof AdminClientesRoute
+  '/admin/config': typeof AdminConfigRoute
   '/admin/contratacoes': typeof AdminContratacoesRoute
   '/admin/extras': typeof AdminExtrasRoute
   '/admin/lista-espera': typeof AdminListaEsperaRoute
@@ -196,6 +203,7 @@ export interface FileRoutesByTo {
   '/admin/cancelamentos': typeof AdminCancelamentosRoute
   '/admin/carrossel': typeof AdminCarrosselRoute
   '/admin/clientes': typeof AdminClientesRoute
+  '/admin/config': typeof AdminConfigRoute
   '/admin/contratacoes': typeof AdminContratacoesRoute
   '/admin/extras': typeof AdminExtrasRoute
   '/admin/lista-espera': typeof AdminListaEsperaRoute
@@ -223,6 +231,7 @@ export interface FileRoutesById {
   '/admin/cancelamentos': typeof AdminCancelamentosRoute
   '/admin/carrossel': typeof AdminCarrosselRoute
   '/admin/clientes': typeof AdminClientesRoute
+  '/admin/config': typeof AdminConfigRoute
   '/admin/contratacoes': typeof AdminContratacoesRoute
   '/admin/extras': typeof AdminExtrasRoute
   '/admin/lista-espera': typeof AdminListaEsperaRoute
@@ -251,6 +260,7 @@ export interface FileRouteTypes {
     | '/admin/cancelamentos'
     | '/admin/carrossel'
     | '/admin/clientes'
+    | '/admin/config'
     | '/admin/contratacoes'
     | '/admin/extras'
     | '/admin/lista-espera'
@@ -276,6 +286,7 @@ export interface FileRouteTypes {
     | '/admin/cancelamentos'
     | '/admin/carrossel'
     | '/admin/clientes'
+    | '/admin/config'
     | '/admin/contratacoes'
     | '/admin/extras'
     | '/admin/lista-espera'
@@ -302,6 +313,7 @@ export interface FileRouteTypes {
     | '/admin/cancelamentos'
     | '/admin/carrossel'
     | '/admin/clientes'
+    | '/admin/config'
     | '/admin/contratacoes'
     | '/admin/extras'
     | '/admin/lista-espera'
@@ -444,6 +456,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminClientesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/config': {
+      id: '/admin/config'
+      path: '/config'
+      fullPath: '/admin/config'
+      preLoaderRoute: typeof AdminConfigRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/contratacoes': {
       id: '/admin/contratacoes'
       path: '/contratacoes'
@@ -508,6 +527,7 @@ interface AdminRouteChildren {
   AdminCancelamentosRoute: typeof AdminCancelamentosRoute
   AdminCarrosselRoute: typeof AdminCarrosselRoute
   AdminClientesRoute: typeof AdminClientesRoute
+  AdminConfigRoute: typeof AdminConfigRoute
   AdminContratacoesRoute: typeof AdminContratacoesRoute
   AdminExtrasRoute: typeof AdminExtrasRoute
   AdminListaEsperaRoute: typeof AdminListaEsperaRoute
@@ -521,6 +541,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminCancelamentosRoute: AdminCancelamentosRoute,
   AdminCarrosselRoute: AdminCarrosselRoute,
   AdminClientesRoute: AdminClientesRoute,
+  AdminConfigRoute: AdminConfigRoute,
   AdminContratacoesRoute: AdminContratacoesRoute,
   AdminExtrasRoute: AdminExtrasRoute,
   AdminListaEsperaRoute: AdminListaEsperaRoute,

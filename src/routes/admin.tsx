@@ -11,13 +11,17 @@ import {
   LogOut,
   MailQuestion,
   Sparkles,
+  Settings,
+  LifeBuoy,
   Star,
   Users,
+  XCircle,
   UserCheck,
 } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useSession, usePapeis } from "@/hooks/use-auth";
+import { linkSuporte } from "@/lib/whatsapp";
 
 
 export const Route = createFileRoute("/admin")({
@@ -47,6 +51,8 @@ const ITENS = [
   { to: "/admin/lista-espera", label: "Lista de espera", icon: MailQuestion },
   { to: "/admin/avaliacoes", label: "Avaliações", icon: Star },
   { to: "/admin/carrossel", label: "Carrossel", icon: Images },
+  { to: "/admin/cancelamentos", label: "Cancelamentos", icon: XCircle },
+  { to: "/admin/config", label: "Configurações", icon: Settings },
 
 ] as const;
 
@@ -99,6 +105,17 @@ function AdminLayout() {
             );
           })}
         </nav>
+        <div className="px-3 pb-2">
+          <a
+            href={linkSuporte("Olá! Sou do time Lar77 e preciso de suporte.")}
+            target="_blank"
+            rel="noreferrer"
+            className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-medium text-primary-foreground/75 hover:bg-primary-foreground/10 hover:text-primary-foreground"
+          >
+            <LifeBuoy className="size-4" strokeWidth={1.5} aria-hidden />
+            Suporte
+          </a>
+        </div>
         <div className="flex items-center justify-between gap-3 px-5 py-4 text-xs text-primary-foreground/60">
           <Link to="/" className="hover:text-primary-foreground">
             ← Voltar ao site

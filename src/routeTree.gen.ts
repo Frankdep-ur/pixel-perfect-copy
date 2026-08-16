@@ -22,6 +22,7 @@ import { Route as SejaProfissionalRouteImport } from './routes/seja-profissional
 import { Route as TermosRouteImport } from './routes/termos'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminAvaliacoesRouteImport } from './routes/admin.avaliacoes'
+import { Route as AdminCancelamentosRouteImport } from './routes/admin.cancelamentos'
 import { Route as AdminCarrosselRouteImport } from './routes/admin.carrossel'
 import { Route as AdminClientesRouteImport } from './routes/admin.clientes'
 import { Route as AdminContratacoesRouteImport } from './routes/admin.contratacoes'
@@ -98,6 +99,11 @@ const AdminAvaliacoesRoute = AdminAvaliacoesRouteImport.update({
   path: '/avaliacoes',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminCancelamentosRoute = AdminCancelamentosRouteImport.update({
+  id: '/cancelamentos',
+  path: '/cancelamentos',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminCarrosselRoute = AdminCarrosselRouteImport.update({
   id: '/carrossel',
   path: '/carrossel',
@@ -162,6 +168,7 @@ export interface FileRoutesByFullPath {
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
+  '/admin/cancelamentos': typeof AdminCancelamentosRoute
   '/admin/carrossel': typeof AdminCarrosselRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/contratacoes': typeof AdminContratacoesRoute
@@ -186,6 +193,7 @@ export interface FileRoutesByTo {
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
+  '/admin/cancelamentos': typeof AdminCancelamentosRoute
   '/admin/carrossel': typeof AdminCarrosselRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/contratacoes': typeof AdminContratacoesRoute
@@ -212,6 +220,7 @@ export interface FileRoutesById {
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
+  '/admin/cancelamentos': typeof AdminCancelamentosRoute
   '/admin/carrossel': typeof AdminCarrosselRoute
   '/admin/clientes': typeof AdminClientesRoute
   '/admin/contratacoes': typeof AdminContratacoesRoute
@@ -239,6 +248,7 @@ export interface FileRouteTypes {
     | '/seja-profissional'
     | '/termos'
     | '/admin/avaliacoes'
+    | '/admin/cancelamentos'
     | '/admin/carrossel'
     | '/admin/clientes'
     | '/admin/contratacoes'
@@ -263,6 +273,7 @@ export interface FileRouteTypes {
     | '/seja-profissional'
     | '/termos'
     | '/admin/avaliacoes'
+    | '/admin/cancelamentos'
     | '/admin/carrossel'
     | '/admin/clientes'
     | '/admin/contratacoes'
@@ -288,6 +299,7 @@ export interface FileRouteTypes {
     | '/seja-profissional'
     | '/termos'
     | '/admin/avaliacoes'
+    | '/admin/cancelamentos'
     | '/admin/carrossel'
     | '/admin/clientes'
     | '/admin/contratacoes'
@@ -411,6 +423,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAvaliacoesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/cancelamentos': {
+      id: '/admin/cancelamentos'
+      path: '/cancelamentos'
+      fullPath: '/admin/cancelamentos'
+      preLoaderRoute: typeof AdminCancelamentosRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/carrossel': {
       id: '/admin/carrossel'
       path: '/carrossel'
@@ -486,6 +505,7 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminAvaliacoesRoute: typeof AdminAvaliacoesRoute
+  AdminCancelamentosRoute: typeof AdminCancelamentosRoute
   AdminCarrosselRoute: typeof AdminCarrosselRoute
   AdminClientesRoute: typeof AdminClientesRoute
   AdminContratacoesRoute: typeof AdminContratacoesRoute
@@ -498,6 +518,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAvaliacoesRoute: AdminAvaliacoesRoute,
+  AdminCancelamentosRoute: AdminCancelamentosRoute,
   AdminCarrosselRoute: AdminCarrosselRoute,
   AdminClientesRoute: AdminClientesRoute,
   AdminContratacoesRoute: AdminContratacoesRoute,

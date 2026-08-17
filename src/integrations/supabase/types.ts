@@ -126,11 +126,15 @@ export type Database = {
           cliente_confirmado_em: string | null
           cliente_id: string
           codigo: string | null
+          copa: number
           cozinha: boolean
+          cozinhas: number
           criado_em: string
           data: string | null
           duracao_horas: number
           endereco_id: string | null
+          faixa_metragem: string | null
+          faixa_pessoas: string | null
           finalizado_em: string | null
           hora: string | null
           id: string
@@ -140,10 +144,13 @@ export type Database = {
           pagamento_liberado_em: string | null
           problema_relatado: string | null
           profissional_id: string | null
+          qtd_profissionais: number
           quartos: number
+          recepcao: number
           recusadas: string[]
           regiao: string | null
           salas: number
+          salas_reuniao: number
           status: string
           taxa_admin: number
           tipo_imovel: string | null
@@ -161,11 +168,15 @@ export type Database = {
           cliente_confirmado_em?: string | null
           cliente_id: string
           codigo?: string | null
+          copa?: number
           cozinha?: boolean
+          cozinhas?: number
           criado_em?: string
           data?: string | null
           duracao_horas?: number
           endereco_id?: string | null
+          faixa_metragem?: string | null
+          faixa_pessoas?: string | null
           finalizado_em?: string | null
           hora?: string | null
           id?: string
@@ -175,10 +186,13 @@ export type Database = {
           pagamento_liberado_em?: string | null
           problema_relatado?: string | null
           profissional_id?: string | null
+          qtd_profissionais?: number
           quartos?: number
+          recepcao?: number
           recusadas?: string[]
           regiao?: string | null
           salas?: number
+          salas_reuniao?: number
           status?: string
           taxa_admin?: number
           tipo_imovel?: string | null
@@ -196,11 +210,15 @@ export type Database = {
           cliente_confirmado_em?: string | null
           cliente_id?: string
           codigo?: string | null
+          copa?: number
           cozinha?: boolean
+          cozinhas?: number
           criado_em?: string
           data?: string | null
           duracao_horas?: number
           endereco_id?: string | null
+          faixa_metragem?: string | null
+          faixa_pessoas?: string | null
           finalizado_em?: string | null
           hora?: string | null
           id?: string
@@ -210,10 +228,13 @@ export type Database = {
           pagamento_liberado_em?: string | null
           problema_relatado?: string | null
           profissional_id?: string | null
+          qtd_profissionais?: number
           quartos?: number
+          recepcao?: number
           recusadas?: string[]
           regiao?: string | null
           salas?: number
+          salas_reuniao?: number
           status?: string
           taxa_admin?: number
           tipo_imovel?: string | null

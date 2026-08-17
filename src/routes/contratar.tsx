@@ -110,10 +110,19 @@ function Contratar() {
     () =>
       calcularOrcamento(
         {
+          perfil: perfilImovel(rascunho.tipo_imovel),
           duracao_horas: rascunho.duracao_horas ?? 0,
           quartos: rascunho.quartos,
+          salas: rascunho.salas,
           banheiros: rascunho.banheiros,
+          cozinhas: rascunho.cozinhas,
           area_externa: rascunho.area_externa,
+          copa: rascunho.copa,
+          salas_reuniao: rascunho.salas_reuniao,
+          recepcao: rascunho.recepcao,
+          faixa_pessoas: rascunho.faixa_pessoas,
+          faixa_metragem: rascunho.faixa_metragem,
+          qtd_profissionais: rascunho.qtd_profissionais,
           tipo_limpeza: rascunho.tipo_limpeza ?? "padrao",
           extras: listaExtras.filter((e) => rascunho.extras_ids.includes(e.id)),
         },

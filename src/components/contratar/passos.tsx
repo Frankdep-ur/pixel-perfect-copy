@@ -1,22 +1,28 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Loader2, MapPin, Minus, Plus } from "lucide-react";
+import { Info, Loader2, MapPin, Minus, Plus } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import {
   AREAS_EXTERNAS,
   DURACOES,
+  FAIXAS_METRAGEM,
+  FAIXAS_PESSOAS,
+  QTD_PROFISSIONAIS,
   TIPOS_IMOVEL,
   TIPOS_LIMPEZA,
+  TIPOS_LIMPEZA_COMERCIAL,
+  ehComercial,
+  permiteMultiplasProfissionais,
   formatBRL,
 } from "@/lib/catalogo";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { dataMinimaAgendamento, ehDomingo, horariosPermitidos } from "@/lib/agenda";
 import { type Rascunho } from "@/lib/contratacao";
 import { FormEndereco } from "@/components/enderecos/form-endereco";
@@ -51,6 +57,34 @@ function Cartao({
     >
       {children}
     </button>
+  );
+}
+
+/** Ícone ⓘ: a descrição só aparece quando o cliente toca/clica no símbolo. */
+function InfoDescricao({ titulo, descricao }: { titulo: string; descricao: string }) {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <span
+          role="button"
+          tabIndex={0}
+          aria-label={`Sobre ${titulo}`}
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
+          className="inline-flex size-5 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-primary"
+        >
+          <Info className="size-4" />
+        </span>
+      </PopoverTrigger>
+      <PopoverContent
+        align="start"
+        className="w-64 text-sm leading-relaxed"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <p className="mb-1 font-semibold">{titulo}</p>
+        <p className="text-muted-foreground">{descricao}</p>
+      </PopoverContent>
+    </Popover>
   );
 }
 
@@ -161,7 +195,18 @@ export function PassoImovel({ rascunho, atualizar }: Props) {
             <Cartao
               key={tipo.id}
               ativo={rascunho.tipo_imovel === tipo.id}
-              onClick={() => atualizar({ tipo_imovel: tipo.id })}
+              onClick={() => {
+                if (rascunho.tipo_imovel === tipo.id) return;
+                const virouComercial = ehComercial(tipo.id);
+                atualizar({
+                  tipo_imovel: tipo.id,
+                  // Perfis diferentes têm perguntas e níveis de limpeza próprios.
+                  ...(ehComercial(rascunho.tipo_imovel) !== virouComercial
+                    ? { tipo_limpeza: null }
+                    : {}),
+                  ...(tipo.id === "empresa" ? {} : { faixa_metragem: null, qtd_profissionais: 1 }),
+                });
+              }}
             >
               <Icone className="size-5 text-primary" />
               <span className="text-sm font-medium">{tipo.label}</span>

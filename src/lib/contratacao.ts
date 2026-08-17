@@ -23,8 +23,20 @@ export type Rascunho = {
   salas: number;
   banheiros: number;
   cozinha: boolean;
+  /** Residencial: quantidade de cozinhas (substitui o antigo sim/não). */
+  cozinhas: number;
   area_externa: string;
   outros_ambientes: string;
+
+  /** Escritório e Empresa. */
+  copa: number;
+  salas_reuniao: number;
+  recepcao: number;
+  faixa_pessoas: string | null;
+  /** Somente Empresa. */
+  faixa_metragem: string | null;
+  qtd_profissionais: number;
+
   duracao_horas: 4 | 6 | 8 | null;
   tipo_limpeza: string | null;
   extras_ids: string[];

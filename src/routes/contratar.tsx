@@ -22,6 +22,7 @@ import { EscolhaProfissional } from "@/components/contratar/escolha-profissional
 import { Checkout } from "@/components/contratar/checkout";
 import { extrasQuery, pricingQuery } from "@/lib/queries";
 import { calcularOrcamento } from "@/lib/pricing";
+import { ehComercial, perfilImovel } from "@/lib/catalogo";
 import {
   RASCUNHO_INICIAL,
   carregarRascunho,
@@ -138,6 +139,12 @@ function Contratar() {
       case 2:
         return !!rascunho.tipo_imovel;
       case 3:
+        if (ehComercial(rascunho.tipo_imovel)) {
+          return (
+            !!rascunho.faixa_pessoas &&
+            (rascunho.tipo_imovel !== "empresa" || !!rascunho.faixa_metragem)
+          );
+        }
         return true;
       case 4:
         return !!rascunho.duracao_horas;

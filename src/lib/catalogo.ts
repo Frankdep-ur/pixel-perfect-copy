@@ -141,7 +141,17 @@ export const STATUS_LABEL: Record<string, string> = {
 
 
 export function labelTipoLimpeza(id: string | null | undefined) {
-  return TIPOS_LIMPEZA.find((t) => t.id === id)?.label ?? "";
+  return (
+    [...TIPOS_LIMPEZA, ...TIPOS_LIMPEZA_COMERCIAL].find((t) => t.id === id)?.label ?? ""
+  );
+}
+
+export function labelFaixaPessoas(id: string | null | undefined) {
+  return FAIXAS_PESSOAS.find((f) => f.id === id)?.label ?? "";
+}
+
+export function labelFaixaMetragem(id: string | null | undefined) {
+  return FAIXAS_METRAGEM.find((f) => f.id === id)?.label ?? "";
 }
 
 export function labelTipoImovel(id: string | null | undefined) {

@@ -180,20 +180,63 @@ function AdminPrecos() {
             salvar.mutate();
           }}
         >
-          {precos.map((p) => (
-            <div key={p.chave} className="space-y-1.5">
-              <label htmlFor={p.chave} className="text-sm font-medium leading-snug">
-                {LABELS[p.chave] ?? p.chave}
-              </label>
-              <Input
-                id={p.chave}
-                inputMode="decimal"
-                value={valores[p.chave] ?? ""}
-                onChange={(e) => setValores((v) => ({ ...v, [p.chave]: e.target.value }))}
-              />
-              {p.descricao && <p className="text-xs text-muted-foreground">{p.descricao}</p>}
-            </div>
-          ))}
+          <Tabs defaultValue="geral">
+            <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1">
+              {ABAS.map((aba) => (
+                <TabsTrigger key={aba.id} value={aba.id} className="text-xs sm:text-sm">
+                  {aba.titulo}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+
+            {ABAS.map((aba) => {
+              const naAba = precos.filter((p) => aba.chaves.includes(p.chave));
+              return (
+                <TabsContent key={aba.id} value={aba.id} className="mt-4 space-y-4">
+                  {naAba.map((p) => (
+                    <div key={p.chave} className="space-y-1.5">
+                      <label
+                        htmlFor={`${aba.id}-${p.chave}`}
+                        className="text-sm font-medium leading-snug"
+                      >
+                        {LABELS[p.chave] ?? p.chave}
+                      </label>
+                      <Input
+                        id={`${aba.id}-${p.chave}`}
+                        inputMode="decimal"
+                        value={valores[p.chave] ?? ""}
+                        onChange={(e) =>
+                          setValores((v) => ({ ...v, [p.chave]: e.target.value }))
+                        }
+                      />
+                      {p.descricao && (
+                        <p className="text-xs text-muted-foreground">{p.descricao}</p>
+                      )}
+                    </div>
+                  ))}
+                </TabsContent>
+              );
+            })}
+
+            {outras.length > 0 && (
+              <TabsContent value="outros" className="mt-4 space-y-4">
+                {outras.map((p) => (
+                  <div key={p.chave} className="space-y-1.5">
+                    <label htmlFor={`outros-${p.chave}`} className="text-sm font-medium leading-snug">
+                      {LABELS[p.chave] ?? p.chave}
+                    </label>
+                    <Input
+                      id={`outros-${p.chave}`}
+                      inputMode="decimal"
+                      value={valores[p.chave] ?? ""}
+                      onChange={(e) => setValores((v) => ({ ...v, [p.chave]: e.target.value }))}
+                    />
+                  </div>
+                ))}
+              </TabsContent>
+            )}
+          </Tabs>
+
           <Button type="submit" disabled={salvar.isPending} className="w-full sm:w-auto">
             {salvar.isPending ? "Salvando..." : "Salvar preços"}
           </Button>

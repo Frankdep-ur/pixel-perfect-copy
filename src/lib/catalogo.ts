@@ -65,6 +65,15 @@ export function permiteMultiplasProfissionais(
   return FAIXAS_METRAGEM.find((f) => f.id === faixaMetragem)?.grande === true;
 }
 
+/**
+ * Escritório e Empresa usam níveis próprios (com_*), mas as profissionais
+ * cadastram habilidades residenciais/comerciais — filtramos por "comercial".
+ */
+export function tipoLimpezaParaFiltro(id: string | null | undefined) {
+  if (!id) return id ?? null;
+  return id.startsWith("com_") ? "comercial" : id;
+}
+
 export const QTD_PROFISSIONAIS = [1, 2, 3, 4, 5];
 
 export const DURACOES: { horas: 4 | 6 | 8; label: string; nivel: string; descricao: string }[] = [

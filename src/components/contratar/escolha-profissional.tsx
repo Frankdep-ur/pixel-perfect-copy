@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { labelTipoLimpeza } from "@/lib/catalogo";
+import { tipoLimpezaParaFiltro, labelTipoLimpeza } from "@/lib/catalogo";
 import { formatarDataLonga } from "@/lib/agenda";
 import { disponiveisQuery, type ProfissionalPublica } from "@/lib/queries";
 import { CENTRO_REGIAO, distanciaKm, type RegiaoId } from "@/lib/regioes";
@@ -41,7 +41,11 @@ function ordenar(lista: ProfissionalPublica[], rascunho: Rascunho) {
 
 export function EscolhaProfissional({ rascunho, atualizar, onAvancar }: Props) {
   const { data, isLoading } = useQuery(
-    disponiveisQuery(rascunho.endereco.regiao, rascunho.data, rascunho.tipo_limpeza),
+    disponiveisQuery(
+      rascunho.endereco.regiao,
+      rascunho.data,
+      tipoLimpezaParaFiltro(rascunho.tipo_limpeza),
+    ),
   );
 
   const lista = useMemo(() => ordenar(data ?? [], rascunho), [data, rascunho]);

@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { formatBRL } from "@/lib/catalogo";
+import { formatBRL, tipoLimpezaParaFiltro } from "@/lib/catalogo";
 import { processarPagamento, type FormaPagamento } from "@/lib/pagamento";
 import { limparRascunho, type Rascunho } from "@/lib/contratacao";
 import type { Orcamento } from "@/lib/pricing";
@@ -67,7 +67,9 @@ export function Checkout({
           {
             _regiao: endereco.regiao!,
             _data: rascunho.data!,
-            ...(rascunho.tipo_limpeza ? { _tipo_limpeza: rascunho.tipo_limpeza } : {}),
+            ...(rascunho.tipo_limpeza
+              ? { _tipo_limpeza: tipoLimpezaParaFiltro(rascunho.tipo_limpeza)! }
+              : {}),
           },
         );
         if (erroSorteio) throw erroSorteio;

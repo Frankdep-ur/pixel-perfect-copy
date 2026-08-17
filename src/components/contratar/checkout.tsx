@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { formatBRL } from "@/lib/catalogo";
+import { formatBRL, tipoLimpezaParaFiltro } from "@/lib/catalogo";
 import { processarPagamento, type FormaPagamento } from "@/lib/pagamento";
 import { limparRascunho, type Rascunho } from "@/lib/contratacao";
 import type { Orcamento } from "@/lib/pricing";
@@ -67,7 +67,9 @@ export function Checkout({
           {
             _regiao: endereco.regiao!,
             _data: rascunho.data!,
-            ...(rascunho.tipo_limpeza ? { _tipo_limpeza: rascunho.tipo_limpeza } : {}),
+            ...(rascunho.tipo_limpeza
+              ? { _tipo_limpeza: tipoLimpezaParaFiltro(rascunho.tipo_limpeza)! }
+              : {}),
           },
         );
         if (erroSorteio) throw erroSorteio;
@@ -93,7 +95,14 @@ export function Checkout({
           quartos: rascunho.quartos,
           salas: rascunho.salas,
           banheiros: rascunho.banheiros,
-          cozinha: rascunho.cozinha,
+          cozinha: rascunho.cozinhas > 0,
+          cozinhas: rascunho.cozinhas,
+          copa: rascunho.copa,
+          salas_reuniao: rascunho.salas_reuniao,
+          recepcao: rascunho.recepcao,
+          faixa_pessoas: rascunho.faixa_pessoas,
+          faixa_metragem: rascunho.faixa_metragem,
+          qtd_profissionais: orcamento.qtdProfissionais,
           area_externa: rascunho.area_externa,
           outros_ambientes: rascunho.outros_ambientes,
           duracao_horas: rascunho.duracao_horas!,
@@ -170,7 +179,7 @@ export function Checkout({
       <div className="flex items-start gap-3 rounded-xl bg-muted p-4 text-sm text-muted-foreground">
         <ShieldCheck className="mt-0.5 size-5 shrink-0 text-primary" />
         <p>
-          A taxa administrativa já inclui o seguro do serviço e profissionais com documentos
+          A taxa administrativa cobre a operação da Lar77 e profissionais com documentos
           verificados. O valor só é liberado depois que você confirma a conclusão da faxina.
         </p>
       </div>

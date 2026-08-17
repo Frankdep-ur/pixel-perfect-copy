@@ -22,6 +22,7 @@ import { EscolhaProfissional } from "@/components/contratar/escolha-profissional
 import { Checkout } from "@/components/contratar/checkout";
 import { extrasQuery, pricingQuery } from "@/lib/queries";
 import { calcularOrcamento } from "@/lib/pricing";
+import { ehComercial, perfilImovel } from "@/lib/catalogo";
 import {
   RASCUNHO_INICIAL,
   carregarRascunho,
@@ -110,10 +111,19 @@ function Contratar() {
     () =>
       calcularOrcamento(
         {
+          perfil: perfilImovel(rascunho.tipo_imovel),
           duracao_horas: rascunho.duracao_horas ?? 0,
           quartos: rascunho.quartos,
+          salas: rascunho.salas,
           banheiros: rascunho.banheiros,
+          cozinhas: rascunho.cozinhas,
           area_externa: rascunho.area_externa,
+          copa: rascunho.copa,
+          salas_reuniao: rascunho.salas_reuniao,
+          recepcao: rascunho.recepcao,
+          faixa_pessoas: rascunho.faixa_pessoas,
+          faixa_metragem: rascunho.faixa_metragem,
+          qtd_profissionais: rascunho.qtd_profissionais,
           tipo_limpeza: rascunho.tipo_limpeza ?? "padrao",
           extras: listaExtras.filter((e) => rascunho.extras_ids.includes(e.id)),
         },
@@ -129,6 +139,12 @@ function Contratar() {
       case 2:
         return !!rascunho.tipo_imovel;
       case 3:
+        if (ehComercial(rascunho.tipo_imovel)) {
+          return (
+            !!rascunho.faixa_pessoas &&
+            (rascunho.tipo_imovel !== "empresa" || !!rascunho.faixa_metragem)
+          );
+        }
         return true;
       case 4:
         return !!rascunho.duracao_horas;

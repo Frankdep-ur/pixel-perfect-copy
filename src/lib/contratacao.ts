@@ -23,8 +23,20 @@ export type Rascunho = {
   salas: number;
   banheiros: number;
   cozinha: boolean;
+  /** Residencial: quantidade de cozinhas (substitui o antigo sim/não). */
+  cozinhas: number;
   area_externa: string;
   outros_ambientes: string;
+
+  /** Escritório e Empresa. */
+  copa: number;
+  salas_reuniao: number;
+  recepcao: number;
+  faixa_pessoas: string | null;
+  /** Somente Empresa. */
+  faixa_metragem: string | null;
+  qtd_profissionais: number;
+
   duracao_horas: 4 | 6 | 8 | null;
   tipo_limpeza: string | null;
   extras_ids: string[];
@@ -57,8 +69,15 @@ export const RASCUNHO_INICIAL: Rascunho = {
   salas: 1,
   banheiros: 1,
   cozinha: true,
+  cozinhas: 1,
   area_externa: "nao",
   outros_ambientes: "",
+  copa: 1,
+  salas_reuniao: 0,
+  recepcao: 0,
+  faixa_pessoas: null,
+  faixa_metragem: null,
+  qtd_profissionais: 1,
   duracao_horas: null,
   tipo_limpeza: null,
   extras_ids: [],

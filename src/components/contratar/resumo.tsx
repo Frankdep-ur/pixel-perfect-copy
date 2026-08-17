@@ -1,6 +1,13 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { formatBRL, labelTipoImovel, labelTipoLimpeza } from "@/lib/catalogo";
+import {
+  ehComercial,
+  formatBRL,
+  labelFaixaMetragem,
+  labelFaixaPessoas,
+  labelTipoImovel,
+  labelTipoLimpeza,
+} from "@/lib/catalogo";
 import type { Orcamento } from "@/lib/pricing";
 import type { Rascunho } from "@/lib/contratacao";
 
@@ -32,7 +39,18 @@ export function Resumo({
           )}
           {rascunho.tipo_imovel && <dd>{labelTipoImovel(rascunho.tipo_imovel)}</dd>}
           {rascunho.duracao_horas && <dd>{rascunho.duracao_horas} horas de serviço</dd>}
-          {rascunho.tipo_limpeza && <dd>Limpeza {labelTipoLimpeza(rascunho.tipo_limpeza)}</dd>}
+          {rascunho.tipo_limpeza && <dd>{labelTipoLimpeza(rascunho.tipo_limpeza)}</dd>}
+          {ehComercial(rascunho.tipo_imovel) && (
+            <>
+              {rascunho.faixa_pessoas && (
+                <dd>{labelFaixaPessoas(rascunho.faixa_pessoas)} pessoas no local</dd>
+              )}
+              {rascunho.faixa_metragem && <dd>{labelFaixaMetragem(rascunho.faixa_metragem)}</dd>}
+              {orcamento.qtdProfissionais > 1 && (
+                <dd>{orcamento.qtdProfissionais} profissionais</dd>
+              )}
+            </>
+          )}
           {rascunho.data && (
             <dd>
               {new Date(`${rascunho.data}T12:00:00`).toLocaleDateString("pt-BR")}
@@ -71,8 +89,7 @@ export function Resumo({
         </div>
         <p className="text-xs text-muted-foreground">
           A profissional recebe {formatBRL(orcamento.valorProfissional)} integralmente. A taxa
-          administrativa já inclui o seguro do serviço e é somada ao valor, nunca descontada da
-          profissional.
+          administrativa é somada ao valor, nunca descontada da profissional.
         </p>
 
       </CardContent>

@@ -163,8 +163,19 @@ export function labelFaixaMetragem(id: string | null | undefined) {
   return FAIXAS_METRAGEM.find((f) => f.id === id)?.label ?? "";
 }
 
+/** Tipos antigos que saíram do funil, mantidos para serviços já contratados. */
+const TIPOS_IMOVEL_LEGADO: Record<string, string> = {
+  consultorio: "Consultório",
+  sala_comercial: "Sala comercial",
+  loja: "Loja",
+  imovel_vazio: "Imóvel vazio",
+  outro: "Outro",
+};
+
 export function labelTipoImovel(id: string | null | undefined) {
-  return TIPOS_IMOVEL.find((t) => t.id === id)?.label ?? "";
+  return (
+    TIPOS_IMOVEL.find((t) => t.id === id)?.label ?? (id ? TIPOS_IMOVEL_LEGADO[id] ?? "" : "")
+  );
 }
 
 export function formatBRL(valor: number) {

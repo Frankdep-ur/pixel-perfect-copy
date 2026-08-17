@@ -166,6 +166,9 @@ function AdminPrecos() {
     );
   }
 
+  const conhecidas = new Set(ABAS.flatMap((a) => a.chaves));
+  const outras = precos.filter((p) => !conhecidas.has(p.chave));
+
   return (
     <>
       <TituloSecao
@@ -187,6 +190,11 @@ function AdminPrecos() {
                   {aba.titulo}
                 </TabsTrigger>
               ))}
+              {outras.length > 0 && (
+                <TabsTrigger value="outros" className="text-xs sm:text-sm">
+                  Outros
+                </TabsTrigger>
+              )}
             </TabsList>
 
             {ABAS.map((aba) => {

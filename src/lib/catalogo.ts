@@ -1,25 +1,71 @@
-import {
-  Building2,
-  Home,
-  Store,
-  Briefcase,
-  Stethoscope,
-  DoorOpen,
-  PackageOpen,
-  Shapes,
-  type LucideIcon,
-} from "lucide-react";
+import { Building2, Home, Briefcase, Factory, type LucideIcon } from "lucide-react";
 
 export const TIPOS_IMOVEL: { id: string; label: string; icon: LucideIcon }[] = [
   { id: "casa", label: "Casa", icon: Home },
   { id: "apartamento", label: "Apartamento", icon: Building2 },
   { id: "escritorio", label: "Escritório", icon: Briefcase },
-  { id: "consultorio", label: "Consultório", icon: Stethoscope },
-  { id: "sala_comercial", label: "Sala comercial", icon: DoorOpen },
-  { id: "loja", label: "Loja", icon: Store },
-  { id: "imovel_vazio", label: "Imóvel vazio", icon: PackageOpen },
-  { id: "outro", label: "Outro", icon: Shapes },
+  { id: "empresa", label: "Empresa", icon: Factory },
 ];
+
+/** Escritório e Empresa usam perguntas e níveis de limpeza próprios. */
+export function ehComercial(tipoImovel: string | null | undefined) {
+  return tipoImovel === "escritorio" || tipoImovel === "empresa";
+}
+
+export type PerfilImovel = "residencial" | "escritorio" | "empresa";
+
+export function perfilImovel(tipoImovel: string | null | undefined): PerfilImovel {
+  if (tipoImovel === "empresa") return "empresa";
+  if (tipoImovel === "escritorio") return "escritorio";
+  return "residencial";
+}
+
+export const TIPOS_LIMPEZA_COMERCIAL: { id: string; label: string; descricao: string }[] = [
+  {
+    id: "com_essencial",
+    label: "🧹 Limpeza Essencial",
+    descricao:
+      "Limpeza de manutenção: pisos, poeira, lixeiras, banheiros, copa e superfícies.",
+  },
+  {
+    id: "com_completa",
+    label: "✨ Limpeza Completa",
+    descricao:
+      "Tudo da Essencial + limpeza mais detalhada, portas, áreas de maior circulação e detalhamento de mobiliário.",
+  },
+  {
+    id: "com_intensiva",
+    label: "💎 Limpeza Intensiva",
+    descricao: "Para ambientes que precisam de uma limpeza mais profunda.",
+  },
+];
+
+export const FAIXAS_PESSOAS: { id: string; label: string }[] = [
+  { id: "ate_5", label: "Até 5" },
+  { id: "6_10", label: "6 a 10" },
+  { id: "11_20", label: "11 a 20" },
+  { id: "21_40", label: "21 a 40" },
+  { id: "mais_40", label: "+ de 40" },
+];
+
+export const FAIXAS_METRAGEM: { id: string; label: string; grande: boolean }[] = [
+  { id: "20_50", label: "20 a 50 m²", grande: false },
+  { id: "51_100", label: "51 a 100 m²", grande: false },
+  { id: "101_200", label: "101 a 200 m²", grande: false },
+  { id: "201_300", label: "201 a 300 m²", grande: true },
+  { id: "mais_301", label: "+ de 301 m²", grande: true },
+];
+
+/** A escolha de mais de uma profissional só existe para Empresa acima de 200 m². */
+export function permiteMultiplasProfissionais(
+  tipoImovel: string | null | undefined,
+  faixaMetragem: string | null | undefined,
+) {
+  if (tipoImovel !== "empresa") return false;
+  return FAIXAS_METRAGEM.find((f) => f.id === faixaMetragem)?.grande === true;
+}
+
+export const QTD_PROFISSIONAIS = [1, 2, 3, 4, 5];
 
 export const DURACOES: { horas: 4 | 6 | 8; label: string; nivel: string; descricao: string }[] = [
   { horas: 4, label: "4 horas", nivel: "Básico", descricao: "Imóveis compactos e manutenção" },

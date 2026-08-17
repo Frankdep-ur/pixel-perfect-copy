@@ -260,13 +260,13 @@ function Contador({
   );
 }
 
-export function PassoTamanho({ rascunho, atualizar }: Props) {
+function TamanhoResidencial({ rascunho, atualizar }: Props) {
   return (
     <div className="space-y-5">
       <div>
         <h2 className="text-2xl font-semibold tracking-tight">Como é o imóvel?</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Quartos e banheiros adicionais influenciam o valor final.
+          Quartos, banheiros e cozinhas influenciam o valor final.
         </p>
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
@@ -288,16 +288,12 @@ export function PassoTamanho({ rascunho, atualizar }: Props) {
           min={0}
           onChange={(v) => atualizar({ banheiros: v })}
         />
-        <div className="flex items-center justify-between rounded-xl border border-border bg-card p-4">
-          <Label htmlFor="cozinha" className="text-sm font-medium">
-            Tem cozinha
-          </Label>
-          <Switch
-            id="cozinha"
-            checked={rascunho.cozinha}
-            onCheckedChange={(v) => atualizar({ cozinha: v })}
-          />
-        </div>
+        <Contador
+          label="Cozinhas"
+          valor={rascunho.cozinhas}
+          min={0}
+          onChange={(v) => atualizar({ cozinhas: v, cozinha: v > 0 })}
+        />
       </div>
 
       <div className="space-y-2">
@@ -328,6 +324,135 @@ export function PassoTamanho({ rascunho, atualizar }: Props) {
   );
 }
 
+function TamanhoComercial({ rascunho, atualizar }: Props) {
+  const empresa = rascunho.tipo_imovel === "empresa";
+  const multiplas = permiteMultiplasProfissionais(rascunho.tipo_imovel, rascunho.faixa_metragem);
+
+  return (
+    <div className="space-y-5">
+      <div>
+        <h2 className="text-2xl font-semibold tracking-tight">
+          Como é o {empresa ? "espaço da empresa" : "escritório"}?
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Cada ambiente e o volume de pessoas ajustam o valor do serviço.
+        </p>
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Contador
+          label="Salas"
+          valor={rascunho.salas}
+          min={0}
+          onChange={(v) => atualizar({ salas: v })}
+        />
+        <Contador
+          label="Banheiros"
+          valor={rascunho.banheiros}
+          min={0}
+          onChange={(v) => atualizar({ banheiros: v })}
+        />
+        <Contador
+          label="Copa"
+          valor={rascunho.copa}
+          min={0}
+          onChange={(v) => atualizar({ copa: v })}
+        />
+        <Contador
+          label="Sala de reunião"
+          valor={rascunho.salas_reuniao}
+          min={0}
+          onChange={(v) => atualizar({ salas_reuniao: v })}
+        />
+        <Contador
+          label="Recepção"
+          valor={rascunho.recepcao}
+          min={0}
+          onChange={(v) => atualizar({ recepcao: v })}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label>Quantidade de pessoas que trabalham no local</Label>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+          {FAIXAS_PESSOAS.map((faixa) => (
+            <Cartao
+              key={faixa.id}
+              ativo={rascunho.faixa_pessoas === faixa.id}
+              onClick={() => atualizar({ faixa_pessoas: faixa.id })}
+            >
+              <span className="text-sm font-medium">{faixa.label}</span>
+            </Cartao>
+          ))}
+        </div>
+      </div>
+
+      {empresa && (
+        <div className="space-y-2">
+          <Label>Metragem do local</Label>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+            {FAIXAS_METRAGEM.map((faixa) => (
+              <Cartao
+                key={faixa.id}
+                ativo={rascunho.faixa_metragem === faixa.id}
+                onClick={() =>
+                  atualizar({
+                    faixa_metragem: faixa.id,
+                    ...(faixa.grande ? {} : { qtd_profissionais: 1 }),
+                  })
+                }
+              >
+                <span className="text-sm font-medium">{faixa.label}</span>
+              </Cartao>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {multiplas && (
+        <div className="space-y-2">
+          <Label className="flex items-center gap-2">
+            Quantas profissionais deseja contratar?
+            <InfoDescricao
+              titulo="Mais de uma profissional"
+              descricao="Disponível para empresas acima de 200 m². O valor do serviço é multiplicado pela quantidade de profissionais escolhida."
+            />
+          </Label>
+          <div className="grid grid-cols-5 gap-3">
+            {QTD_PROFISSIONAIS.map((qtd) => (
+              <Cartao
+                key={qtd}
+                ativo={rascunho.qtd_profissionais === qtd}
+                onClick={() => atualizar({ qtd_profissionais: qtd })}
+              >
+                <span className="mx-auto text-sm font-medium">{qtd}</span>
+              </Cartao>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="space-y-2">
+        <Label htmlFor="outros">Outros ambientes (opcional)</Label>
+        <Input
+          id="outros"
+          placeholder="Depósito, garagem, área de café..."
+          value={rascunho.outros_ambientes}
+          onChange={(e) => atualizar({ outros_ambientes: e.target.value })}
+        />
+      </div>
+    </div>
+  );
+}
+
+export function PassoTamanho({ rascunho, atualizar }: Props) {
+  return ehComercial(rascunho.tipo_imovel) ? (
+    <TamanhoComercial rascunho={rascunho} atualizar={atualizar} />
+  ) : (
+    <TamanhoResidencial rascunho={rascunho} atualizar={atualizar} />
+  );
+}
+
 export function PassoDuracao({
   rascunho,
   atualizar,
@@ -340,7 +465,7 @@ export function PassoDuracao({
           Quantas horas de serviço você precisa?
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Na dúvida, 6 horas atende a maioria dos imóveis residenciais.
+          Na dúvida, 6 horas atende a maioria dos imóveis.
         </p>
       </div>
       <div className="grid gap-3 sm:grid-cols-3">
@@ -355,8 +480,8 @@ export function PassoDuracao({
               <span className="rounded-full bg-accent/12 px-2 py-0.5 text-xs font-semibold text-primary">
                 {duracao.nivel}
               </span>
+              <InfoDescricao titulo={duracao.label} descricao={duracao.descricao} />
             </span>
-            <span className="text-sm text-muted-foreground">{duracao.descricao}</span>
             <span className="mt-1 text-sm font-medium text-primary">
               a partir de {formatBRL(precos[`preco_${duracao.horas}h`] ?? 0)}
             </span>
@@ -366,29 +491,35 @@ export function PassoDuracao({
           </Cartao>
         ))}
       </div>
-
     </div>
   );
 }
 
 export function PassoTipoLimpeza({ rascunho, atualizar }: Props) {
+  const comercial = ehComercial(rascunho.tipo_imovel);
+  const opcoes = comercial ? TIPOS_LIMPEZA_COMERCIAL : TIPOS_LIMPEZA;
+
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-2xl font-semibold tracking-tight">Qual tipo de limpeza?</h2>
+        <h2 className="text-2xl font-semibold tracking-tight">
+          {comercial ? "Qual nível de serviço?" : "Qual tipo de limpeza?"}
+        </h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Cada tipo exige um esforço diferente e ajusta o valor do serviço.
+          Toque no ⓘ para ver o que está incluído em cada opção.
         </p>
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
-        {TIPOS_LIMPEZA.map((tipo) => (
+        {opcoes.map((tipo) => (
           <Cartao
             key={tipo.id}
             ativo={rascunho.tipo_limpeza === tipo.id}
             onClick={() => atualizar({ tipo_limpeza: tipo.id })}
           >
-            <span className="font-semibold">{tipo.label}</span>
-            <span className="text-sm text-muted-foreground">{tipo.descricao}</span>
+            <span className="flex items-center gap-2 font-semibold">
+              {tipo.label}
+              <InfoDescricao titulo={tipo.label} descricao={tipo.descricao} />
+            </span>
           </Cartao>
         ))}
       </div>

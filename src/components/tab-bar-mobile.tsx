@@ -88,7 +88,8 @@ export function TabBarMobile() {
             </li>
           );
         })}
-      </ul>
-    </nav>
+        </ul>
+      </nav>
+    </>
   );
 }

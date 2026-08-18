@@ -149,10 +149,49 @@
 }
 
 @utility lar-card {
-  background-color: var(--color-card);
+  background-color: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 1.5rem;
+  border-radius: 1rem;
   box-shadow: var(--shadow-card);
+}
+
+@utility lar-card-selecionado {
+  background-color: var(--color-surface-tint);
+  border: 1px solid var(--color-accent);
+  border-radius: 1rem;
+}
+
+@utility lar-icon-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-surface-tint);
+  color: var(--color-accent);
+  border-radius: 0.875rem;
+}
+
+@layer base {
+  /* Traço mais fino e dourado nos ícones (fora de botões/badges preenchidos) */
+  svg {
+    stroke-width: 1.5;
+  }
+
+  :is(p, h1, h2, h3, h4, li, span, div):not(button):not([role="button"]) > svg:not([data-slot]) {
+    color: var(--color-accent);
+  }
+
+  input,
+  select,
+  textarea {
+    background-color: var(--color-surface-tint);
+    border-color: var(--color-border);
+  }
+
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    border-color: var(--color-accent);
+  }
 }
 
 

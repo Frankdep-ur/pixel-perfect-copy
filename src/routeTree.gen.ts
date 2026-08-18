@@ -29,6 +29,7 @@ import { Route as AdminConfigRouteImport } from './routes/admin.config'
 import { Route as AdminContratacoesRouteImport } from './routes/admin.contratacoes'
 import { Route as AdminExtrasRouteImport } from './routes/admin.extras'
 import { Route as AdminListaEsperaRouteImport } from './routes/admin.lista-espera'
+import { Route as AdminOrquestraRouteImport } from './routes/admin.orquestra'
 import { Route as AdminPrecosRouteImport } from './routes/admin.precos'
 import { Route as AdminProfissionaisRouteImport } from './routes/admin.profissionais'
 import { Route as AdminLoginRouteImport } from './routes/admin_.login'
@@ -136,6 +137,11 @@ const AdminListaEsperaRoute = AdminListaEsperaRouteImport.update({
   path: '/lista-espera',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminOrquestraRoute = AdminOrquestraRouteImport.update({
+  id: '/orquestra',
+  path: '/orquestra',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPrecosRoute = AdminPrecosRouteImport.update({
   id: '/precos',
   path: '/precos',
@@ -187,6 +193,7 @@ export interface FileRoutesByFullPath {
   '/admin/contratacoes': typeof AdminContratacoesRoute
   '/admin/extras': typeof AdminExtrasRoute
   '/admin/lista-espera': typeof AdminListaEsperaRoute
+  '/admin/orquestra': typeof AdminOrquestraRoute
   '/admin/precos': typeof AdminPrecosRoute
   '/admin/profissionais': typeof AdminProfissionaisRoute
   '/admin/login': typeof AdminLoginRoute
@@ -214,6 +221,7 @@ export interface FileRoutesByTo {
   '/admin/contratacoes': typeof AdminContratacoesRoute
   '/admin/extras': typeof AdminExtrasRoute
   '/admin/lista-espera': typeof AdminListaEsperaRoute
+  '/admin/orquestra': typeof AdminOrquestraRoute
   '/admin/precos': typeof AdminPrecosRoute
   '/admin/profissionais': typeof AdminProfissionaisRoute
   '/admin/login': typeof AdminLoginRoute
@@ -243,6 +251,7 @@ export interface FileRoutesById {
   '/admin/contratacoes': typeof AdminContratacoesRoute
   '/admin/extras': typeof AdminExtrasRoute
   '/admin/lista-espera': typeof AdminListaEsperaRoute
+  '/admin/orquestra': typeof AdminOrquestraRoute
   '/admin/precos': typeof AdminPrecosRoute
   '/admin/profissionais': typeof AdminProfissionaisRoute
   '/admin_/login': typeof AdminLoginRoute
@@ -273,6 +282,7 @@ export interface FileRouteTypes {
     | '/admin/contratacoes'
     | '/admin/extras'
     | '/admin/lista-espera'
+    | '/admin/orquestra'
     | '/admin/precos'
     | '/admin/profissionais'
     | '/admin/login'
@@ -300,6 +310,7 @@ export interface FileRouteTypes {
     | '/admin/contratacoes'
     | '/admin/extras'
     | '/admin/lista-espera'
+    | '/admin/orquestra'
     | '/admin/precos'
     | '/admin/profissionais'
     | '/admin/login'
@@ -328,6 +339,7 @@ export interface FileRouteTypes {
     | '/admin/contratacoes'
     | '/admin/extras'
     | '/admin/lista-espera'
+    | '/admin/orquestra'
     | '/admin/precos'
     | '/admin/profissionais'
     | '/admin_/login'
@@ -497,6 +509,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminListaEsperaRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/orquestra': {
+      id: '/admin/orquestra'
+      path: '/orquestra'
+      fullPath: '/admin/orquestra'
+      preLoaderRoute: typeof AdminOrquestraRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/precos': {
       id: '/admin/precos'
       path: '/precos'
@@ -551,6 +570,7 @@ interface AdminRouteChildren {
   AdminContratacoesRoute: typeof AdminContratacoesRoute
   AdminExtrasRoute: typeof AdminExtrasRoute
   AdminListaEsperaRoute: typeof AdminListaEsperaRoute
+  AdminOrquestraRoute: typeof AdminOrquestraRoute
   AdminPrecosRoute: typeof AdminPrecosRoute
   AdminProfissionaisRoute: typeof AdminProfissionaisRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -565,6 +585,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminContratacoesRoute: AdminContratacoesRoute,
   AdminExtrasRoute: AdminExtrasRoute,
   AdminListaEsperaRoute: AdminListaEsperaRoute,
+  AdminOrquestraRoute: AdminOrquestraRoute,
   AdminPrecosRoute: AdminPrecosRoute,
   AdminProfissionaisRoute: AdminProfissionaisRoute,
   AdminIndexRoute: AdminIndexRoute,

@@ -211,20 +211,21 @@ function Contratar() {
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
+      <main className="mx-auto w-full max-w-md flex-1 px-4 py-6 lg:max-w-6xl lg:py-8">
         {fase === "passos" && (
-          <div className="mb-8">
-            <div className="mb-2 flex items-center justify-between text-sm text-muted-foreground">
+          <div className="mb-7">
+            <div className="mb-2 flex items-center justify-between text-xs font-medium text-muted-foreground">
               <span>
                 Passo {passo} de {TOTAL_PASSOS}
               </span>
-              <span>{Math.round((passo / TOTAL_PASSOS) * 100)}%</span>
+              <span className="text-primary">{Math.round((passo / TOTAL_PASSOS) * 100)}%</span>
             </div>
-            <Progress value={(passo / TOTAL_PASSOS) * 100} />
+            <Progress value={(passo / TOTAL_PASSOS) * 100} className="h-2" />
           </div>
         )}
 
         <div className="grid gap-8 lg:grid-cols-[1fr_20rem]">
+
           <div>
             {fase === "passos" && (
               <>
@@ -244,20 +245,26 @@ function Contratar() {
                 {passo === 7 && <PassoDataHora rascunho={rascunho} atualizar={atualizar} />}
                 {passo === 8 && <PassoObservacoes rascunho={rascunho} atualizar={atualizar} />}
 
-                <div className="mt-8 flex items-center justify-between gap-3">
+                <div className="mt-8 flex flex-col items-center gap-2">
+                  <Button
+                    onClick={avancar}
+                    disabled={!podeAvancar}
+                    size="lg"
+                    className="min-h-14 w-full rounded-[24px] text-base font-bold"
+                  >
+                    {passo === TOTAL_PASSOS ? "Buscar profissionais" : "Continuar"}
+                    <ArrowRight className="size-4" />
+                  </Button>
                   <Button
                     variant="ghost"
                     onClick={voltar}
                     disabled={passo === 1}
-                    className="gap-2"
+                    className="gap-2 text-muted-foreground"
                   >
                     <ArrowLeft className="size-4" /> Voltar
                   </Button>
-                  <Button onClick={avancar} disabled={!podeAvancar} size="lg" className="gap-2">
-                    {passo === TOTAL_PASSOS ? "Buscar profissionais" : "Continuar"}
-                    <ArrowRight className="size-4" />
-                  </Button>
                 </div>
+
               </>
             )}
 

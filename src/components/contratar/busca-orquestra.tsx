@@ -232,20 +232,21 @@ export function BuscaOrquestra({
   }
 
   return (
-    <div className="space-y-6">
-      <div className="rounded-2xl border border-border bg-card p-6 text-center">
-        <span className="relative mx-auto flex size-16 items-center justify-center">
-          <span className="absolute inset-0 animate-ping rounded-full bg-primary/15" />
-          <span className="flex size-16 items-center justify-center rounded-full bg-primary/10">
-            <Radar className="size-7 text-primary" />
+    <div className="space-y-5">
+      <div className="rounded-[28px] border border-border bg-card p-7 text-center">
+        <span className="relative mx-auto flex size-28 items-center justify-center">
+          <span className="absolute inset-0 animate-ping rounded-full border border-primary/40" />
+          <span className="absolute inset-3 rounded-full border border-primary/25" />
+          <span className="flex size-16 items-center justify-center rounded-full bg-primary/15">
+            <MapPin className="size-7 text-primary" />
           </span>
         </span>
-        <h2 className="mt-4 text-xl font-semibold tracking-tight">
+        <h2 className="mt-5 text-xl font-semibold tracking-tight">
           {aceites.length > 0
             ? aceites.length === 1
               ? "Encontramos uma profissional para você!"
               : `Encontramos ${aceites.length} profissionais para você!`
-            : "Estamos encontrando profissionais disponíveis para você"}
+            : "Buscando a profissional ideal..."}
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
           {formatarDataLonga(rascunho.data)}
@@ -255,7 +256,7 @@ export function BuscaOrquestra({
         {!encerrado && (
           <p className="mt-3 text-sm text-muted-foreground">
             Rodada {rodada} de {MAX_RODADAS} · aguardando respostas por{" "}
-            <span className="font-semibold text-foreground">{formatarContagem(restante)}</span>
+            <span className="font-semibold text-primary">{formatarContagem(restante)}</span>
           </p>
         )}
         {pedido.codigo && (
@@ -263,14 +264,20 @@ export function BuscaOrquestra({
         )}
       </div>
 
+      {aceites.length > 0 && (
+        <h3 className="px-1 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          Profissionais disponíveis
+        </h3>
+      )}
+
       {aceites.map((p) => (
-        <div key={p.convite_id} className="rounded-xl border-2 border-border bg-card p-4">
+        <div key={p.convite_id} className="rounded-[24px] border border-border bg-card p-5">
           <div className="flex items-start gap-4">
-            <Avatar className="size-16">
+            <Avatar className="size-16 ring-2 ring-primary/40">
               {p.foto_url && <AvatarImage src={p.foto_url} alt={p.nome ?? "Profissional"} />}
               <AvatarFallback>{(p.nome ?? "LA").slice(0, 2).toUpperCase()}</AvatarFallback>
             </Avatar>
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-semibold">{p.nome ?? "Profissional Lar77"}</span>
                 {p.verificada && (
@@ -279,22 +286,34 @@ export function BuscaOrquestra({
                   </Badge>
                 )}
               </div>
-              <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+              <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
                 <span className="flex items-center gap-1 font-medium text-foreground">
                   <Star className="size-4 fill-primary text-primary" />
                   {p.nota_media.toFixed(1)}
                 </span>
-                <span>{p.total_avaliacoes} avaliações</span>
                 <span>{p.total_servicos} serviços</span>
-                {p.anos_experiencia ? <span>{p.anos_experiencia} anos de experiência</span> : null}
+                {p.anos_experiencia ? <span>{p.anos_experiencia} anos</span> : null}
               </div>
               {p.bio && (
                 <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{p.bio}</p>
               )}
             </div>
           </div>
+
+          <div className="mt-4 flex items-center justify-between rounded-2xl bg-muted px-4 py-3">
+            <div>
+              <p className="font-display text-lg font-bold text-primary">
+                {formatBRL(orcamento.total)}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {rascunho.duracao_horas ?? 4} horas de serviço
+              </p>
+            </div>
+            <Radar className="size-5 text-primary" />
+          </div>
+
           <Button
-            className="mt-4 w-full"
+            className="mt-4 min-h-14 w-full rounded-[20px] text-base font-bold"
             size="lg"
             disabled={escolhendo !== null}
             onClick={() => void escolher(p)}
@@ -306,6 +325,7 @@ export function BuscaOrquestra({
           </Button>
         </div>
       ))}
+
 
       {aceites.length === 0 && !encerrado && (
         <div className="space-y-3">

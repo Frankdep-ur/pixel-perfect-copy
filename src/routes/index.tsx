@@ -3,22 +3,25 @@ import { useQuery } from "@tanstack/react-query";
 import {
   BadgeCheck,
   CalendarClock,
-  CreditCard,
+  ChevronRight,
   Gem,
+  LifeBuoy,
   Lock,
+  Search,
   ShieldCheck,
   Smartphone,
   Sparkles,
+  Sprout,
   Tag,
-  UserPlus,
-  Users,
+  UserRound,
   Wallet,
 } from "lucide-react";
 
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { CtaFixoMobile } from "@/components/cta-fixo-mobile";
 import { HeroCarrossel } from "@/components/hero-carrossel";
+import { useSession } from "@/hooks/use-auth";
+import { linkSuporte } from "@/lib/whatsapp";
 import { siteConfigQuery, CONFIG_PADRAO } from "@/lib/site-config";
 
 export const Route = createFileRoute("/")({
@@ -43,34 +46,11 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const passos = [
-  {
-    icon: UserPlus,
-    titulo: "Cadastre-se",
-    texto: "Crie seu cadastro em poucos minutos e informe o endereço do imóvel.",
-  },
-  {
-    icon: Users,
-    titulo: "Escolha sua profissional",
-    texto:
-      "Selecione a profissional que mais combina com o que você precisa ou deixe a Lar77 escolher a profissional ideal para o seu perfil.",
-  },
-  {
-    icon: CalendarClock,
-    titulo: "Escolha data e horário",
-    texto: "Informe o dia e o horário que deseja receber o serviço.",
-  },
-  {
-    icon: CreditCard,
-    titulo: "Realize o pagamento do serviço contratado",
-    texto: "",
-  },
-  {
-    icon: Sparkles,
-    titulo: "Pronto!",
-    texto:
-      "Sua profissional estará no local no horário agendado. Você contrata e pode ficar tranquilo.",
-  },
+const comoFunciona = [
+  { icon: Search, titulo: "Escolha o serviço" },
+  { icon: CalendarClock, titulo: "Data e horário" },
+  { icon: UserRound, titulo: "Profissional ideal" },
+  { icon: ShieldCheck, titulo: "Faxina segura" },
 ];
 
 const confianca = [
@@ -115,156 +95,203 @@ const vantagensProfissional = [
 function Home() {
   const { data } = useQuery(siteConfigQuery);
   const t = (data ?? CONFIG_PADRAO).textos;
+  const { user } = useSession();
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <SiteHeader />
 
       <main className="flex-1">
-        {/* Hero — cliente */}
-        <section className="pb-14 pt-6 md:px-5 md:py-20">
-          <div className="mx-auto grid w-full max-w-6xl items-center gap-8 md:grid-cols-2 md:gap-10">
-            <div className="order-1 overflow-hidden rounded-b-[24px] md:order-2 md:rounded-2xl md:shadow-[0_24px_48px_oklch(0.22_0.045_258/0.14)]">
+        {/* Hero */}
+        <section className="px-4 pt-4 md:px-5 md:pt-8">
+          <div className="mx-auto w-full max-w-md md:max-w-5xl">
+            <div className="relative overflow-hidden rounded-[28px] border border-border">
               <HeroCarrossel />
-            </div>
-
-            <div className="order-2 px-5 md:order-1 md:px-0">
-              <h1
-                className="leading-tight text-foreground"
-                style={{ fontSize: "clamp(28px, 7vw, 52px)" }}
-              >
-                {t.slogan}
-              </h1>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link
-                  to="/contratar"
-                  className="inline-flex min-h-[52px] items-center justify-center rounded-xl bg-primary px-7 text-sm font-bold uppercase tracking-wide text-primary-foreground transition-all duration-200 ease-out hover:bg-primary-hover active:scale-[0.98]"
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-6">
+                <h1
+                  className="max-w-md leading-tight text-foreground"
+                  style={{ fontSize: "clamp(26px, 6.5vw, 44px)" }}
                 >
-                  {t.hero_botao_cliente}
-                </Link>
-                <Link
-                  to="/seja-profissional"
-                  className="inline-flex min-h-[52px] items-center justify-center rounded-xl border border-border bg-card px-7 text-sm font-bold uppercase tracking-wide text-muted-foreground transition-all duration-200 ease-out hover:border-primary/30 hover:text-primary active:scale-[0.98]"
+                  {t.slogan}
+                </h1>
+                <a
+                  href="#como-funciona"
+                  className="mt-4 inline-flex min-h-11 items-center gap-1 rounded-full bg-primary px-5 text-sm font-bold text-primary-foreground transition-all duration-200 ease-out active:scale-[0.97]"
                 >
-                  {t.hero_botao_profissional}
-                </Link>
+                  Saiba mais <ChevronRight className="size-4" />
+                </a>
               </div>
             </div>
           </div>
         </section>
 
+        {/* Como funciona — 4 passos em ícones */}
+        <section id="como-funciona" className="px-4 py-10 md:px-5">
+          <div className="mx-auto w-full max-w-md md:max-w-5xl">
+            <h2 className="text-center text-xl text-foreground md:text-2xl">{t.como_titulo}</h2>
+            <ol className="mt-6 grid grid-cols-4 gap-1">
+              {comoFunciona.map((passo, i) => (
+                <li key={passo.titulo} className="relative flex flex-col items-center text-center">
+                  <span className="flex size-14 items-center justify-center rounded-full border border-primary/40 bg-primary/10">
+                    <passo.icon strokeWidth={1.6} className="size-6 text-primary" aria-hidden />
+                  </span>
+                  <span className="mt-2 text-[11px] font-medium leading-tight text-muted-foreground">
+                    {passo.titulo}
+                  </span>
+                  {i < comoFunciona.length - 1 && (
+                    <ChevronRight
+                      className="absolute -right-2 top-4 size-4 text-primary/50"
+                      aria-hidden
+                    />
+                  )}
+                </li>
+              ))}
+            </ol>
+            <p className="mt-6 text-center text-sm text-muted-foreground">{t.como_subtitulo}</p>
+          </div>
+        </section>
+
+        {/* Ações principais */}
+        <section className="px-4 pb-4 md:px-5">
+          <div className="mx-auto grid w-full max-w-md gap-3 md:max-w-5xl md:grid-cols-3">
+            <Link
+              to="/contratar"
+              className="flex items-center gap-4 rounded-[24px] bg-primary p-5 text-primary-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+            >
+              <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary-foreground/10">
+                <Sprout strokeWidth={1.6} className="size-6" aria-hidden />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block font-display text-lg font-bold">
+                  {t.hero_botao_cliente}
+                </span>
+                <span className="block text-sm opacity-80">Preço na hora, sem surpresa</span>
+              </span>
+              <ChevronRight className="size-5 shrink-0" aria-hidden />
+            </Link>
+
+            <Link
+              to="/seja-profissional"
+              className="flex items-center gap-4 rounded-[24px] border border-primary/50 bg-card p-5 text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+            >
+              <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
+                <Sparkles strokeWidth={1.6} className="size-6 text-primary" aria-hidden />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block font-display text-lg font-bold">
+                  {t.hero_botao_profissional}
+                </span>
+                <span className="block text-sm text-muted-foreground">
+                  Trabalhe como diarista Lar77
+                </span>
+              </span>
+              <ChevronRight className="size-5 shrink-0 text-primary" aria-hidden />
+            </Link>
+
+            <a
+              href={linkSuporte()}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-4 rounded-[24px] border border-border bg-card p-5 text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+            >
+              <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-muted">
+                <LifeBuoy strokeWidth={1.6} className="size-6 text-primary" aria-hidden />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block font-display text-lg font-bold">Suporte</span>
+                <span className="block text-sm text-muted-foreground">
+                  Fale com a nossa equipe
+                </span>
+              </span>
+              <ChevronRight className="size-5 shrink-0 text-muted-foreground" aria-hidden />
+            </a>
+          </div>
+        </section>
+
+        {/* Entrar / Criar conta */}
+        {!user && (
+          <section className="px-4 pb-8 md:px-5">
+            <div className="mx-auto w-full max-w-md md:max-w-5xl">
+              <Link
+                to="/entrar"
+                search={{ next: undefined }}
+                className="flex min-h-14 w-full items-center justify-center rounded-[24px] bg-primary text-base font-bold text-primary-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+              >
+                Entrar / Criar conta
+              </Link>
+            </div>
+          </section>
+        )}
+
         {/* Faixa de confiança */}
-        <section className="bg-primary px-5 py-5">
-          <ul className="mx-auto grid w-full max-w-6xl grid-cols-3 gap-3">
+        <section className="border-y border-border bg-card px-4 py-5 md:px-5">
+          <ul className="mx-auto grid w-full max-w-md grid-cols-3 gap-3 md:max-w-5xl">
             {confianca.map((item) => (
               <li
                 key={item.texto}
-                className="flex flex-col items-center gap-1.5 text-center text-primary-foreground md:flex-row md:justify-center md:gap-2.5"
+                className="flex flex-col items-center gap-1.5 text-center text-foreground md:flex-row md:justify-center md:gap-2.5"
               >
-                <item.icon strokeWidth={1.5} className="h-5 w-5 text-accent" aria-hidden />
+                <item.icon strokeWidth={1.5} className="size-5 text-primary" aria-hidden />
                 <span className="text-xs font-medium md:text-sm">{item.texto}</span>
               </li>
             ))}
           </ul>
         </section>
 
-        {/* Como funciona a Lar77? */}
-        <section id="como-funciona" className="bg-surface-tint py-14 md:py-20">
-          <div className="mx-auto w-full max-w-6xl px-5">
-            <h2 className="text-2xl text-foreground md:text-3xl">{t.como_titulo}</h2>
-            <p className="mt-2 max-w-2xl text-base text-muted-foreground">{t.como_subtitulo}</p>
-
-            <ol className="mt-8 grid gap-4 md:grid-cols-2">
-              {passos.map((passo, i) => (
-                <li key={passo.titulo} className="lar-card flex gap-4 p-5">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--accent-soft)] font-display text-base font-bold text-primary">
-                    {i + 1}
-                  </span>
-                  <div>
-                    <h3 className="flex items-center gap-2 text-lg leading-[1.4] text-foreground">
-                      <passo.icon strokeWidth={1.5} className="h-5 w-5 text-accent" aria-hidden />
-                      {passo.titulo}
-                    </h3>
-                    {passo.texto && (
-                      <p className="mt-2 text-sm text-muted-foreground">{passo.texto}</p>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ol>
-
-            <div className="mt-8 rounded-2xl border border-primary/15 bg-card p-6">
-              <h3 className="flex items-center gap-2 text-lg text-foreground">
-                <ShieldCheck strokeWidth={1.5} className="h-5 w-5 text-accent" aria-hidden />
-                {t.garantia_titulo}
-              </h3>
-              <p className="mt-2 text-sm text-muted-foreground">{t.garantia_texto}</p>
-              <p className="mt-4 font-display text-lg font-bold text-primary">
-                {t.garantia_fechamento}
-              </p>
-            </div>
+        {/* Garantia */}
+        <section className="px-4 py-10 md:px-5">
+          <div className="mx-auto w-full max-w-md rounded-[24px] border border-primary/25 bg-card p-6 md:max-w-5xl">
+            <h3 className="flex items-center gap-2 text-lg text-foreground">
+              <ShieldCheck strokeWidth={1.5} className="size-5 text-primary" aria-hidden />
+              {t.garantia_titulo}
+            </h3>
+            <p className="mt-2 text-sm text-muted-foreground">{t.garantia_texto}</p>
+            <p className="mt-4 font-display text-lg font-bold text-primary">
+              {t.garantia_fechamento}
+            </p>
           </div>
         </section>
 
         {/* Trabalhe com a Lar77 */}
-        <section
-          id="profissionais"
-          className="relative overflow-hidden bg-primary px-5 py-16 md:py-24"
-        >
-          <div
-            className="pointer-events-none absolute inset-0 opacity-[0.07]"
-            aria-hidden
-            style={{
-              backgroundImage:
-                "radial-gradient(circle at 20% 30%, oklch(0.79 0.125 84) 0%, transparent 25%), radial-gradient(circle at 80% 70%, oklch(0.79 0.125 84) 0%, transparent 30%)",
-            }}
-          />
+        <section id="profissionais" className="border-t border-border bg-card px-4 py-12 md:px-5">
+          <div className="mx-auto w-full max-w-md md:max-w-5xl">
+            <span className="inline-flex items-center rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">
+              Para profissionais de limpeza
+            </span>
+            <h2 className="mt-4 text-2xl text-foreground md:text-3xl">{t.prof_titulo}</h2>
+            <p className="mt-3 font-display text-lg font-bold text-primary">{t.prof_chamada}</p>
+            <p className="mt-3 text-base text-muted-foreground">{t.prof_texto}</p>
 
-          <div className="relative mx-auto w-full max-w-6xl">
-            <div className="grid gap-10 md:grid-cols-2 md:items-start md:gap-16">
-              <div>
-                <span className="inline-flex items-center rounded-full bg-accent/15 px-3 py-1 text-xs font-semibold text-accent">
-                  Para profissionais de limpeza
-                </span>
-                <h2 className="mt-4 text-3xl text-primary-foreground md:text-4xl">
-                  {t.prof_titulo}
-                </h2>
-                <p className="mt-4 font-display text-xl font-bold text-accent">{t.prof_chamada}</p>
-                <p className="mt-4 max-w-lg text-base text-primary-foreground/80">{t.prof_texto}</p>
-
-                <div className="mt-6 space-y-1 text-primary-foreground">
-                  <p>{t.prof_fechamento_1}</p>
-                  <p>{t.prof_fechamento_2}</p>
-                  <p className="font-semibold">{t.prof_fechamento_3}</p>
-                </div>
-
-                <Link
-                  to="/seja-profissional"
-                  className="mt-8 inline-flex min-h-[52px] items-center justify-center rounded-xl bg-accent px-7 text-sm font-bold uppercase tracking-wide text-accent-foreground transition-all duration-200 ease-out hover:opacity-90 active:scale-[0.98]"
-                >
-                  {t.hero_botao_profissional}
-                </Link>
-              </div>
-
-              <div className="grid gap-3">
-                {vantagensProfissional.map((item) => (
-                  <div
-                    key={item.titulo}
-                    className="rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5 p-5 backdrop-blur-sm transition-all duration-200 ease-out md:hover:bg-primary-foreground/10"
-                  >
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/15">
-                      <item.icon strokeWidth={1.5} className="h-5 w-5 text-accent" aria-hidden />
-                    </span>
-                    <h3 className="mt-4 text-base font-semibold text-primary-foreground">
-                      {item.titulo}
-                    </h3>
-                    <p className="mt-1 text-sm text-primary-foreground/70">{item.texto}</p>
-                  </div>
-                ))}
-              </div>
+            <div className="mt-5 space-y-1 text-foreground">
+              <p>{t.prof_fechamento_1}</p>
+              <p>{t.prof_fechamento_2}</p>
+              <p className="font-semibold">{t.prof_fechamento_3}</p>
             </div>
 
-            <p className="mt-12 text-center font-display text-lg font-bold text-primary-foreground md:text-xl">
+            <div className="mt-8 grid gap-3 md:grid-cols-2">
+              {vantagensProfissional.map((item) => (
+                <div
+                  key={item.titulo}
+                  className="rounded-[24px] border border-border bg-surface-tint p-5"
+                >
+                  <span className="flex size-11 items-center justify-center rounded-2xl bg-primary/10">
+                    <item.icon strokeWidth={1.5} className="size-5 text-primary" aria-hidden />
+                  </span>
+                  <h3 className="mt-4 text-base font-semibold text-foreground">{item.titulo}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{item.texto}</p>
+                </div>
+              ))}
+            </div>
+
+            <Link
+              to="/seja-profissional"
+              className="mt-8 flex min-h-14 w-full items-center justify-center rounded-[24px] bg-primary text-base font-bold text-primary-foreground transition-transform duration-200 ease-out active:scale-[0.98] md:w-auto md:px-8"
+            >
+              {t.hero_botao_profissional}
+            </Link>
+
+            <p className="mt-10 text-center font-display text-lg font-bold text-foreground">
               {t.rodape}
             </p>
           </div>
@@ -272,7 +299,6 @@ function Home() {
       </main>
 
       <SiteFooter />
-      <CtaFixoMobile />
     </div>
   );
 }

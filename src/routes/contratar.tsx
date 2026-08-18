@@ -245,20 +245,26 @@ function Contratar() {
                 {passo === 7 && <PassoDataHora rascunho={rascunho} atualizar={atualizar} />}
                 {passo === 8 && <PassoObservacoes rascunho={rascunho} atualizar={atualizar} />}
 
-                <div className="mt-8 flex items-center justify-between gap-3">
+                <div className="mt-8 flex flex-col items-center gap-2">
+                  <Button
+                    onClick={avancar}
+                    disabled={!podeAvancar}
+                    size="lg"
+                    className="min-h-14 w-full rounded-[24px] text-base font-bold"
+                  >
+                    {passo === TOTAL_PASSOS ? "Buscar profissionais" : "Continuar"}
+                    <ArrowRight className="size-4" />
+                  </Button>
                   <Button
                     variant="ghost"
                     onClick={voltar}
                     disabled={passo === 1}
-                    className="gap-2"
+                    className="gap-2 text-muted-foreground"
                   >
                     <ArrowLeft className="size-4" /> Voltar
                   </Button>
-                  <Button onClick={avancar} disabled={!podeAvancar} size="lg" className="gap-2">
-                    {passo === TOTAL_PASSOS ? "Buscar profissionais" : "Continuar"}
-                    <ArrowRight className="size-4" />
-                  </Button>
                 </div>
+
               </>
             )}
 

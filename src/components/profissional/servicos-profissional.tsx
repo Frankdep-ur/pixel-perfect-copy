@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { OportunidadesProfissional } from "@/components/profissional/oportunidades-profissional";
 import { STATUS_LABEL, formatBRL, labelTipoImovel, labelTipoLimpeza } from "@/lib/catalogo";
 import { formatarData } from "@/lib/agenda";
 import { MENSAGENS } from "@/lib/whatsapp";

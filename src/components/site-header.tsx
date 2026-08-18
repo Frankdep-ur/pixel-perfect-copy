@@ -36,17 +36,28 @@ export function SiteHeader() {
 
   return (
     <>
-    <header className="sticky top-0 z-40 border-b border-border bg-card/80 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
-      <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-5 md:h-16">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/90 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
+      <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-2 px-4 md:h-16 md:justify-between md:px-5">
+
+        <button
+          type="button"
+          aria-label={open ? "Fechar menu" : "Abrir menu"}
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+          className="inline-flex size-11 items-center justify-center rounded-2xl text-primary transition-transform duration-200 ease-out active:scale-[0.96] md:hidden"
+        >
+          {open ? <X strokeWidth={1.75} /> : <Menu strokeWidth={1.75} />}
+        </button>
 
         <Link
           to="/"
           onClick={() => setOpen(false)}
-          className="flex items-center gap-2 transition-transform duration-200 ease-out active:scale-[0.98]"
+          className="mx-auto flex items-center gap-2 transition-transform duration-200 ease-out active:scale-[0.98] md:mx-0"
         >
-          <img src={logoLar77.url} alt="Lar77 — diaristas de confiança" className="h-9 w-auto" />
+          <img src={logoLar77.url} alt="Lar77 — diaristas de confiança" className="h-10 w-auto" />
           <span className="sr-only">Lar77</span>
         </Link>
+
 
         <nav className="hidden items-center gap-8 md:flex">
           {navLinksCliente.map((link) => (

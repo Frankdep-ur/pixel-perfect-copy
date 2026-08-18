@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { LifeBuoy, LogOut, Menu, ShieldCheck, Sparkles, UserRound, X } from "lucide-react";
+import { Bell, Headset, LogOut, Menu, ShieldCheck, Sparkles, UserRound, X } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useSession, usePapeis } from "@/hooks/use-auth";
+import { useNaoLidas } from "@/hooks/use-nao-lidas";
 import { linkSuporte } from "@/lib/whatsapp";
 import logoLar77 from "@/assets/logo-lar77.png.asset.json";
 
@@ -16,6 +17,7 @@ export function SiteHeader() {
   const queryClient = useQueryClient();
   const { user } = useSession();
   const { data: papeis } = usePapeis(user);
+  const { data: naoLidas } = useNaoLidas(user);
   const ehAdmin = (papeis ?? []).includes("admin");
   const ehProfissional = (papeis ?? []).includes("profissional");
 
@@ -36,8 +38,8 @@ export function SiteHeader() {
 
   return (
     <>
-    <header className="sticky top-0 z-40 border-b border-border bg-background/90 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
-      <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-2 px-4 md:h-16 md:justify-between md:px-5">
+    <header className="sticky top-0 z-40 border-b border-border bg-background pt-[env(safe-area-inset-top)]">
+      <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-2 px-4 md:h-16 md:justify-between md:px-5">
 
         <button
           type="button"
@@ -54,7 +56,7 @@ export function SiteHeader() {
           onClick={() => setOpen(false)}
           className="mx-auto flex items-center gap-2 transition-transform duration-200 ease-out active:scale-[0.98] md:mx-0"
         >
-          <img src={logoLar77.url} alt="Lar77 — diaristas de confiança" className="h-10 w-auto" />
+          <img src={logoLar77.url} alt="Lar77 — diaristas de confiança" className="h-8 w-auto md:h-10" />
           <span className="sr-only">Lar77</span>
         </Link>
 
@@ -75,7 +77,7 @@ export function SiteHeader() {
             rel="noreferrer"
             className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors duration-200 ease-out hover:text-primary"
           >
-            <LifeBuoy className="size-4" />
+            <Headset className="size-4" />
             Suporte
           </a>
         </nav>
@@ -140,15 +142,30 @@ export function SiteHeader() {
 
         </div>
 
-        <a
-          href={linkSuporte()}
-          target="_blank"
-          rel="noreferrer"
-          aria-label="Falar com o suporte"
-          className="inline-flex size-11 items-center justify-center rounded-2xl text-primary transition-transform duration-200 ease-out active:scale-[0.96] md:hidden"
-        >
-          <LifeBuoy strokeWidth={1.75} />
-        </a>
+        {user ? (
+          <Link
+            to="/mensagens"
+            aria-label="Notificações e mensagens"
+            className="relative inline-flex size-11 items-center justify-center rounded-2xl text-accent transition-transform duration-200 ease-out active:scale-[0.96] md:hidden"
+          >
+            <Bell size={24} strokeWidth={1.5} />
+            {!!naoLidas && naoLidas > 0 && (
+              <span className="absolute right-1.5 top-1.5 inline-flex min-w-[18px] items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold leading-[18px] text-accent-foreground">
+                {naoLidas > 99 ? "99+" : naoLidas}
+              </span>
+            )}
+          </Link>
+        ) : (
+          <a
+            href={linkSuporte()}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Falar com o suporte"
+            className="inline-flex size-11 items-center justify-center rounded-2xl text-accent transition-transform duration-200 ease-out active:scale-[0.96] md:hidden"
+          >
+            <Headset size={24} strokeWidth={1.5} />
+          </a>
+        )}
 
       </div>
       </header>
@@ -254,7 +271,7 @@ export function SiteHeader() {
             onClick={() => setOpen(false)}
             className="mt-4 flex min-h-14 items-center gap-2 rounded-xl bg-surface-tint px-3 text-base font-semibold text-primary transition-transform duration-200 ease-out active:scale-[0.98]"
           >
-            <LifeBuoy className="size-5" />
+            <Headset className="size-5" />
             Falar com o suporte
           </a>
         </nav>

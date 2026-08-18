@@ -29,7 +29,11 @@ import { AvaliarDialog } from "@/components/avaliar-dialog";
 import { STATUS_LABEL, formatBRL, labelTipoLimpeza } from "@/lib/catalogo";
 import { useSession } from "@/hooks/use-auth";
 
+type Busca = { aba?: string };
+
 export const Route = createFileRoute("/minha-conta")({
+  validateSearch: (busca: Record<string, unknown>): Busca =>
+    typeof busca["aba"] === "string" ? { aba: busca["aba"] as string } : {},
   head: () => ({
     meta: [
       { title: "Minha conta — Lar77" },
@@ -65,8 +69,12 @@ const CANCELAVEIS = ["aguardando_aceite", "sem_profissional", "solicitada", "ace
 /** Só depois do aceite o cliente vê os dados da profissional. */
 const APOS_ACEITE = ["aceita", "confirmada", "a_caminho", "em_andamento", "finalizada", "concluida"];
 
+const ABAS_VALIDAS = ["ativas", "historico", "imoveis", "perfil"];
+
 function MinhaConta() {
   const navigate = useNavigate();
+  const { aba } = Route.useSearch();
+  const abaInicial = aba && ABAS_VALIDAS.includes(aba) ? aba : "ativas";
   const { user, carregando } = useSession();
 
   useEffect(() => {
@@ -119,7 +127,7 @@ function MinhaConta() {
         )}
 
         {!isLoading && data && (
-          <Tabs defaultValue="ativas" className="mt-8">
+          <Tabs key={abaInicial} defaultValue={abaInicial} className="mt-8">
             <TabsList className="flex-wrap">
               <TabsTrigger value="ativas">Em andamento ({ativas.length})</TabsTrigger>
               <TabsTrigger value="historico">Histórico ({historico.length})</TabsTrigger>

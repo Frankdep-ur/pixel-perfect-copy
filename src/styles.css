@@ -273,13 +273,3 @@
     line-height: 1.55;
   }
 }
-
-/* Espaço para a barra de abas fixa (mobile) */
-@layer base {
-  @media (max-width: 767px) {
-    .com-tab-bar main,
-    .com-tab-bar footer {
-      padding-bottom: calc(72px + env(safe-area-inset-bottom));
-    }
-  }
-}

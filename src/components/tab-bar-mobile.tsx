@@ -46,10 +46,17 @@ export function TabBarMobile() {
   ];
 
   return (
-    <nav
-      aria-label="Navegação principal"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-surface pb-[env(safe-area-inset-bottom)] md:hidden"
-    >
+    <>
+      {/* Espaçador em fluxo: garante que o fim do conteúdo nunca fique sob a barra fixa. */}
+      <div
+        aria-hidden
+        className="h-[calc(72px+env(safe-area-inset-bottom))] md:hidden"
+        data-tab-bar-spacer
+      />
+      <nav
+        aria-label="Navegação principal"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-surface pb-[env(safe-area-inset-bottom)] md:hidden"
+      >
       <ul className="flex items-stretch justify-between px-1">
         {abas.map((aba) => {
           const Icone = aba.icon;
@@ -81,7 +88,8 @@ export function TabBarMobile() {
             </li>
           );
         })}
-      </ul>
-    </nav>
+        </ul>
+      </nav>
+    </>
   );
 }

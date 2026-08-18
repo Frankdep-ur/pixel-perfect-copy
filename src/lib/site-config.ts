@@ -50,9 +50,9 @@ export const TEXTOS_PADRAO: TextosSite = {
 
 /** Valores em oklch — iguais aos tokens de src/styles.css. */
 export const CORES_PADRAO: CoresSite = {
-  primary: "oklch(0.7750 0.1250 86)",
-  accent: "oklch(0.7750 0.1250 86)",
-  background: "oklch(0.1900 0.0450 264)",
+  primary: "oklch(0.7675 0.0957 75)",
+  accent: "oklch(0.7675 0.0957 75)",
+  background: "oklch(0.2014 0.0559 256)",
 };
 
 

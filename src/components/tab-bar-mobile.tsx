@@ -21,6 +21,9 @@ type Aba = {
 export function TabBarMobile() {
   const { user } = useSession();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const abaAtual = useRouterState({
+    select: (s) => (s.location.search as { aba?: string } | undefined)?.aba,
+  });
   const { data: naoLidas } = useNaoLidas(user);
 
   const bloqueada = ROTAS_SEM_BARRA.some((r) => pathname === r || pathname.startsWith(`${r}/`));

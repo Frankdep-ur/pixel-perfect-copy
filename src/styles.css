@@ -176,10 +176,6 @@
     stroke-width: 1.5;
   }
 
-  :is(p, h1, h2, h3, h4, li, span, div):not(button):not([role="button"]) > svg:not([data-slot]) {
-    color: var(--color-accent);
-  }
-
   input,
   select,
   textarea {

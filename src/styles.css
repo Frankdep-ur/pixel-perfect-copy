@@ -152,9 +152,10 @@
 @utility lar-card {
   background-color: var(--color-card);
   border: 1px solid var(--color-border);
-  border-radius: 1rem;
+  border-radius: 1.5rem;
   box-shadow: var(--shadow-card);
 }
+
 
 
 /* Comportamento de aplicativo (mobile) */

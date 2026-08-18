@@ -271,7 +271,7 @@ export function SiteHeader() {
             onClick={() => setOpen(false)}
             className="mt-4 flex min-h-14 items-center gap-2 rounded-xl bg-surface-tint px-3 text-base font-semibold text-primary transition-transform duration-200 ease-out active:scale-[0.98]"
           >
-            <LifeBuoy className="size-5" />
+            <Headset className="size-5" />
             Falar com o suporte
           </a>
         </nav>

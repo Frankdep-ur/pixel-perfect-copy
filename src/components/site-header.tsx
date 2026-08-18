@@ -140,15 +140,16 @@ export function SiteHeader() {
 
         </div>
 
-        <button
-          type="button"
-          aria-label={open ? "Fechar menu" : "Abrir menu"}
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-          className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-border text-primary transition-transform duration-200 ease-out active:scale-[0.98] md:hidden"
+        <a
+          href={linkSuporte()}
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Falar com o suporte"
+          className="inline-flex size-11 items-center justify-center rounded-2xl text-primary transition-transform duration-200 ease-out active:scale-[0.96] md:hidden"
         >
-          {open ? <X strokeWidth={1.5} /> : <Menu strokeWidth={1.5} />}
-        </button>
+          <LifeBuoy strokeWidth={1.75} />
+        </a>
+
       </div>
       </header>
 

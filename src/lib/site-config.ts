@@ -50,10 +50,11 @@ export const TEXTOS_PADRAO: TextosSite = {
 
 /** Valores em oklch — iguais aos tokens de src/styles.css. */
 export const CORES_PADRAO: CoresSite = {
-  primary: "oklch(0.2750 0.0700 259)",
-  accent: "oklch(0.7900 0.1250 84)",
-  background: "oklch(0.9800 0.0050 85)",
+  primary: "oklch(0.7750 0.1250 86)",
+  accent: "oklch(0.7750 0.1250 86)",
+  background: "oklch(0.1900 0.0450 264)",
 };
+
 
 export const LOGO_PADRAO = logoLar77.url;
 

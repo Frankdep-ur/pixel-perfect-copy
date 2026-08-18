@@ -66,8 +66,8 @@ export function Checkout({
         </p>
       </div>
 
-      <div className="flex items-center gap-4 rounded-xl border-2 border-primary bg-primary/5 p-4">
-        <Avatar className="size-14">
+      <div className="flex items-center gap-4 rounded-[24px] border border-primary/50 bg-primary/10 p-5">
+        <Avatar className="size-14 ring-2 ring-primary/40">
           {profissional.foto_url && (
             <AvatarImage src={profissional.foto_url} alt={profissional.nome ?? "Profissional"} />
           )}
@@ -75,7 +75,7 @@ export function Checkout({
             {(profissional.nome ?? "LA").slice(0, 2).toUpperCase()}
           </AvatarFallback>
         </Avatar>
-        <div className="flex-1">
+        <div className="min-w-0 flex-1">
           <p className="font-semibold">{profissional.nome ?? "Profissional Lar77"}</p>
           <p className="text-sm text-muted-foreground">
             Reservada para você · nota {profissional.nota_media.toFixed(1)}
@@ -85,11 +85,11 @@ export function Checkout({
 
       <div
         className={cn(
-          "flex items-center gap-3 rounded-xl p-4 text-sm",
-          expirada ? "bg-destructive/10 text-destructive" : "bg-muted text-muted-foreground",
+          "flex items-center gap-3 rounded-[24px] p-5 text-sm",
+          expirada ? "bg-destructive/15 text-destructive" : "bg-card text-muted-foreground",
         )}
       >
-        <Clock className="size-5 shrink-0" />
+        <Clock className="size-5 shrink-0 text-primary" />
         {expirada ? (
           <div className="flex-1">
             <p className="font-medium">A reserva expirou</p>
@@ -98,7 +98,7 @@ export function Checkout({
         ) : (
           <p className="flex-1">
             Reserva garantida por{" "}
-            <span className="font-semibold text-foreground">{formatarContagem(restante)}</span>.
+            <span className="font-semibold text-primary">{formatarContagem(restante)}</span>.
             Conclua o pagamento para confirmar a contratação.
           </p>
         )}
@@ -119,8 +119,8 @@ export function Checkout({
               type="button"
               onClick={() => setForma(opcao.id)}
               className={cn(
-                "flex flex-col items-start gap-1 rounded-xl border-2 bg-card p-4 text-left transition-all",
-                ativo ? "border-primary bg-primary/5" : "border-border hover:border-primary/60",
+                "flex flex-col items-start gap-1 rounded-[24px] border bg-card p-5 text-left transition-all",
+                ativo ? "border-primary bg-primary/10" : "border-border hover:border-primary/60",
               )}
             >
               <Icone className="size-5 text-primary" />
@@ -131,7 +131,7 @@ export function Checkout({
         })}
       </div>
 
-      <div className="flex items-start gap-3 rounded-xl bg-muted p-4 text-sm text-muted-foreground">
+      <div className="flex items-start gap-3 rounded-[24px] bg-card p-5 text-sm text-muted-foreground">
         <ShieldCheck className="mt-0.5 size-5 shrink-0 text-primary" />
         <p>
           A taxa administrativa cobre a operação da Lar77 e profissionais com documentos
@@ -140,7 +140,7 @@ export function Checkout({
       </div>
 
       <Button
-        className="w-full"
+        className="min-h-14 w-full rounded-[24px] text-base font-bold"
         size="lg"
         onClick={confirmar}
         disabled={processando || expirada}
@@ -153,3 +153,4 @@ export function Checkout({
     </div>
   );
 }
+

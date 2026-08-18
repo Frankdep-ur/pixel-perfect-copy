@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { CreditCard, Loader2, QrCode, ShieldCheck, Wallet } from "lucide-react";
+import { Clock, CreditCard, Loader2, QrCode, ShieldCheck, Wallet } from "lucide-react";
 import { toast } from "sonner";
 
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { formatBRL, tipoLimpezaParaFiltro } from "@/lib/catalogo";
+import { formatBRL } from "@/lib/catalogo";
 import { processarPagamento, type FormaPagamento } from "@/lib/pagamento";
-import { limparRascunho, type Rascunho } from "@/lib/contratacao";
+import { limparRascunho } from "@/lib/contratacao";
+import { confirmarPagamento, formatarContagem, type ProfissionalAceite } from "@/lib/orquestra";
+import { useContagem } from "@/hooks/use-contagem";
 import type { Orcamento } from "@/lib/pricing";
 
 const FORMAS: { id: FormaPagamento; label: string; icon: typeof QrCode; nota: string }[] = [
@@ -18,124 +20,34 @@ const FORMAS: { id: FormaPagamento; label: string; icon: typeof QrCode; nota: st
 ];
 
 export function Checkout({
-  rascunho,
+  bookingId,
+  profissional,
+  reservaAte,
   orcamento,
-  extras,
-  userId,
+  onReservaExpirada,
 }: {
-  rascunho: Rascunho;
+  bookingId: string;
+  profissional: ProfissionalAceite;
+  reservaAte: string;
   orcamento: Orcamento;
-  extras: { id: string; preco: number }[];
-  userId: string;
+  onReservaExpirada: () => void;
 }) {
   const navigate = useNavigate();
   const [forma, setForma] = useState<FormaPagamento>("pix");
   const [processando, setProcessando] = useState(false);
+  const restante = useContagem(reservaAte);
+  const expirada = restante <= 0;
 
   async function confirmar() {
     setProcessando(true);
     try {
-      const endereco = rascunho.endereco;
-      let enderecoId = rascunho.endereco_id;
-
-      // Imóvel já salvo na conta: reaproveitamos, sem duplicar endereços.
-      if (!enderecoId) {
-        const { data: enderecoSalvo, error: erroEndereco } = await supabase
-          .from("enderecos")
-          .insert({
-            user_id: userId,
-            cep: endereco.cep,
-            rua: endereco.rua,
-            numero: endereco.numero,
-            complemento: endereco.complemento,
-            bairro: endereco.bairro,
-            cidade: endereco.cidade,
-            estado: endereco.estado,
-            regiao: endereco.regiao,
-          })
-          .select("id")
-          .single();
-        if (erroEndereco) throw erroEndereco;
-        enderecoId = enderecoSalvo.id;
-      }
-
-
-      let profissionalId = rascunho.profissional_id;
-      if (rascunho.escolha_automatica || !profissionalId) {
-        const { data: sorteada, error: erroSorteio } = await supabase.rpc(
-          "sortear_profissional",
-          {
-            _regiao: endereco.regiao!,
-            _data: rascunho.data!,
-            ...(rascunho.tipo_limpeza
-              ? { _tipo_limpeza: tipoLimpezaParaFiltro(rascunho.tipo_limpeza)! }
-              : {}),
-          },
-        );
-        if (erroSorteio) throw erroSorteio;
-        if (!sorteada) {
-          throw new Error(
-            "Nenhuma profissional disponível nessa data. Volte e escolha outro dia ou horário.",
-          );
-        }
-        profissionalId = sorteada;
-      }
-
       const pagamento = await processarPagamento(forma, orcamento.total);
       if (!pagamento.sucesso) throw new Error(pagamento.mensagem);
 
-      const { data: booking, error: erroBooking } = await supabase
-        .from("bookings")
-        .insert({
-          cliente_id: userId,
-          profissional_id: profissionalId,
-          endereco_id: enderecoId,
-          regiao: endereco.regiao,
-          tipo_imovel: rascunho.tipo_imovel,
-          quartos: rascunho.quartos,
-          salas: rascunho.salas,
-          banheiros: rascunho.banheiros,
-          cozinha: rascunho.cozinhas > 0,
-          cozinhas: rascunho.cozinhas,
-          copa: rascunho.copa,
-          salas_reuniao: rascunho.salas_reuniao,
-          recepcao: rascunho.recepcao,
-          faixa_pessoas: rascunho.faixa_pessoas,
-          faixa_metragem: rascunho.faixa_metragem,
-          qtd_profissionais: orcamento.qtdProfissionais,
-          area_externa: rascunho.area_externa,
-          outros_ambientes: rascunho.outros_ambientes,
-          duracao_horas: rascunho.duracao_horas!,
-          tipo_limpeza: rascunho.tipo_limpeza!,
-          data: rascunho.data,
-          hora: rascunho.hora,
-          observacoes: rascunho.observacoes,
-          status: "aguardando_aceite",
-          valor_profissional: orcamento.valorProfissional,
-          taxa_admin: orcamento.taxaAdminBase,
-          valor_seguro: orcamento.valorSeguro,
-          valor_extras: orcamento.valorExtras,
-          valor_total: orcamento.total,
-        })
-        .select("id, codigo")
-        .single();
-      if (erroBooking) throw erroBooking;
-
-
-      const extrasEscolhidos = extras.filter((e) => rascunho.extras_ids.includes(e.id));
-      if (extrasEscolhidos.length > 0) {
-        const { error: erroExtras } = await supabase.from("booking_extras").insert(
-          extrasEscolhidos.map((e) => ({
-            booking_id: booking.id,
-            extra_id: e.id,
-            preco_congelado: Number(e.preco),
-          })),
-        );
-        if (erroExtras) throw erroExtras;
-      }
+      await confirmarPagamento(bookingId);
 
       limparRascunho();
-      navigate({ to: "/confirmacao/$id", params: { id: booking.id } });
+      navigate({ to: "/confirmacao/$id", params: { id: bookingId } });
     } catch (erro) {
       toast.error("Não conseguimos concluir a contratação", {
         description: erro instanceof Error ? erro.message : undefined,
@@ -152,6 +64,49 @@ export function Checkout({
         <p className="mt-1 text-sm text-muted-foreground">
           Ambiente de testes: nenhuma cobrança real é feita neste momento.
         </p>
+      </div>
+
+      <div className="flex items-center gap-4 rounded-xl border-2 border-primary bg-primary/5 p-4">
+        <Avatar className="size-14">
+          {profissional.foto_url && (
+            <AvatarImage src={profissional.foto_url} alt={profissional.nome ?? "Profissional"} />
+          )}
+          <AvatarFallback>
+            {(profissional.nome ?? "LA").slice(0, 2).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+        <div className="flex-1">
+          <p className="font-semibold">{profissional.nome ?? "Profissional Lar77"}</p>
+          <p className="text-sm text-muted-foreground">
+            Reservada para você · nota {profissional.nota_media.toFixed(1)}
+          </p>
+        </div>
+      </div>
+
+      <div
+        className={cn(
+          "flex items-center gap-3 rounded-xl p-4 text-sm",
+          expirada ? "bg-destructive/10 text-destructive" : "bg-muted text-muted-foreground",
+        )}
+      >
+        <Clock className="size-5 shrink-0" />
+        {expirada ? (
+          <div className="flex-1">
+            <p className="font-medium">A reserva expirou</p>
+            <p>Volte e escolha uma profissional novamente.</p>
+          </div>
+        ) : (
+          <p className="flex-1">
+            Reserva garantida por{" "}
+            <span className="font-semibold text-foreground">{formatarContagem(restante)}</span>.
+            Conclua o pagamento para confirmar a contratação.
+          </p>
+        )}
+        {expirada && (
+          <Button size="sm" variant="outline" onClick={onReservaExpirada}>
+            Escolher outra
+          </Button>
+        )}
       </div>
 
       <div className="grid gap-3 sm:grid-cols-3">
@@ -184,8 +139,12 @@ export function Checkout({
         </p>
       </div>
 
-
-      <Button className="w-full" size="lg" onClick={confirmar} disabled={processando}>
+      <Button
+        className="w-full"
+        size="lg"
+        onClick={confirmar}
+        disabled={processando || expirada}
+      >
         {processando && <Loader2 className="mr-2 size-4 animate-spin" />}
         {processando
           ? "Processando pagamento..."

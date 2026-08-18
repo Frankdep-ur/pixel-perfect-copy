@@ -1,0 +1,16 @@
+REVOKE EXECUTE ON FUNCTION public.has_role(uuid, public.app_role) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.participa_booking(uuid, uuid) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.recusar_booking(uuid) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.sortear_profissional(text, date, text) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.profissionais_disponiveis(text, date, text) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.abrir_rodada_convites(uuid) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.responder_convite(uuid, boolean) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.convites_aceitos(uuid) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.reservar_profissional(uuid, uuid) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.confirmar_pagamento_booking(uuid) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.expirar_convites_e_reservas() FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.recalcular_nota_profissional() FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.set_booking_codigo() FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.bloquear_domingo() FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.update_updated_at_column() FROM anon, authenticated;

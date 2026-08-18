@@ -56,8 +56,8 @@ export function TabBarMobile() {
           const ativa = aba.exact
             ? pathname === aba.to
             : aba.search
-              ? false
-              : pathname === aba.to || pathname.startsWith(`${aba.to}/`);
+              ? pathname === aba.to && abaAtual === aba.search["aba"]
+              : (pathname === aba.to || pathname.startsWith(`${aba.to}/`)) && !abaAtual;
           return (
             <li key={aba.label} className="flex-1">
               <Link

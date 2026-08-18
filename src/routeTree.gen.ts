@@ -15,6 +15,7 @@ import { Route as AjudaRouteImport } from './routes/ajuda'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContratarRouteImport } from './routes/contratar'
 import { Route as EntrarRouteImport } from './routes/entrar'
+import { Route as MensagensRouteImport } from './routes/mensagens'
 import { Route as MinhaContaRouteImport } from './routes/minha-conta'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as ProfissionalRouteImport } from './routes/profissional'
@@ -65,6 +66,11 @@ const ContratarRoute = ContratarRouteImport.update({
 const EntrarRoute = EntrarRouteImport.update({
   id: '/entrar',
   path: '/entrar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MensagensRoute = MensagensRouteImport.update({
+  id: '/mensagens',
+  path: '/mensagens',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MinhaContaRoute = MinhaContaRouteImport.update({
@@ -180,6 +186,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
   '/entrar': typeof EntrarRoute
+  '/mensagens': typeof MensagensRoute
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
   '/profissional': typeof ProfissionalRoute
@@ -208,6 +215,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
   '/entrar': typeof EntrarRoute
+  '/mensagens': typeof MensagensRoute
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
   '/profissional': typeof ProfissionalRoute
@@ -238,6 +246,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
   '/entrar': typeof EntrarRoute
+  '/mensagens': typeof MensagensRoute
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
   '/profissional': typeof ProfissionalRoute
@@ -269,6 +278,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contratar'
     | '/entrar'
+    | '/mensagens'
     | '/minha-conta'
     | '/privacidade'
     | '/profissional'
@@ -297,6 +307,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contratar'
     | '/entrar'
+    | '/mensagens'
     | '/minha-conta'
     | '/privacidade'
     | '/profissional'
@@ -326,6 +337,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contratar'
     | '/entrar'
+    | '/mensagens'
     | '/minha-conta'
     | '/privacidade'
     | '/profissional'
@@ -356,6 +368,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ContratarRoute: typeof ContratarRoute
   EntrarRoute: typeof EntrarRoute
+  MensagensRoute: typeof MensagensRoute
   MinhaContaRoute: typeof MinhaContaRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   ProfissionalRoute: typeof ProfissionalRoute
@@ -409,6 +422,13 @@ declare module '@tanstack/react-router' {
       path: '/entrar'
       fullPath: '/entrar'
       preLoaderRoute: typeof EntrarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mensagens': {
+      id: '/mensagens'
+      path: '/mensagens'
+      fullPath: '/mensagens'
+      preLoaderRoute: typeof MensagensRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/minha-conta': {
@@ -600,6 +620,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ContratarRoute: ContratarRoute,
   EntrarRoute: EntrarRoute,
+  MensagensRoute: MensagensRoute,
   MinhaContaRoute: MinhaContaRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   ProfissionalRoute: ProfissionalRoute,

@@ -17,6 +17,7 @@ import {
   Users,
   XCircle,
   UserCheck,
+  Radar,
 } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";

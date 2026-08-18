@@ -29,12 +29,11 @@ import { AvaliarDialog } from "@/components/avaliar-dialog";
 import { STATUS_LABEL, formatBRL, labelTipoLimpeza } from "@/lib/catalogo";
 import { useSession } from "@/hooks/use-auth";
 
-type Busca = { aba: string | undefined };
+type Busca = { aba?: string };
 
 export const Route = createFileRoute("/minha-conta")({
-  validateSearch: (busca: Record<string, unknown>): Busca => ({
-    aba: typeof busca["aba"] === "string" ? (busca["aba"] as string) : undefined,
-  }),
+  validateSearch: (busca: Record<string, unknown>): Busca =>
+    typeof busca["aba"] === "string" ? { aba: busca["aba"] as string } : {},
   head: () => ({
     meta: [
       { title: "Minha conta — Lar77" },

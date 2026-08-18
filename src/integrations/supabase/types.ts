@@ -81,6 +81,57 @@ export type Database = {
           },
         ]
       }
+      booking_convites: {
+        Row: {
+          booking_id: string
+          criado_em: string
+          expira_em: string
+          id: string
+          profissional_id: string
+          respondido_em: string | null
+          rodada: number
+          status: string
+          token: string
+        }
+        Insert: {
+          booking_id: string
+          criado_em?: string
+          expira_em: string
+          id?: string
+          profissional_id: string
+          respondido_em?: string | null
+          rodada?: number
+          status?: string
+          token?: string
+        }
+        Update: {
+          booking_id?: string
+          criado_em?: string
+          expira_em?: string
+          id?: string
+          profissional_id?: string
+          respondido_em?: string | null
+          rodada?: number
+          status?: string
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_convites_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_convites_profissional_id_fkey"
+            columns: ["profissional_id"]
+            isOneToOne: false
+            referencedRelation: "profissionais"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       booking_extras: {
         Row: {
           booking_id: string
@@ -149,6 +200,8 @@ export type Database = {
           recepcao: number
           recusadas: string[]
           regiao: string | null
+          reserva_expira_em: string | null
+          reservado_profissional_id: string | null
           salas: number
           salas_reuniao: number
           status: string
@@ -191,6 +244,8 @@ export type Database = {
           recepcao?: number
           recusadas?: string[]
           regiao?: string | null
+          reserva_expira_em?: string | null
+          reservado_profissional_id?: string | null
           salas?: number
           salas_reuniao?: number
           status?: string
@@ -233,6 +288,8 @@ export type Database = {
           recepcao?: number
           recusadas?: string[]
           regiao?: string | null
+          reserva_expira_em?: string | null
+          reservado_profissional_id?: string | null
           salas?: number
           salas_reuniao?: number
           status?: string
@@ -262,6 +319,13 @@ export type Database = {
           {
             foreignKeyName: "bookings_profissional_id_fkey"
             columns: ["profissional_id"]
+            isOneToOne: false
+            referencedRelation: "profissionais"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_reservado_profissional_id_fkey"
+            columns: ["reservado_profissional_id"]
             isOneToOne: false
             referencedRelation: "profissionais"
             referencedColumns: ["id"]
@@ -572,6 +636,60 @@ export type Database = {
           },
         ]
       }
+      notificacoes_whatsapp: {
+        Row: {
+          booking_id: string | null
+          convite_id: string | null
+          criado_em: string
+          destinatario_nome: string | null
+          enviado_em: string | null
+          id: string
+          mensagem: string
+          status: string
+          telefone: string | null
+          tipo: string
+        }
+        Insert: {
+          booking_id?: string | null
+          convite_id?: string | null
+          criado_em?: string
+          destinatario_nome?: string | null
+          enviado_em?: string | null
+          id?: string
+          mensagem: string
+          status?: string
+          telefone?: string | null
+          tipo: string
+        }
+        Update: {
+          booking_id?: string | null
+          convite_id?: string | null
+          criado_em?: string
+          destinatario_nome?: string | null
+          enviado_em?: string | null
+          id?: string
+          mensagem?: string
+          status?: string
+          telefone?: string | null
+          tipo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notificacoes_whatsapp_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notificacoes_whatsapp_convite_id_fkey"
+            columns: ["convite_id"]
+            isOneToOne: false
+            referencedRelation: "booking_convites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pricing_config: {
         Row: {
           chave: string
@@ -794,6 +912,46 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      abrir_rodada_convites: { Args: { _booking_id: string }; Returns: number }
+      confirmar_pagamento_booking: {
+        Args: { _booking_id: string }
+        Returns: string
+      }
+      convite_por_token: {
+        Args: { _token: string }
+        Returns: {
+          bairro: string
+          booking_status: string
+          cidade: string
+          convite_id: string
+          data: string
+          duracao_horas: number
+          escolhida: boolean
+          expira_em: string
+          hora: string
+          profissional_nome: string
+          status: string
+          tipo_limpeza: string
+          valor_profissional: number
+        }[]
+      }
+      convites_aceitos: {
+        Args: { _booking_id: string }
+        Returns: {
+          anos_experiencia: number
+          bio: string
+          convite_id: string
+          foto_url: string
+          nome: string
+          nota_media: number
+          profissional_id: string
+          respondido_em: string
+          total_avaliacoes: number
+          total_servicos: number
+          verificada: boolean
+        }[]
+      }
+      expirar_convites_e_reservas: { Args: never; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -827,6 +985,18 @@ export type Database = {
         }[]
       }
       recusar_booking: { Args: { _booking_id: string }; Returns: string }
+      reservar_profissional: {
+        Args: { _booking_id: string; _profissional_id: string }
+        Returns: string
+      }
+      responder_convite: {
+        Args: { _aceitar: boolean; _convite_id: string }
+        Returns: string
+      }
+      responder_convite_token: {
+        Args: { _aceitar: boolean; _token: string }
+        Returns: string
+      }
       sortear_profissional: {
         Args: { _data: string; _regiao: string; _tipo_limpeza?: string }
         Returns: string

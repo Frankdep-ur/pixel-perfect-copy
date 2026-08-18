@@ -18,8 +18,10 @@ import {
   PassoTipoLimpeza,
 } from "@/components/contratar/passos";
 import { Resumo } from "@/components/contratar/resumo";
-import { EscolhaProfissional } from "@/components/contratar/escolha-profissional";
+import { BuscaOrquestra } from "@/components/contratar/busca-orquestra";
 import { Checkout } from "@/components/contratar/checkout";
+import type { ProfissionalAceite } from "@/lib/orquestra";
+
 import { extrasQuery, pricingQuery } from "@/lib/queries";
 import { calcularOrcamento } from "@/lib/pricing";
 import { ehComercial, perfilImovel } from "@/lib/catalogo";
@@ -60,7 +62,13 @@ function Contratar() {
   const { user, carregando } = useSession();
   const [rascunho, setRascunho] = useState<Rascunho>(RASCUNHO_INICIAL);
   const [passo, setPasso] = useState(1);
-  const [fase, setFase] = useState<"passos" | "profissional" | "checkout">("passos");
+  const [fase, setFase] = useState<"passos" | "busca" | "checkout">("passos");
+  const [pedido, setPedido] = useState<{ id: string; codigo: string | null } | null>(null);
+  const [reserva, setReserva] = useState<{
+    profissional: ProfissionalAceite;
+    reservaAte: string;
+  } | null>(null);
+
 
   useEffect(() => {
     setRascunho(carregarRascunho());
@@ -170,30 +178,23 @@ function Contratar() {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-    setFase("profissional");
+    setFase("busca");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function voltar() {
     if (fase === "checkout") {
-      setFase("profissional");
+      setReserva(null);
+      setFase("busca");
       return;
     }
-    if (fase === "profissional") {
+    if (fase === "busca") {
       setFase("passos");
       return;
     }
     if (passo > 1) setPasso(passo - 1);
   }
 
-  function irParaCheckout() {
-    if (!user) {
-      navigate({ to: "/auth", search: { next: "/contratar" } });
-      return;
-    }
-    setFase("checkout");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
 
   if (!precos || !extras || carregando || !user) {
     return (
@@ -253,19 +254,28 @@ function Contratar() {
                     <ArrowLeft className="size-4" /> Voltar
                   </Button>
                   <Button onClick={avancar} disabled={!podeAvancar} size="lg" className="gap-2">
-                    {passo === TOTAL_PASSOS ? "Ver profissionais" : "Continuar"}
+                    {passo === TOTAL_PASSOS ? "Buscar profissionais" : "Continuar"}
                     <ArrowRight className="size-4" />
                   </Button>
                 </div>
               </>
             )}
 
-            {fase === "profissional" && (
+            {fase === "busca" && user && (
               <>
-                <EscolhaProfissional
+                <BuscaOrquestra
                   rascunho={rascunho}
-                  atualizar={atualizar}
-                  onAvancar={irParaCheckout}
+                  orcamento={orcamento}
+                  extras={listaExtras}
+                  userId={user.id}
+                  pedido={pedido}
+                  onPedidoCriado={setPedido}
+                  onEscolhida={(dados) => {
+                    setReserva(dados);
+                    setFase("checkout");
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  onVoltar={() => setFase("passos")}
                 />
                 <Button variant="ghost" onClick={voltar} className="mt-6 gap-2">
                   <ArrowLeft className="size-4" /> Revisar serviço
@@ -273,14 +283,16 @@ function Contratar() {
               </>
             )}
 
-            {fase === "checkout" && user && (
+            {fase === "checkout" && user && pedido && reserva && (
               <>
                 <Checkout
-                  rascunho={rascunho}
+                  bookingId={pedido.id}
+                  profissional={reserva.profissional}
+                  reservaAte={reserva.reservaAte}
                   orcamento={orcamento}
-                  extras={listaExtras}
-                  userId={user.id}
+                  onReservaExpirada={voltar}
                 />
+
                 <Button variant="ghost" onClick={voltar} className="mt-6 gap-2">
                   <ArrowLeft className="size-4" /> Trocar profissional
                 </Button>

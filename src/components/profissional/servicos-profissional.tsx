@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { OportunidadesProfissional } from "@/components/profissional/oportunidades-profissional";
 import { STATUS_LABEL, formatBRL, labelTipoImovel, labelTipoLimpeza } from "@/lib/catalogo";
 import { formatarData } from "@/lib/agenda";
 import { MENSAGENS } from "@/lib/whatsapp";
@@ -177,8 +178,11 @@ export function ServicosProfissional({ profissionalId, nomeProfissional, userId 
   );
 
   return (
-    <Tabs defaultValue="pedidos" className="mt-8">
+    <Tabs defaultValue="oportunidades" className="mt-8">
       <TabsList className="w-full">
+        <TabsTrigger value="oportunidades" className="flex-1">
+          Oportunidades
+        </TabsTrigger>
         <TabsTrigger value="pedidos" className="flex-1">
           Pedidos ({pendentes.length})
         </TabsTrigger>
@@ -190,7 +194,12 @@ export function ServicosProfissional({ profissionalId, nomeProfissional, userId 
         </TabsTrigger>
       </TabsList>
 
+      <TabsContent value="oportunidades" className="mt-6">
+        <OportunidadesProfissional profissionalId={profissionalId} />
+      </TabsContent>
+
       <TabsContent value="pedidos" className="mt-6 space-y-4">
+
         {pendentes.length === 0 && (
           <Vazio
             icon={Inbox}

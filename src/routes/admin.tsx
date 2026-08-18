@@ -17,6 +17,7 @@ import {
   Users,
   XCircle,
   UserCheck,
+  Radar,
 } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -51,6 +52,7 @@ const ITENS = [
   { to: "/admin/lista-espera", label: "Lista de espera", icon: MailQuestion },
   { to: "/admin/avaliacoes", label: "Avaliações", icon: Star },
   { to: "/admin/carrossel", label: "Carrossel", icon: Images },
+  { to: "/admin/orquestra", label: "Orquestra", icon: Radar },
   { to: "/admin/cancelamentos", label: "Cancelamentos", icon: XCircle },
   { to: "/admin/config", label: "Configurações", icon: Settings },
 

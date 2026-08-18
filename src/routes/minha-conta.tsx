@@ -82,7 +82,7 @@ function MinhaConta() {
       const { data: bookings, error } = await supabase
         .from("bookings")
         .select(
-          "*, enderecos(rua, numero, bairro, cidade), profissionais(id, user_id, cidade, profiles!profissionais_user_id_fkey(nome, telefone, foto_url)), avaliacoes(id)",
+          "*, enderecos(rua, numero, bairro, cidade), profissionais!bookings_profissional_id_fkey(id, user_id, cidade, profiles!profissionais_user_id_fkey(nome, telefone, foto_url)), avaliacoes(id)",
         )
         .eq("cliente_id", user!.id)
         .order("criado_em", { ascending: false });

@@ -33,6 +33,7 @@ import { Route as AdminPrecosRouteImport } from './routes/admin.precos'
 import { Route as AdminProfissionaisRouteImport } from './routes/admin.profissionais'
 import { Route as AdminLoginRouteImport } from './routes/admin_.login'
 import { Route as ConfirmacaoIdRouteImport } from './routes/confirmacao.$id'
+import { Route as OportunidadeTokenRouteImport } from './routes/oportunidade.$token'
 import { Route as ProfissionalEntrarRouteImport } from './routes/profissional_.entrar'
 
 const IndexRoute = IndexRouteImport.update({
@@ -155,6 +156,11 @@ const ConfirmacaoIdRoute = ConfirmacaoIdRouteImport.update({
   path: '/confirmacao/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OportunidadeTokenRoute = OportunidadeTokenRouteImport.update({
+  id: '/oportunidade/$token',
+  path: '/oportunidade/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfissionalEntrarRoute = ProfissionalEntrarRouteImport.update({
   id: '/profissional_/entrar',
   path: '/profissional/entrar',
@@ -185,6 +191,7 @@ export interface FileRoutesByFullPath {
   '/admin/profissionais': typeof AdminProfissionaisRoute
   '/admin/login': typeof AdminLoginRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
+  '/oportunidade/$token': typeof OportunidadeTokenRoute
   '/profissional/entrar': typeof ProfissionalEntrarRoute
   '/admin/': typeof AdminIndexRoute
 }
@@ -211,6 +218,7 @@ export interface FileRoutesByTo {
   '/admin/profissionais': typeof AdminProfissionaisRoute
   '/admin/login': typeof AdminLoginRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
+  '/oportunidade/$token': typeof OportunidadeTokenRoute
   '/profissional/entrar': typeof ProfissionalEntrarRoute
   '/admin': typeof AdminIndexRoute
 }
@@ -239,6 +247,7 @@ export interface FileRoutesById {
   '/admin/profissionais': typeof AdminProfissionaisRoute
   '/admin_/login': typeof AdminLoginRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
+  '/oportunidade/$token': typeof OportunidadeTokenRoute
   '/profissional_/entrar': typeof ProfissionalEntrarRoute
   '/admin/': typeof AdminIndexRoute
 }
@@ -268,6 +277,7 @@ export interface FileRouteTypes {
     | '/admin/profissionais'
     | '/admin/login'
     | '/confirmacao/$id'
+    | '/oportunidade/$token'
     | '/profissional/entrar'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -294,6 +304,7 @@ export interface FileRouteTypes {
     | '/admin/profissionais'
     | '/admin/login'
     | '/confirmacao/$id'
+    | '/oportunidade/$token'
     | '/profissional/entrar'
     | '/admin'
   id:
@@ -321,6 +332,7 @@ export interface FileRouteTypes {
     | '/admin/profissionais'
     | '/admin_/login'
     | '/confirmacao/$id'
+    | '/oportunidade/$token'
     | '/profissional_/entrar'
     | '/admin/'
   fileRoutesById: FileRoutesById
@@ -339,6 +351,7 @@ export interface RootRouteChildren {
   TermosRoute: typeof TermosRoute
   AdminLoginRoute: typeof AdminLoginRoute
   ConfirmacaoIdRoute: typeof ConfirmacaoIdRoute
+  OportunidadeTokenRoute: typeof OportunidadeTokenRoute
   ProfissionalEntrarRoute: typeof ProfissionalEntrarRoute
 }
 
@@ -512,6 +525,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConfirmacaoIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/oportunidade/$token': {
+      id: '/oportunidade/$token'
+      path: '/oportunidade/$token'
+      fullPath: '/oportunidade/$token'
+      preLoaderRoute: typeof OportunidadeTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profissional_/entrar': {
       id: '/profissional_/entrar'
       path: '/profissional/entrar'
@@ -566,6 +586,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermosRoute: TermosRoute,
   AdminLoginRoute: AdminLoginRoute,
   ConfirmacaoIdRoute: ConfirmacaoIdRoute,
+  OportunidadeTokenRoute: OportunidadeTokenRoute,
   ProfissionalEntrarRoute: ProfissionalEntrarRoute,
 }
 export const routeTree = rootRouteImport

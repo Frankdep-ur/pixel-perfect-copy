@@ -84,6 +84,7 @@ export type Database = {
       booking_convites: {
         Row: {
           booking_id: string
+          canal_resposta: string | null
           criado_em: string
           expira_em: string
           id: string
@@ -95,6 +96,7 @@ export type Database = {
         }
         Insert: {
           booking_id: string
+          canal_resposta?: string | null
           criado_em?: string
           expira_em: string
           id?: string
@@ -106,6 +108,7 @@ export type Database = {
         }
         Update: {
           booking_id?: string
+          canal_resposta?: string | null
           criado_em?: string
           expira_em?: string
           id?: string

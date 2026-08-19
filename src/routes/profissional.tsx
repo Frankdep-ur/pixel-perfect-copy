@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/site-header";
+import { PwaInstalar } from "@/components/pwa-instalar";
 import { SiteFooter } from "@/components/site-footer";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -106,6 +107,7 @@ function AreaProfissional() {
 
         {!isLoading && perfil && (
           <>
+            <PwaInstalar className="mt-8" />
             <Card className="mt-8 overflow-hidden">
               <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center">
                 <Avatar className="size-20 shrink-0 border border-border shadow-sm">

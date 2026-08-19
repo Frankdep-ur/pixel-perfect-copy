@@ -65,6 +65,7 @@ type PedidoBusca = {
     status: string;
     rodada: number;
     expira_em: string;
+    canal_resposta: string | null;
     profissionais: { profiles: { nome: string | null } | null } | null;
   }[];
 };
@@ -79,7 +80,7 @@ function AdminOrquestra() {
       const { data, error } = await supabase
         .from("bookings")
         .select(
-          "id, codigo, data, hora, tipo_limpeza, regiao, valor_total, reserva_expira_em, reservado_profissional_id, criado_em, booking_convites(id, status, rodada, expira_em, profissionais(profiles(nome)))",
+          "id, codigo, data, hora, tipo_limpeza, regiao, valor_total, reserva_expira_em, reservado_profissional_id, criado_em, booking_convites(id, status, rodada, expira_em, canal_resposta, profissionais(profiles(nome)))",
         )
         .eq("status", "buscando")
         .order("criado_em", { ascending: false });
@@ -223,9 +224,16 @@ function AdminOrquestra() {
                       <span className="truncate">
                         {c.profissionais?.profiles?.nome ?? "Profissional"}
                       </span>
-                      <Badge variant="secondary" className="ml-auto shrink-0">
-                        R{c.rodada} · {LABEL_CONVITE[c.status] ?? c.status}
-                      </Badge>
+                      <span className="ml-auto flex shrink-0 items-center gap-1">
+                        {c.canal_resposta && (
+                          <Badge variant="outline" className="shrink-0">
+                            via {c.canal_resposta === "app" ? "app" : "link"}
+                          </Badge>
+                        )}
+                        <Badge variant="secondary" className="shrink-0">
+                          R{c.rodada} · {LABEL_CONVITE[c.status] ?? c.status}
+                        </Badge>
+                      </span>
                     </div>
                   ))}
                 </div>

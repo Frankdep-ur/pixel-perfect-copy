@@ -36,8 +36,10 @@ export async function abrirRodada(bookingId: string) {
     _booking_id: bookingId,
   });
   if (error) throw error;
+  if ((data ?? 0) > 0) dispararWhatsapp();
   return data ?? 0;
 }
+
 
 export async function listarAceites(bookingId: string): Promise<ProfissionalAceite[]> {
   const { data, error } = await supabase.rpc("convites_aceitos", { _booking_id: bookingId });

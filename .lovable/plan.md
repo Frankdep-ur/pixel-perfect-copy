@@ -1,45 +1,34 @@
-# Aceitar a oportunidade respondendo no próprio WhatsApp
+# Aceite pelo link do WhatsApp abrindo o app
 
-Sim, dá para fazer — e é o caminho mais natural para a profissional: ela responde a mensagem e o aceite já entra no sistema, sem abrir link nem app.
+Melhor caminho: manter o aceite no link — mas com o link levando ela para dentro do Lar77, não para uma página solta. Assim ela conhece o app, vê o painel dela e o aceite fica sempre no mesmo lugar.
 
 ## Como fica para a profissional
 
-Mensagem de oportunidade passa a terminar com:
+1. Chega a mensagem de oportunidade com um botão de link único (token de 5 min).
+2. O link abre o app na tela **Nova oportunidade**, em tela cheia, com serviço, duração, data, hora, bairro/cidade e valor a receber — mais a contagem regressiva.
+3. Dois botões grandes: **ACEITAR** e **ESTOU INDISPONÍVEL**.
+4. Se ela já estiver logada no celular (o normal, porque a sessão fica salva), o aceite acontece na hora e ela cai direto no painel dela, com o serviço já na aba "Aguardando escolha do cliente".
+5. Se não estiver logada, ela aceita ali mesmo pelo token (sem travar o aceite por causa de login) e a tela oferece **Entrar no app para acompanhar** — depois do login ela volta exatamente para essa oportunidade.
+6. Prazo vencido ou vaga já preenchida: a página explica com clareza e mostra as próximas oportunidades / botão para abrir o painel.
 
-```text
-Responda esta mensagem com:
-1 = ACEITAR
-2 = INDISPONÍVEL
+Nada muda para o cliente e nenhuma regra de prazo, rodada ou reserva é alterada.
 
-Ou toque no link: https://lar77.lovable.app/oportunidade/{token}
-```
+## Instalar como app
 
-Respondendo "1" (ou "aceito", "sim"), ela recebe na hora:
-- "Aceite confirmado! Agora é só aguardar a escolha do cliente."
-- ou "Essa oportunidade já expirou / já foi preenchida." quando o prazo de 5 minutos passou.
-
-Respondendo "2" (ou "não", "indisponível"): "Ok, avisamos que você não está disponível."
-
-Se a resposta não for entendida: mensagem curta repetindo as opções e o link. O link com token continua funcionando exatamente como hoje — a resposta por WhatsApp é um caminho a mais, não uma troca.
-
-## Regras
-
-- Vale sempre o convite aberto mais recente daquele número. Se ela tiver dois convites abertos ao mesmo tempo, o sistema responde pedindo para usar o link, porque "1" ficaria ambíguo.
-- Fora do prazo, aceite por WhatsApp é recusado com aviso — mesma regra do link.
-- Número desconhecido (não é de profissional com convite) recebe uma resposta neutra de suporte e nada é alterado.
-- Cada mensagem recebida é processada uma única vez, mesmo se a Z-API reenviar o mesmo evento.
+Para o link parecer app de verdade no celular:
+- a página de oportunidade ganha o convite discreto **"Adicionar Lar77 à tela de início"** (Android/Chrome com o prompt nativo, iPhone com as instruções de Compartilhar → Adicionar à Tela de Início);
+- quando o app já está instalado, o link abre dentro dele em vez do navegador.
 
 ## Painel administrativo
 
-Na aba Orquestra, cada convite passa a mostrar por onde veio a resposta: **app**, **link** ou **WhatsApp**. A fila de mensagens ganha também as respostas recebidas, para você auditar o que a profissional escreveu.
+Na aba Orquestra cada convite mostra por onde veio a resposta: **app** (logada) ou **link** (token). A fila de WhatsApp continua igual, com o texto exato enviado.
 
 ## Detalhes técnicos
 
-- Nova rota pública `src/routes/api/public/zapi-webhook.ts` (POST) para o webhook "Ao receber" da Z-API, com verificação por segredo em query string (`?s=...`, novo secret `ZAPI_WEBHOOK_SECRET`) mais checagem do `Client-Token` quando presente. Ignora `fromMe`, grupos e mensagens sem texto.
-- Parser de intenção em `src/lib/notificacoes.server.ts` (ou novo `src/lib/resposta-whatsapp.server.ts`): normaliza acentos/caixa e mapeia `1|aceito|aceitar|sim|ok` → aceitar; `2|nao|indisponivel|recusar` → recusar.
-- Resolução do convite: consulta `booking_convites` juntando `profissionais`/`profiles` pelo telefone normalizado (`numeroZapi`), status `enviado` e `expira_em > now()`, ordenado por `criado_em desc`. Zero → resposta neutra; mais de um → pede o link.
-- Aceite: chama a função existente `responder_convite_token(token, aceitar)` via `supabaseAdmin`, reaproveitando toda a validação de prazo e concorrência já testada. Nenhuma regra de negócio nova.
-- Migração: coluna `canal_resposta text` em `booking_convites` (`app` | `link` | `whatsapp`), preenchida pelas funções de resposta; tabela `whatsapp_recebidas` (message_id único, telefone, texto, convite_id, acao, criado_em) com GRANTs (`select` para `authenticated`, `all` para `service_role`), RLS ligada e leitura restrita a admin via `has_role`. O message_id único garante idempotência.
-- Resposta ao remetente reusa `enviarTextoZapi` direto (confirmação imediata), sem passar pela fila, e registra o texto enviado em `notificacoes_whatsapp` com tipo `resposta`.
-- Textos da oportunidade atualizados no gerador de mensagens da orquestra para incluir as instruções "1 / 2".
-- Configuração: depois do deploy é preciso apontar o webhook "Ao receber mensagem" da instância Z-API para a URL pública com o segredo — eu faço isso pela API da Z-API assim que o segredo estiver salvo.
+- `src/routes/oportunidade.$token.tsx` é redesenhada como tela de app (header Lar77, card do serviço, contagem, dois botões de 52px), reaproveitando `convite_por_token` e `responder_convite_token` — nenhuma função nova no banco para o aceite.
+- Detecção de sessão: se `supabase.auth.getUser()` retorna a profissional dona do convite, a resposta usa `responder_convite` (canal `app`) e navega para `/profissional`; senão usa o token (canal `link`).
+- Retorno pós-login: link "Entrar no app" vai para `/profissional_/entrar?redirect=/oportunidade/{token}` e a tela de acesso navega de volta para o caminho salvo (validado como caminho interno, nunca URL externa).
+- Texto da mensagem de oportunidade ajustado no gerador da orquestra para chamar a ação ("Toque para abrir o Lar77 e aceitar") — o link continua o mesmo formato com token.
+- Migração: coluna `canal_resposta text` em `booking_convites` (`app` | `link`), preenchida por `responder_convite` e `responder_convite_token`; exibida no admin.
+- PWA: usa o `public/manifest.json` já existente; adiciono um componente de convite de instalação (`beforeinstallprompt` no Android, instruções no iOS) exibido na tela de oportunidade e no painel da profissional.
+- Sem webhook e sem novos segredos nesta fase. Se depois você quiser aceite respondendo "1" direto na conversa, isso entra como camada extra em cima desse mesmo fluxo.

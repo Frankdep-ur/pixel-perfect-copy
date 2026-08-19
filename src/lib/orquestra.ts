@@ -1,9 +1,21 @@
 import { supabase } from "@/integrations/supabase/client";
+import { dispararFilaWhatsapp } from "@/lib/notificacoes.functions";
 
 /**
  * Orquestra de contratação: o cliente descreve o serviço, o Lar77 convida as
  * profissionais disponíveis e elas vão aparecendo conforme aceitam.
  */
+
+/**
+ * Dispara a fila de WhatsApp sem travar a interface: qualquer falha aqui é
+ * apenas registrada, a rede de segurança (cron) reprocessa depois.
+ */
+export function dispararWhatsapp() {
+  void dispararFilaWhatsapp().catch((e) => {
+    console.warn("[whatsapp] falha ao disparar fila", e);
+  });
+}
+
 
 export type ProfissionalAceite = {
   convite_id: string;

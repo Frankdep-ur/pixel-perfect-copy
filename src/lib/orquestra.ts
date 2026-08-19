@@ -85,8 +85,10 @@ export async function confirmarPagamento(bookingId: string) {
     _booking_id: bookingId,
   });
   if (error) throw error;
+  dispararWhatsapp();
   return data;
 }
+
 
 export type ConviteProfissional = {
   id: string;

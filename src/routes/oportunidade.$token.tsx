@@ -253,7 +253,7 @@ function OportunidadeCard({
         )}
 
         <Button asChild variant="ghost" className="mt-4 h-11 w-full gap-2">
-          <a href={`/profissional_/entrar?next=${encodeURIComponent(`/oportunidade/${token}`)}`}>
+          <a href={`/profissional/entrar?next=${encodeURIComponent(`/oportunidade/${token}`)}`}>
             Entrar no app para acompanhar <ArrowRight className="size-4" strokeWidth={1.5} />
           </a>
         </Button>

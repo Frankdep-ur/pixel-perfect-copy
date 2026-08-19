@@ -65,6 +65,7 @@ type PedidoBusca = {
     status: string;
     rodada: number;
     expira_em: string;
+    canal_resposta: string | null;
     profissionais: { profiles: { nome: string | null } | null } | null;
   }[];
 };

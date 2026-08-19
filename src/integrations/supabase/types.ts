@@ -643,11 +643,15 @@ export type Database = {
           criado_em: string
           destinatario_nome: string | null
           enviado_em: string | null
+          erro: string | null
           id: string
           mensagem: string
           status: string
           telefone: string | null
+          tentado_em: string | null
+          tentativas: number
           tipo: string
+          zapi_message_id: string | null
         }
         Insert: {
           booking_id?: string | null
@@ -655,11 +659,15 @@ export type Database = {
           criado_em?: string
           destinatario_nome?: string | null
           enviado_em?: string | null
+          erro?: string | null
           id?: string
           mensagem: string
           status?: string
           telefone?: string | null
+          tentado_em?: string | null
+          tentativas?: number
           tipo: string
+          zapi_message_id?: string | null
         }
         Update: {
           booking_id?: string | null
@@ -667,11 +675,15 @@ export type Database = {
           criado_em?: string
           destinatario_nome?: string | null
           enviado_em?: string | null
+          erro?: string | null
           id?: string
           mensagem?: string
           status?: string
           telefone?: string | null
+          tentado_em?: string | null
+          tentativas?: number
           tipo?: string
+          zapi_message_id?: string | null
         }
         Relationships: [
           {

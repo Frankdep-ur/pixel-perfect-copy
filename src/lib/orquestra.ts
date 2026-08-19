@@ -1,9 +1,21 @@
 import { supabase } from "@/integrations/supabase/client";
+import { dispararFilaWhatsapp } from "@/lib/notificacoes.functions";
 
 /**
  * Orquestra de contratação: o cliente descreve o serviço, o Lar77 convida as
  * profissionais disponíveis e elas vão aparecendo conforme aceitam.
  */
+
+/**
+ * Dispara a fila de WhatsApp sem travar a interface: qualquer falha aqui é
+ * apenas registrada, a rede de segurança (cron) reprocessa depois.
+ */
+export function dispararWhatsapp() {
+  void dispararFilaWhatsapp().catch((e) => {
+    console.warn("[whatsapp] falha ao disparar fila", e);
+  });
+}
+
 
 export type ProfissionalAceite = {
   convite_id: string;
@@ -24,8 +36,10 @@ export async function abrirRodada(bookingId: string) {
     _booking_id: bookingId,
   });
   if (error) throw error;
+  if ((data ?? 0) > 0) dispararWhatsapp();
   return data ?? 0;
 }
+
 
 export async function listarAceites(bookingId: string): Promise<ProfissionalAceite[]> {
   const { data, error } = await supabase.rpc("convites_aceitos", { _booking_id: bookingId });
@@ -71,8 +85,10 @@ export async function confirmarPagamento(bookingId: string) {
     _booking_id: bookingId,
   });
   if (error) throw error;
+  dispararWhatsapp();
   return data;
 }
+
 
 export type ConviteProfissional = {
   id: string;

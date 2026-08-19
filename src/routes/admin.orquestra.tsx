@@ -102,13 +102,59 @@ function AdminOrquestra() {
     },
   });
 
+  const [telefoneTeste, setTelefoneTeste] = useState("");
+
+  const status = useQuery({
+    queryKey: ["zapi-status"],
+    staleTime: 60_000,
+    queryFn: () => statusWhatsapp(),
+  });
+
+  function atualizarFila() {
+    void queryClient.invalidateQueries({ queryKey: ["admin-notificacoes"] });
+  }
+
+  const disparar = useMutation({
+    mutationFn: () => dispararFilaWhatsapp(),
+    onSuccess: (r) => {
+      toast.success(`${r.enviadas} enviada(s), ${r.falhas} falha(s).`);
+      atualizarFila();
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const reenviar = useMutation({
+    mutationFn: (id: string) => reenviarNotificacao({ data: { id } }),
+    onSuccess: (r) => {
+      toast[r.enviadas ? "success" : "error"](
+        r.enviadas ? "Mensagem enviada pela Z-API." : "Não foi possível enviar. Veja o motivo na fila.",
+      );
+      atualizarFila();
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const teste = useMutation({
+    mutationFn: () =>
+      enviarTesteWhatsapp({
+        data: {
+          telefone: telefoneTeste,
+          mensagem: "Teste de notificação da Lar77 pela Z-API. Se você recebeu, está funcionando.",
+        },
+      }),
+    onSuccess: (r) =>
+      r.ok ? toast.success("Teste enviado.") : toast.error(`Falhou: ${r.erro}`),
+    onError: (e: Error) => toast.error(e.message),
+  });
+
   async function marcarEnviada(id: string) {
     await supabase
       .from("notificacoes_whatsapp")
       .update({ status: "enviada", enviado_em: new Date().toISOString() })
       .eq("id", id);
-    void queryClient.invalidateQueries({ queryKey: ["admin-notificacoes"] });
+    atualizarFila();
   }
+
 
   if (isLoading) {
     return (

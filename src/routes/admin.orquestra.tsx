@@ -80,7 +80,7 @@ function AdminOrquestra() {
       const { data, error } = await supabase
         .from("bookings")
         .select(
-          "id, codigo, data, hora, tipo_limpeza, regiao, valor_total, reserva_expira_em, reservado_profissional_id, criado_em, booking_convites(id, status, rodada, expira_em, profissionais(profiles(nome)))",
+          "id, codigo, data, hora, tipo_limpeza, regiao, valor_total, reserva_expira_em, reservado_profissional_id, criado_em, booking_convites(id, status, rodada, expira_em, canal_resposta, profissionais(profiles(nome)))",
         )
         .eq("status", "buscando")
         .order("criado_em", { ascending: false });

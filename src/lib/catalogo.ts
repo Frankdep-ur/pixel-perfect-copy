@@ -27,6 +27,9 @@ export function ehAirbnb(tipoImovel: string | null | undefined) {
 
 export const AIRBNB_TIPO_LIMPEZA = "airbnb_checkout";
 
+/** Mínimo de fotos que a profissional precisa enviar para finalizar um Airbnb. */
+export const AIRBNB_MIN_FOTOS = 3;
+
 export const AIRBNB_INCLUSOS = [
   "Troca de roupa de cama",
   "Limpeza de cozinha",

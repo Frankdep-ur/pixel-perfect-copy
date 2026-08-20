@@ -3,7 +3,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { CalendarCheck, Heart, Home, MessageCircle, UserRound } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
-import { useSession } from "@/hooks/use-auth";
+import { usePapeis, useSession } from "@/hooks/use-auth";
 import { useNaoLidas } from "@/hooks/use-nao-lidas";
 
 /** Rotas em que a barra nunca aparece. */

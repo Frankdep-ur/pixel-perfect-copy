@@ -183,12 +183,16 @@ function AdminOrquestra() {
         </TabsList>
 
         <TabsContent value="pedidos" className="mt-6 space-y-4">
+          <AvisoTelefonesDuplicados />
+
           {lista.length === 0 && (
             <Painel className="p-8 text-center text-sm text-muted-foreground">
               <Radar className="mx-auto mb-2 size-6 text-primary" />
               Nenhum pedido em busca neste momento.
             </Painel>
           )}
+
+
 
           {lista.map((p) => {
             const convites = p.booking_convites ?? [];

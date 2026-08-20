@@ -105,6 +105,12 @@ export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdica
         pixTitular.trim().toLowerCase() !== nome.trim().toLowerCase()
       )
         throw new Error("O titular do PIX deve ser exatamente o mesmo nome do seu cadastro.");
+      if (!dados) {
+        if (!endereco.rua.trim() || !endereco.numero.trim())
+          throw new Error("Informe seu endereço completo (rua e número).");
+        if (endereco.latitude === null || endereco.longitude === null)
+          throw new Error("Marque sua localização no mapa para receber serviços perto de você.");
+      }
 
       const { error: erroPerfil } = await supabase
         .from("profiles")
@@ -126,6 +132,14 @@ export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdica
           cidade: cidade || cidades[0] || null,
           cidades_atendidas: cidades,
           tipos_limpeza: tipos,
+          cep: endereco.cep || null,
+          rua: endereco.rua.trim() || null,
+          numero: endereco.numero.trim() || null,
+          complemento: endereco.complemento.trim() || null,
+          bairro: endereco.bairro.trim() || null,
+          estado: endereco.estado.trim() || null,
+          latitude: endereco.latitude,
+          longitude: endereco.longitude,
         })
         .eq("id", perfil.id);
       if (error) throw error;

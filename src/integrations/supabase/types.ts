@@ -1012,6 +1012,10 @@ export type Database = {
         Args: { _aceitar: boolean; _token: string }
         Returns: string
       }
+      responder_convite_whatsapp: {
+        Args: { _aceitar: boolean; _telefone: string }
+        Returns: string
+      }
       sortear_profissional: {
         Args: { _data: string; _regiao: string; _tipo_limpeza?: string }
         Returns: string

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { CampoTelefone } from "@/components/campo-telefone";
 
 function mascaraCpf(valor: string) {
   const d = valor.replace(/\D/g, "").slice(0, 11);

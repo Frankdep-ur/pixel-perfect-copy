@@ -168,6 +168,20 @@ function AreaProfissional() {
               />
             </div>
 
+            {perfil.status === "aprovada" ? (
+              <ServicosProfissional
+                profissionalId={perfil.id}
+                nomeProfissional={perfil.profiles?.nome ?? "sua profissional"}
+                userId={perfil.user_id}
+              />
+            ) : (
+              <EstadoVazio
+                icon={Clock3}
+                titulo="Cadastro em análise"
+                texto="A equipe Lar77 revisa seu perfil no painel administrativo (Admin → Profissionais). Assim que for aprovado, as solicitações da sua região aparecem aqui."
+              />
+            )}
+
             <PerfilProfissional
               perfil={{
                 id: perfil.id,
@@ -198,22 +212,7 @@ function AreaProfissional() {
               docTipo={perfil.doc_tipo ?? null}
             />
 
-
             <BloqueiosProfissional profissionalId={perfil.id} />
-
-            {perfil.status === "aprovada" ? (
-              <ServicosProfissional
-                profissionalId={perfil.id}
-                nomeProfissional={perfil.profiles?.nome ?? "sua profissional"}
-                userId={perfil.user_id}
-              />
-            ) : (
-              <EstadoVazio
-                icon={Clock3}
-                titulo="Cadastro em análise"
-                texto="A equipe Lar77 revisa seu perfil no painel administrativo (Admin → Profissionais). Assim que for aprovado, as solicitações da sua região aparecem aqui."
-              />
-            )}
 
 
           </>

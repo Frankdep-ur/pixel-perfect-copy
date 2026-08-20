@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   CalendarCheck,
@@ -78,6 +79,23 @@ export function ServicosProfissional({ profissionalId, nomeProfissional, userId 
     },
   });
 
+  useEffect(() => {
+    const canal = supabase
+      .channel(`bookings-prof-${profissionalId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "bookings",
+          filter: `profissional_id=eq.${profissionalId}`,
+        },
+        () => void queryClient.invalidateQueries({ queryKey: ["servicos-profissional", profissionalId] }),
+      )
+      .subscribe();
+    return () => void supabase.removeChannel(canal);
+  }, [profissionalId, queryClient]);
+
   function atualizarLista() {
     queryClient.invalidateQueries({ queryKey: ["servicos-profissional", profissionalId] });
   }
@@ -157,14 +175,6 @@ export function ServicosProfissional({ profissionalId, nomeProfissional, userId 
     onError: (erro: Error) => toast.error(erro.message),
   });
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center py-16">
-        <Loader2 className="size-6 animate-spin text-primary" />
-      </div>
-    );
-  }
-
   const lista = data ?? [];
   const pendentes = lista.filter((b) => PENDENTES.includes(b.status));
   const meus = lista.filter(
@@ -177,8 +187,44 @@ export function ServicosProfissional({ profissionalId, nomeProfissional, userId 
       !PENDENTES.includes(b.status),
   );
 
+  const [aba, setAba] = useState<string | null>(null);
+  useEffect(() => {
+    if (isLoading || aba) return;
+    setAba(meus.length > 0 ? "agenda" : pendentes.length > 0 ? "pedidos" : "oportunidades");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, meus.length, pendentes.length]);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-16">
+        <Loader2 className="size-6 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  const proxima = meus[0];
+
   return (
-    <Tabs defaultValue="oportunidades" className="mt-8">
+    <Tabs value={aba ?? "oportunidades"} onValueChange={setAba} className="mt-8">
+      {proxima && (
+        <button
+          type="button"
+          onClick={() => setAba("agenda")}
+          className="mb-4 flex w-full flex-wrap items-center gap-3 rounded-2xl border-2 border-primary/40 bg-surface-tint p-4 text-left"
+        >
+          <CalendarCheck className="size-5 shrink-0 text-primary" />
+          <span className="text-sm font-semibold text-foreground">
+            Você tem {meus.length === 1 ? "1 faxina confirmada" : `${meus.length} faxinas confirmadas`}
+            {" — "}
+            {formatarData(proxima.data)}
+            {proxima.hora ? ` às ${proxima.hora.slice(0, 5)}` : ""}
+            {[proxima.enderecos?.bairro, proxima.enderecos?.cidade].filter(Boolean).length
+              ? `, ${[proxima.enderecos?.bairro, proxima.enderecos?.cidade].filter(Boolean).join(", ")}`
+              : ""}
+          </span>
+          <span className="ml-auto text-xs font-semibold text-primary">Ver na agenda</span>
+        </button>
+      )}
       <TabsList className="w-full">
         <TabsTrigger value="oportunidades" className="flex-1">
           Oportunidades

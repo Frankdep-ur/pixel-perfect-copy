@@ -73,11 +73,47 @@ export function OportunidadesProfissional({ profissionalId }: { profissionalId: 
   });
 
   const abertos = convites.filter((c) => c.status === "enviado");
-  const historico = convites.filter((c) => c.status !== "enviado").slice(0, 10);
+  const aguardando = convites.filter(
+    (c) => c.status === "aceito" && c.bookings?.profissional_id !== profissionalId,
+  );
+  const historico = convites
+    .filter((c) => c.status !== "enviado" && !aguardando.includes(c))
+    .slice(0, 10);
 
   return (
     <div className="space-y-4">
-      {abertos.length === 0 && (
+      {aguardando.map((c) => (
+        <Card key={c.id} className="border-2 border-primary/30">
+          <CardContent className="space-y-2 p-5">
+            <Badge variant="secondary" className="gap-1">
+              <Check className="size-3" /> Aceito — aguardando a escolha do cliente
+            </Badge>
+            <p className="font-medium">{labelTipoLimpeza(c.bookings?.tipo_limpeza ?? "")}</p>
+            <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <CalendarDays className="size-4" />
+                {formatarData(c.bookings?.data ?? null)}
+                {c.bookings?.hora ? ` · ${c.bookings.hora.slice(0, 5)}` : ""}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Clock className="size-4" />
+                {c.bookings?.duracao_horas ?? 0}h
+              </span>
+              <span className="flex items-center gap-1.5">
+                <MapPin className="size-4" />
+                {[c.bookings?.enderecos?.bairro, c.bookings?.enderecos?.cidade]
+                  .filter(Boolean)
+                  .join(", ") || "Sua região"}
+              </span>
+            </div>
+            <p className="text-lg font-semibold">
+              Você recebe {formatBRL(Number(c.bookings?.valor_profissional ?? 0))}
+            </p>
+          </CardContent>
+        </Card>
+      ))}
+
+      {abertos.length === 0 && aguardando.length === 0 && (
         <EstadoVazio
           icon={Megaphone}
           titulo="Nenhuma oportunidade agora"

@@ -80,8 +80,10 @@ function Oportunidade() {
         toast.success("Oportunidade aceita! Agora aguarde a escolha do cliente.");
         if (logada) {
           void navigate({ to: "/profissional" });
-          return;
+        } else {
+          void navigate({ to: "/profissional/entrar", search: { next: "/profissional" } });
         }
+        return;
       } else if (status === "expirado") {
         toast.error("O prazo dessa oportunidade encerrou.");
       } else {

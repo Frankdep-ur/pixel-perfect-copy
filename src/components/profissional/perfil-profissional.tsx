@@ -11,9 +11,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { UploadFoto } from "@/components/upload-foto";
-import { TIPOS_LIMPEZA } from "@/lib/catalogo";
+import { TIPOS_LIMPEZA, TIPOS_LIMPEZA_AIRBNB } from "@/lib/catalogo";
 import { REGIOES, type RegiaoId } from "@/lib/regioes";
 import { cn } from "@/lib/utils";
+import {
+  EnderecoProfissional,
+  ENDERECO_PROF_INICIAL,
+  type EnderecoProf,
+} from "@/components/profissional/endereco-profissional";
 
 export type PerfilProfissionalEdicao = {
   id: string;
@@ -31,6 +36,14 @@ export type PerfilProfissionalEdicao = {
   pix_tipo: string | null;
   pix_chave: string | null;
   pix_titular: string | null;
+  cep?: string | null;
+  rua?: string | null;
+  numero?: string | null;
+  complemento?: string | null;
+  bairro?: string | null;
+  estado?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
 };
 
 const TIPOS_PIX = [

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Radar, RefreshCw, Send, Wifi } from "lucide-react";
+import { AlertTriangle, Loader2, Radar, RefreshCw, Send, Wifi } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatarData } from "@/lib/agenda";
 import { formatBRL, labelTipoLimpeza } from "@/lib/catalogo";
 import { linkWhatsApp } from "@/lib/whatsapp";
+import { diagnosticoOrquestra, telefonesDuplicados } from "@/lib/orquestra";
 import {
   dispararFilaWhatsapp,
   enviarTesteWhatsapp,
@@ -19,6 +20,7 @@ import {
   statusWhatsapp,
 } from "@/lib/notificacoes.functions";
 import { useState } from "react";
+
 
 
 export const Route = createFileRoute("/admin/orquestra")({

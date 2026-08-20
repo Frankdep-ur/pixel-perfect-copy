@@ -394,6 +394,14 @@ function Cartao({
           />
         )}
 
+        {airbnb && aceito && (
+          <FotosServicoProfissional
+            bookingId={booking.id}
+            userId={userId}
+            minimo={AIRBNB_MIN_FOTOS}
+          />
+        )}
+
         {onAceitar && onRecusar && (
           <div className="grid gap-2 sm:grid-cols-2">
             <Button size="lg" disabled={pendente} onClick={onAceitar}>
@@ -412,14 +420,26 @@ function Cartao({
         )}
 
         {passo && onAvancar && (
-          <Button size="lg" className="w-full" disabled={pendente} onClick={onAvancar}>
-            {pendente ? (
-              <Loader2 className="mr-2 size-4 animate-spin" />
-            ) : (
-              <Icone className="mr-2 size-4" />
+          <>
+            <Button
+              size="lg"
+              className="w-full"
+              disabled={pendente || faltamFotos}
+              onClick={onAvancar}
+            >
+              {pendente ? (
+                <Loader2 className="mr-2 size-4 animate-spin" />
+              ) : (
+                <Icone className="mr-2 size-4" />
+              )}
+              {passo.label}
+            </Button>
+            {faltamFotos && (
+              <p className="text-xs text-muted-foreground">
+                Envie pelo menos {AIRBNB_MIN_FOTOS} fotos do imóvel para poder finalizar.
+              </p>
             )}
-            {passo.label}
-          </Button>
+          </>
         )}
 
         {booking.status === "finalizada" && (

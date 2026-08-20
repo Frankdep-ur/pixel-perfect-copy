@@ -1,40 +1,39 @@
-# Por que a mensagem não caiu no WhatsApp da Juliete
+# Fluxo da contratação e por que a oportunidade não chegou agora
 
-## O fluxo, como ele funciona hoje
+## Como o fluxo funciona hoje
 
 ```text
 1. Cliente entra em /contratar, descreve o imóvel, escolhe data e hora
-2. Ao final, o pedido é criado com status "buscando"
+2. O pedido é criado com status "buscando"
 3. O sistema procura profissionais: aprovada + disponível + mesma região
-   + sem bloqueio na data + sem outra faxina já aceita naquela data
-4. Convida até 3 delas (tamanho_rodada = 3), prazo de 5 minutos
-5. Para cada convite, entra uma mensagem na fila de WhatsApp e a Z-API envia
-6. Ela aceita: pelo link da mensagem, pelo app, ou respondendo "1" na conversa
-7. Cada aceite aparece na tela do cliente; ele escolhe uma (reserva de 5 min)
+   + sem bloqueio na data + sem outra faxina já aceita naquela mesma data
+4. Convida até 3 delas (tamanho_rodada = 3), com prazo de 5 minutos
+5. Cada convite entra na fila de WhatsApp e a Z-API envia a oportunidade
+6. Ela aceita pelo link da mensagem, pelo app, ou respondendo "1" na conversa
+7. Cada aceite aparece na tela do cliente, que escolhe uma (reserva de 5 min)
 8. Pagamento confirma a contratação e dispara a mensagem de confirmação
 ```
 
-## O que realmente aconteceu nos seus testes
+## O que os registros mostram
 
-Verifiquei os registros do banco:
+Confirmado no banco e na Z-API, com o número 17920034155 sendo o correto:
 
-- Pedido **LAR-2026-0027** (22/08, 07:00, Ingleses): o convite foi criado para a **Juliete** e a mensagem de oportunidade foi enviada com sucesso, seguida da confirmação. Ou seja, o sistema mandou para ela — **mas para o número que está no cadastro dela: 17 92003-4155**.
-- A resposta que chegou na conversa veio de outro número: **18 99170-9288**. Como esse número não pertence a nenhum convite, o sistema respondeu "Não entendi".
-- Conclusão: o número gravado no cadastro da Juliete está errado (DDD 17 em vez de 18, e sem o nono dígito no formato certo). A mensagem foi para um número que não é o WhatsApp dela.
-- Pedido **LAR-2026-0028** (mesma data 22/08, criado 19:05): **zero convites**. A Juliete já tinha aceito a faxina do dia 22/08, então ficou fora da busca, e as demais profissionais de Florianópolis estão marcadas como indisponíveis. O pedido ficou parado em "buscando" sem avisar ninguém.
-- Também existem **vários cadastros repetindo o mesmo telefone** (18 99805-4798 em 8 perfis), o que pode fazer uma resposta no WhatsApp cair no convite da pessoa errada.
+- **LAR-2026-0027** (22/08, 07:00, Ingleses): convite criado para a Juliete e as duas mensagens (oportunidade e confirmação) enviadas para **5517920034155**, com ID de mensagem retornado pela Z-API. A Z-API confirma que esse número tem WhatsApp ativo. Ou seja, esse pedido saiu certo, só para ela.
+- **LAR-2026-0028** (criado às 19:05, também para 22/08): **nenhum convite foi criado** — nada foi enviado para ninguém. Motivo: a Juliete já tinha aceito a faxina do dia 22/08, então a busca a exclui daquela data, e todas as outras profissionais de Florianópolis estão marcadas como indisponíveis. O pedido ficou parado em "buscando" em silêncio, sem avisar o cliente.
+- Houve também uma mensagem recebida do número **18 99170-9288** (não é o da Juliete). Como esse número não tem convite nenhum, o sistema respondeu "Não entendi — responda 1 ou 2". É esse "outro número" que aparece na fila.
+- Existem **8 cadastros com o mesmo telefone** (18 99805-4798). Como o casamento da resposta por WhatsApp usa só os 8 últimos dígitos, uma resposta desse número pode cair no convite da pessoa errada.
 
-## O que eu proponho corrigir
+## Correções propostas
 
-1. **Corrigir o número da Juliete** para o WhatsApp real (18 99170-9288) e reenviar a oportunidade, se você quiser repetir o teste.
-2. **Validação de telefone no cadastro e no admin**: recusar número brasileiro sem 11 dígitos ou com nono dígito faltando, e mostrar o número já normalizado (+55 18 99170-9288) na tela da profissional e na ficha do admin, para dar para conferir antes de aprovar.
-3. **Confirmação do WhatsApp**: no momento em que o admin aprova a profissional, o sistema manda uma mensagem curta de boas-vindas para o número cadastrado. Se ela não responder/receber, o número está errado e aparece um aviso na ficha.
-4. **Aviso de número duplicado**: quando dois cadastros compartilham o mesmo telefone, marcar na ficha do admin e não usar a resposta por WhatsApp para esses casos (ela ainda aceita pelo link ou pelo app).
-5. **Pedido sem ninguém para convidar**: em vez de ficar girando em silêncio, a tela do cliente passa a dizer que não há profissional livre naquela data e oferece trocar data/horário ou falar com o suporte; o pedido é registrado como sem profissional no painel Orquestra.
+1. **Pedido sem ninguém para convidar**: em vez de girar em silêncio, a tela do cliente avisa que não há profissional livre naquela data e oferece trocar data/horário ou falar com o suporte; o pedido é marcado como sem profissional e aparece assim no painel Orquestra.
+2. **Mesma profissional, duas faxinas no dia**: hoje ela é excluída da data inteira depois de aceitar uma. Deixar essa regra explícita no painel dela e no admin (badge "agenda cheia em 22/08"), para não parecer que o sistema falhou.
+3. **Respostas de números sem convite**: registrar quem enviou e mostrar no painel Orquestra ("mensagem de número não vinculado"), em vez de só devolver "Não entendi".
+4. **Telefone duplicado**: sinalizar na ficha do admin quando dois cadastros usam o mesmo número e, nesses casos, não aceitar a resposta pelo texto do WhatsApp (o link e o app continuam funcionando).
+5. **Painel Orquestra mais claro**: por pedido, mostrar quantas profissionais eram elegíveis, quantas foram convidadas e o motivo quando o número der zero.
 
 ## Detalhes técnicos
 
-- Normalização única de telefone (DDI + DDD + nono dígito) reutilizada no cadastro, no admin e no envio Z-API.
-- Casamento da resposta por WhatsApp deixa de usar apenas os 8 últimos dígitos: compara o número completo normalizado e ignora convites quando há telefone duplicado entre profissionais.
-- Correção do número da Juliete via atualização de dados (não é mudança de schema).
-- Ajuste na tela de busca do cliente para o caso "rodada com 0 convites" já na primeira rodada.
+- Ajuste em `abrir_rodada_convites` para devolver o motivo quando não há candidatas, e na tela de busca (`busca-orquestra.tsx`) para tratar "0 convites na primeira rodada" como estado final com saída para trocar data.
+- Nova coluna/registro de log para mensagens recebidas sem convite correspondente, exibido em `admin.orquestra.tsx`.
+- `responder_convite_whatsapp` passa a comparar o número completo normalizado e a ignorar telefones duplicados entre profissionais.
+- Nada muda no envio para a Juliete: o número 17920034155 já está correto e validado na Z-API.

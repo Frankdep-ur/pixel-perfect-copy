@@ -227,7 +227,7 @@ function AdminOrquestra() {
                       <span className="ml-auto flex shrink-0 items-center gap-1">
                         {c.canal_resposta && (
                           <Badge variant="outline" className="shrink-0">
-                            via {c.canal_resposta === "app" ? "app" : "link"}
+                            via {c.canal_resposta}
                           </Badge>
                         )}
                         <Badge variant="secondary" className="shrink-0">

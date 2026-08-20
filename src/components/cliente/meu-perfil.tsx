@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UploadFoto } from "@/components/upload-foto";
+import { CampoTelefone } from "@/components/campo-telefone";
 
 type Perfil = {
   nome: string | null;

@@ -327,6 +327,11 @@ function Cartao({
   const end = booking.enderecos;
   const aceito = !PENDENTES.includes(booking.status);
   const Icone = passo?.icone ?? Check;
+  const airbnb = ehServicoAirbnb(booking.tipo_imovel, booking.tipo_limpeza);
+  const { data: fotos = [] } = useFotosServico(booking.id, airbnb && aceito);
+  // No Airbnb o cliente quase nunca está no imóvel: só finaliza com as fotos enviadas.
+  const faltamFotos = airbnb && booking.status === "em_andamento" && fotos.length < AIRBNB_MIN_FOTOS;
+
 
   return (
     <Card>

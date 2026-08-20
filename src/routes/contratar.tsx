@@ -24,7 +24,7 @@ import type { ProfissionalAceite } from "@/lib/orquestra";
 
 import { extrasQuery, pricingQuery } from "@/lib/queries";
 import { calcularOrcamento } from "@/lib/pricing";
-import { ehComercial, perfilImovel } from "@/lib/catalogo";
+import { AIRBNB_TIPO_LIMPEZA, ehAirbnb, ehComercial, perfilImovel } from "@/lib/catalogo";
 import {
   RASCUNHO_INICIAL,
   carregarRascunho,

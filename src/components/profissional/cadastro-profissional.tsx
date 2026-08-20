@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { TIPOS_LIMPEZA } from "@/lib/catalogo";
 import { REGIOES, type RegiaoId } from "@/lib/regioes";
 import { UploadFoto } from "@/components/upload-foto";
+import { CampoTelefone } from "@/components/campo-telefone";
 
 type Props = { user: User };
 

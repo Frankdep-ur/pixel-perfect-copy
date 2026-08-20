@@ -187,7 +187,9 @@ export const STATUS_LABEL: Record<string, string> = {
 
 export function labelTipoLimpeza(id: string | null | undefined) {
   return (
-    [...TIPOS_LIMPEZA, ...TIPOS_LIMPEZA_COMERCIAL].find((t) => t.id === id)?.label ?? ""
+    [...TIPOS_LIMPEZA, ...TIPOS_LIMPEZA_COMERCIAL, ...TIPOS_LIMPEZA_AIRBNB].find(
+      (t) => t.id === id,
+    )?.label ?? ""
   );
 }
 

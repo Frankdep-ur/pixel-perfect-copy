@@ -33,7 +33,7 @@ export function OportunidadesProfissional({ profissionalId }: { profissionalId: 
   const { data: convites = [] } = useQuery({
     queryKey: chave,
     refetchInterval: 5000,
-    queryFn: () => listarConvitesProfissional(profissionalId),
+    queryFn: () => listarConvitesProfissional(),
   });
 
   useEffect(() => {

@@ -39,6 +39,7 @@ import { Route as ConfirmacaoIdRouteImport } from './routes/confirmacao.$id'
 import { Route as OportunidadeTokenRouteImport } from './routes/oportunidade.$token'
 import { Route as ProfissionalEntrarRouteImport } from './routes/profissional_.entrar'
 import { Route as ApiPublicZapiDrenarRouteImport } from './routes/api/public/zapi-drenar'
+import { Route as ApiPublicZapiReceberRouteImport } from './routes/api/public/zapi-receber'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -190,6 +191,11 @@ const ApiPublicZapiDrenarRoute = ApiPublicZapiDrenarRouteImport.update({
   path: '/api/public/zapi-drenar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicZapiReceberRoute = ApiPublicZapiReceberRouteImport.update({
+  id: '/api/public/zapi-receber',
+  path: '/api/public/zapi-receber',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -222,6 +228,7 @@ export interface FileRoutesByFullPath {
   '/profissional/entrar': typeof ProfissionalEntrarRoute
   '/admin/': typeof AdminIndexRoute
   '/api/public/zapi-drenar': typeof ApiPublicZapiDrenarRoute
+  '/api/public/zapi-receber': typeof ApiPublicZapiReceberRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -253,6 +260,7 @@ export interface FileRoutesByTo {
   '/profissional/entrar': typeof ProfissionalEntrarRoute
   '/admin': typeof AdminIndexRoute
   '/api/public/zapi-drenar': typeof ApiPublicZapiDrenarRoute
+  '/api/public/zapi-receber': typeof ApiPublicZapiReceberRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -286,6 +294,7 @@ export interface FileRoutesById {
   '/profissional_/entrar': typeof ProfissionalEntrarRoute
   '/admin/': typeof AdminIndexRoute
   '/api/public/zapi-drenar': typeof ApiPublicZapiDrenarRoute
+  '/api/public/zapi-receber': typeof ApiPublicZapiReceberRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -320,6 +329,7 @@ export interface FileRouteTypes {
     | '/profissional/entrar'
     | '/admin/'
     | '/api/public/zapi-drenar'
+    | '/api/public/zapi-receber'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -351,6 +361,7 @@ export interface FileRouteTypes {
     | '/profissional/entrar'
     | '/admin'
     | '/api/public/zapi-drenar'
+    | '/api/public/zapi-receber'
   id:
     | '__root__'
     | '/'
@@ -383,6 +394,7 @@ export interface FileRouteTypes {
     | '/profissional_/entrar'
     | '/admin/'
     | '/api/public/zapi-drenar'
+    | '/api/public/zapi-receber'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -404,6 +416,7 @@ export interface RootRouteChildren {
   OportunidadeTokenRoute: typeof OportunidadeTokenRoute
   ProfissionalEntrarRoute: typeof ProfissionalEntrarRoute
   ApiPublicZapiDrenarRoute: typeof ApiPublicZapiDrenarRoute
+  ApiPublicZapiReceberRoute: typeof ApiPublicZapiReceberRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -618,6 +631,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicZapiDrenarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/zapi-receber': {
+      id: '/api/public/zapi-receber'
+      path: '/api/public/zapi-receber'
+      fullPath: '/api/public/zapi-receber'
+      preLoaderRoute: typeof ApiPublicZapiReceberRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -672,6 +692,7 @@ const rootRouteChildren: RootRouteChildren = {
   OportunidadeTokenRoute: OportunidadeTokenRoute,
   ProfissionalEntrarRoute: ProfissionalEntrarRoute,
   ApiPublicZapiDrenarRoute: ApiPublicZapiDrenarRoute,
+  ApiPublicZapiReceberRoute: ApiPublicZapiReceberRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

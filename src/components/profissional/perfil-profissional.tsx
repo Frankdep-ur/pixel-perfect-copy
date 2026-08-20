@@ -70,6 +70,19 @@ export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdica
   const [pixTipo, setPixTipo] = useState(perfil.pix_tipo ?? "cpf");
   const [pixChave, setPixChave] = useState(perfil.pix_chave ?? "");
   const [pixTitular, setPixTitular] = useState(perfil.pix_titular ?? nome);
+  const [endereco, setEndereco] = useState<EnderecoProf>({
+    ...ENDERECO_PROF_INICIAL,
+    cep: perfil.cep ?? "",
+    rua: perfil.rua ?? "",
+    numero: perfil.numero ?? "",
+    complemento: perfil.complemento ?? "",
+    bairro: perfil.bairro ?? "",
+    cidade: perfil.cidade ?? "",
+    estado: perfil.estado ?? "",
+    latitude: perfil.latitude ?? null,
+    longitude: perfil.longitude ?? null,
+  });
+
 
 
   function alternar(lista: string[], set: (v: string[]) => void, valor: string) {

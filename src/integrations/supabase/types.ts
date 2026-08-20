@@ -966,6 +966,28 @@ export type Database = {
           verificada: boolean
         }[]
       }
+      convites_profissional: {
+        Args: never
+        Returns: {
+          bairro: string
+          booking_id: string
+          booking_status: string
+          cidade: string
+          codigo: string
+          criado_em: string
+          data: string
+          duracao_horas: number
+          escolhida: boolean
+          expira_em: string
+          hora: string
+          id: string
+          rodada: number
+          status: string
+          tipo_imovel: string
+          tipo_limpeza: string
+          valor_profissional: number
+        }[]
+      }
       diagnostico_orquestra: {
         Args: { _booking_id: string }
         Returns: {

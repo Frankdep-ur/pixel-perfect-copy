@@ -966,6 +966,13 @@ export type Database = {
           verificada: boolean
         }[]
       }
+      diagnostico_orquestra: {
+        Args: { _booking_id: string }
+        Returns: {
+          convidadas: number
+          elegiveis: number
+        }[]
+      }
       expirar_convites_e_reservas: { Args: never; Returns: undefined }
       has_role: {
         Args: {
@@ -999,6 +1006,14 @@ export type Database = {
           verificada: boolean
         }[]
       }
+      profissionais_telefone_duplicado: {
+        Args: never
+        Returns: {
+          profissional_id: string
+          quantos: number
+          telefone: string
+        }[]
+      }
       recusar_booking: { Args: { _booking_id: string }; Returns: string }
       reservar_profissional: {
         Args: { _booking_id: string; _profissional_id: string }
@@ -1020,6 +1035,7 @@ export type Database = {
         Args: { _data: string; _regiao: string; _tipo_limpeza?: string }
         Returns: string
       }
+      telefone_e164: { Args: { _telefone: string }; Returns: string }
     }
     Enums: {
       app_role: "cliente" | "profissional" | "admin"

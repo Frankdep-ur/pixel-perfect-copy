@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Radar, RefreshCw, Send, Wifi } from "lucide-react";
+import { AlertTriangle, Loader2, Radar, RefreshCw, Send, Wifi } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatarData } from "@/lib/agenda";
 import { formatBRL, labelTipoLimpeza } from "@/lib/catalogo";
 import { linkWhatsApp } from "@/lib/whatsapp";
+import { diagnosticoOrquestra, telefonesDuplicados } from "@/lib/orquestra";
 import {
   dispararFilaWhatsapp,
   enviarTesteWhatsapp,
@@ -19,6 +20,7 @@ import {
   statusWhatsapp,
 } from "@/lib/notificacoes.functions";
 import { useState } from "react";
+
 
 
 export const Route = createFileRoute("/admin/orquestra")({
@@ -181,12 +183,16 @@ function AdminOrquestra() {
         </TabsList>
 
         <TabsContent value="pedidos" className="mt-6 space-y-4">
+          <AvisoTelefonesDuplicados />
+
           {lista.length === 0 && (
             <Painel className="p-8 text-center text-sm text-muted-foreground">
               <Radar className="mx-auto mb-2 size-6 text-primary" />
               Nenhum pedido em busca neste momento.
             </Painel>
           )}
+
+
 
           {lista.map((p) => {
             const convites = p.booking_convites ?? [];
@@ -205,15 +211,17 @@ function AdminOrquestra() {
                   </span>
                 </div>
 
-                <div className="mt-3 flex flex-wrap gap-3 text-sm text-muted-foreground">
+                <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                   <span>
                     Rodada atual: {Math.max(1, ...convites.map((c) => c.rodada), 1)} ·{" "}
                     {convites.length} convites · {aceitos} aceites
                   </span>
+                  <DiagnosticoPedido bookingId={p.id} />
                   {p.reserva_expira_em && new Date(p.reserva_expira_em) > new Date() && (
                     <Badge>Reserva ativa até {new Date(p.reserva_expira_em).toLocaleTimeString("pt-BR")}</Badge>
                   )}
                 </div>
+
 
                 <div className="mt-3 grid gap-2 sm:grid-cols-2">
                   {convites.map((c) => (
@@ -309,6 +317,12 @@ function AdminOrquestra() {
               <Painel key={n.id} className="p-4">
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="secondary">{n.tipo}</Badge>
+                  {n.tipo === "resposta_convite" && !n.destinatario_nome && (
+                    <Badge variant="outline" className="gap-1">
+                      <AlertTriangle className="size-3" /> número não vinculado
+                    </Badge>
+                  )}
+
                   <span className="text-sm font-medium">{n.destinatario_nome ?? "—"}</span>
                   <span className="text-xs text-muted-foreground">
                     {n.telefone ?? "sem telefone"}
@@ -369,5 +383,56 @@ function AdminOrquestra() {
 
       </Tabs>
     </div>
+  );
+}
+
+/** Quantas profissionais eram elegíveis para o pedido e quantas já foram convidadas. */
+function DiagnosticoPedido({ bookingId }: { bookingId: string }) {
+  const { data } = useQuery({
+    queryKey: ["orquestra-diagnostico", bookingId],
+    staleTime: 30_000,
+    queryFn: () => diagnosticoOrquestra(bookingId),
+  });
+
+  if (!data) return null;
+
+  return (
+    <Badge variant={data.elegiveis === 0 ? "destructive" : "outline"}>
+      {data.elegiveis === 0
+        ? "Nenhuma profissional elegível nesta data"
+        : `${data.elegiveis} elegíveis · ${data.convidadas} convidadas`}
+    </Badge>
+  );
+}
+
+/** Telefones repetidos entre profissionais impedem o aceite pela conversa do WhatsApp. */
+function AvisoTelefonesDuplicados() {
+  const { data } = useQuery({
+    queryKey: ["orquestra-telefones-duplicados"],
+    staleTime: 60_000,
+    queryFn: () => telefonesDuplicados(),
+  });
+
+  const linhas = data ?? [];
+  if (linhas.length === 0) return null;
+
+  const numeros = Array.from(new Set(linhas.map((l) => l.telefone))).filter(Boolean);
+
+  return (
+    <Painel className="border-destructive/40 p-4">
+      <div className="flex items-start gap-3">
+        <AlertTriangle className="mt-0.5 size-5 shrink-0 text-destructive" />
+        <div className="text-sm">
+          <p className="font-semibold">
+            {numeros.length} telefone(s) repetido(s) entre cadastros de profissionais
+          </p>
+          <p className="mt-1 text-muted-foreground">
+            {numeros.join(", ")} — nesses casos o aceite pela conversa do WhatsApp fica bloqueado
+            (para não confirmar pela pessoa errada). O link da mensagem e o app continuam
+            funcionando. Ajuste os cadastros duplicados na aba Profissionais.
+          </p>
+        </div>
+      </div>
+    </Painel>
   );
 }

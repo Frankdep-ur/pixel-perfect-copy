@@ -117,8 +117,9 @@ export function OportunidadesProfissional({ profissionalId }: { profissionalId: 
         <EstadoVazio
           icon={Megaphone}
           titulo="Nenhuma oportunidade agora"
-          texto="Quando surgir uma faxina na sua região, avisamos por WhatsApp e ela aparece aqui para você aceitar."
+          texto="Quando surgir uma faxina na sua região, avisamos por WhatsApp e ela aparece aqui para você aceitar. Nos dias em que você já tem uma faxina aceita, sua agenda fica cheia e novos convites para a mesma data não são enviados."
         />
+
       )}
 
       {abertos.map((c) => (

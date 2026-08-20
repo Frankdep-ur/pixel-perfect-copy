@@ -43,7 +43,10 @@ const RESPOSTAS: Record<string, string> = {
     "⏰ O prazo desta oportunidade já encerrou. Abra o Lar77 para ver as próximas faxinas da sua região.",
   sem_convite:
     "Não encontramos nenhuma oportunidade aberta no seu número agora. Abra o Lar77 para acompanhar as próximas.",
+  ambiguo:
+    "Este número está cadastrado em mais de um perfil, então não conseguimos confirmar por aqui. Toque no link da mensagem da oportunidade ou abra o Lar77 para aceitar.",
   duvida: "Não entendi 🙂 Responda *1* para ACEITAR ou *2* se estiver INDISPONÍVEL.",
+
 };
 
 export const Route = createFileRoute("/api/public/zapi-receber")({

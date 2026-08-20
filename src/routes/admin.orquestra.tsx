@@ -207,15 +207,17 @@ function AdminOrquestra() {
                   </span>
                 </div>
 
-                <div className="mt-3 flex flex-wrap gap-3 text-sm text-muted-foreground">
+                <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                   <span>
                     Rodada atual: {Math.max(1, ...convites.map((c) => c.rodada), 1)} ·{" "}
                     {convites.length} convites · {aceitos} aceites
                   </span>
+                  <DiagnosticoPedido bookingId={p.id} />
                   {p.reserva_expira_em && new Date(p.reserva_expira_em) > new Date() && (
                     <Badge>Reserva ativa até {new Date(p.reserva_expira_em).toLocaleTimeString("pt-BR")}</Badge>
                   )}
                 </div>
+
 
                 <div className="mt-3 grid gap-2 sm:grid-cols-2">
                   {convites.map((c) => (

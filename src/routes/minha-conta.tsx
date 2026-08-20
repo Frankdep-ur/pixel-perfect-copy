@@ -328,6 +328,13 @@ function CartaoBooking({ booking, userId }: { booking: BookingLista; userId: str
           </div>
         )}
 
+        {ehServicoAirbnb(null, booking.tipo_limpeza) &&
+          ["em_andamento", "finalizada", "concluida"].includes(booking.status) && (
+            <FotosServicoCliente bookingId={booking.id} />
+          )}
+
+
+
         {aguardandoConfirmacao && (
           <div className="space-y-2 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3">
             <p className="text-sm">

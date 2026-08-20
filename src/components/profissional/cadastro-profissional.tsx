@@ -12,10 +12,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { TIPOS_LIMPEZA } from "@/lib/catalogo";
+import { TIPOS_LIMPEZA, TIPOS_LIMPEZA_AIRBNB } from "@/lib/catalogo";
 import { REGIOES, type RegiaoId } from "@/lib/regioes";
 import { UploadFoto } from "@/components/upload-foto";
 import { CampoTelefone } from "@/components/campo-telefone";
+import { EnderecoProfissional, type EnderecoProf, ENDERECO_PROF_INICIAL } from "@/components/profissional/endereco-profissional";
 
 type Props = { user: User };
 
@@ -31,6 +32,7 @@ export function CadastroProfissional({ user }: Props) {
   const [cidade, setCidade] = useState("");
   const [cidades, setCidades] = useState<string[]>([]);
   const [tipos, setTipos] = useState<string[]>(["padrao"]);
+  const [endereco, setEndereco] = useState<EnderecoProf>(ENDERECO_PROF_INICIAL);
 
 
   function alternar(lista: string[], set: (v: string[]) => void, valor: string) {
@@ -42,6 +44,12 @@ export function CadastroProfissional({ user }: Props) {
       if (!nome.trim()) throw new Error("Informe seu nome completo.");
       if (tipos.length === 0) throw new Error("Escolha pelo menos um tipo de limpeza.");
       if (cidades.length === 0) throw new Error("Escolha as cidades que você atende.");
+      if (!endereco.rua.trim() || !endereco.numero.trim()) {
+        throw new Error("Informe seu endereço completo (rua e número).");
+      }
+      if (endereco.latitude === null || endereco.longitude === null) {
+        throw new Error("Marque sua localização no mapa para receber serviços perto de você.");
+      }
 
       const { error: erroPerfil } = await supabase
         .from("profiles")
@@ -59,6 +67,14 @@ export function CadastroProfissional({ user }: Props) {
         cidade: cidade || cidades[0] || null,
         cidades_atendidas: cidades,
         tipos_limpeza: tipos,
+        cep: endereco.cep || null,
+        rua: endereco.rua.trim(),
+        numero: endereco.numero.trim(),
+        complemento: endereco.complemento.trim() || null,
+        bairro: endereco.bairro.trim() || null,
+        estado: endereco.estado.trim() || null,
+        latitude: endereco.latitude,
+        longitude: endereco.longitude,
       });
       if (error) throw error;
 

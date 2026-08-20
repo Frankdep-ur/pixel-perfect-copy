@@ -350,11 +350,13 @@ export function BuscaOrquestra({
 
       {encerrado && aceites.length === 0 && (
         <div className="rounded-xl border border-border bg-card p-6 text-center">
-          <p className="font-medium">Ainda não encontramos profissionais para esse horário</p>
+          <p className="font-medium">Nenhuma profissional livre nessa data</p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Você pode trocar a data ou o horário — ou falar com a nossa equipe que continua
-            procurando para você.
+            As profissionais da sua região já estão com a agenda cheia em{" "}
+            {formatarDataLonga(rascunho.data)}. Escolha outra data ou horário — ou fale com a nossa
+            equipe, que continua procurando para você.
           </p>
+
           <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-center">
             <Button variant="outline" onClick={onVoltar}>
               Trocar data ou horário

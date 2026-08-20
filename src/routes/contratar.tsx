@@ -236,11 +236,11 @@ function Contratar() {
           <div className="mb-7">
             <div className="mb-2 flex items-center justify-between text-xs font-medium text-muted-foreground">
               <span>
-                Passo {passo} de {TOTAL_PASSOS}
+                Passo {indice + 1} de {total}
               </span>
-              <span className="text-primary">{Math.round((passo / TOTAL_PASSOS) * 100)}%</span>
+              <span className="text-primary">{Math.round(((indice + 1) / total) * 100)}%</span>
             </div>
-            <Progress value={(passo / TOTAL_PASSOS) * 100} className="h-2" />
+            <Progress value={((indice + 1) / total) * 100} className="h-2" />
           </div>
         )}
 

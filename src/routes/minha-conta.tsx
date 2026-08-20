@@ -26,7 +26,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AvaliarDialog } from "@/components/avaliar-dialog";
-import { STATUS_LABEL, formatBRL, labelTipoLimpeza } from "@/lib/catalogo";
+import { STATUS_LABEL, ehServicoAirbnb, formatBRL, labelTipoLimpeza } from "@/lib/catalogo";
+import { FotosServicoCliente } from "@/components/fotos-servico";
 import { useSession } from "@/hooks/use-auth";
 
 type Busca = { aba?: string };

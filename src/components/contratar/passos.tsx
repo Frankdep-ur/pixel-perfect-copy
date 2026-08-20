@@ -179,16 +179,22 @@ export function PassoEndereco({
 }
 
 
-export function PassoImovel({ rascunho, atualizar }: Props) {
+export function PassoImovel({
+  rascunho,
+  atualizar,
+  precoAirbnb,
+}: Props & { precoAirbnb?: number }) {
+  const airbnb = ehAirbnb(rascunho.tipo_imovel);
+
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-2xl font-semibold tracking-tight">Qual é o tipo do imóvel?</h2>
+        <h2 className="text-2xl font-semibold tracking-tight">Qual o tipo do imóvel?</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Isso ajuda a preparar a profissional para o serviço.
+          Essa informação nos ajuda a entender melhor suas necessidades.
         </p>
       </div>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="grid gap-3">
         {TIPOS_IMOVEL.map((tipo) => {
           const Icone = tipo.icon;
           return (
@@ -198,22 +204,67 @@ export function PassoImovel({ rascunho, atualizar }: Props) {
               onClick={() => {
                 if (rascunho.tipo_imovel === tipo.id) return;
                 const virouComercial = ehComercial(tipo.id);
+                const virouAirbnb = ehAirbnb(tipo.id);
                 atualizar({
                   tipo_imovel: tipo.id,
                   // Perfis diferentes têm perguntas e níveis de limpeza próprios.
-                  ...(ehComercial(rascunho.tipo_imovel) !== virouComercial
-                    ? { tipo_limpeza: null }
+                  ...(ehComercial(rascunho.tipo_imovel) !== virouComercial ||
+                  ehAirbnb(rascunho.tipo_imovel) !== virouAirbnb
+                    ? { tipo_limpeza: virouAirbnb ? AIRBNB_TIPO_LIMPEZA : null }
                     : {}),
+                  // Airbnb é preço fixo: nada de extras, metragem ou múltiplas profissionais.
+                  ...(virouAirbnb ? { extras_ids: [], duracao_horas: null } : {}),
                   ...(tipo.id === "empresa" ? {} : { faixa_metragem: null, qtd_profissionais: 1 }),
                 });
               }}
             >
-              <Icone className="size-5 text-primary" />
-              <span className="text-sm font-medium">{tipo.label}</span>
+              <span className="flex w-full items-center gap-3">
+                <Icone className="size-6 shrink-0 text-primary" strokeWidth={1.5} />
+                <span className="flex-1">
+                  <span className="block text-sm font-semibold">{tipo.label}</span>
+                  {tipo.selo && (
+                    <span className="mt-1 inline-block rounded-md border border-primary/50 px-2 py-0.5 text-[11px] font-semibold text-primary">
+                      {tipo.selo}
+                    </span>
+                  )}
+                </span>
+                <ChevronRight className="size-4 shrink-0 text-primary" />
+              </span>
             </Cartao>
           );
         })}
       </div>
+
+      {airbnb && (
+        <div className="space-y-3 rounded-2xl border border-primary/30 bg-surface-tint p-4">
+          <div className="flex items-start gap-3">
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-full border border-primary/50 text-primary">
+              <Star className="size-5" strokeWidth={1.5} />
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-primary">Limpeza para receber melhor.</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Ideal para anfitriões que querem avaliações 5 estrelas e hóspedes sempre
+                satisfeitos.
+              </p>
+            </div>
+          </div>
+          <ul className="space-y-1.5 text-sm text-muted-foreground">
+            {AIRBNB_INCLUSOS.map((item) => (
+              <li key={item} className="flex items-center gap-2">
+                <Check className="size-4 shrink-0 text-primary" />
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p className="text-sm font-semibold text-foreground">
+            Valor fixo do serviço: {formatBRL(precoAirbnb ?? 150)}
+            <span className="ml-1 text-xs font-normal text-muted-foreground">
+              (+ taxa administrativa)
+            </span>
+          </p>
+        </div>
+      )}
     </div>
   );
 }

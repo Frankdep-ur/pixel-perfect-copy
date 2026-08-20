@@ -136,8 +136,7 @@ export function OportunidadesProfissional({ profissionalId }: { profissionalId: 
               className="flex flex-wrap items-center gap-2 rounded-lg border border-border bg-card px-4 py-3 text-sm"
             >
               <span className="font-medium">
-                {labelTipoLimpeza(c.bookings?.tipo_limpeza ?? "")} ·{" "}
-                {formatarData(c.bookings?.data ?? null)}
+                {labelTipoLimpeza(c.tipo_limpeza ?? "")} · {formatarData(c.data)}
               </span>
               <Badge variant="secondary" className="ml-auto">
                 {LABEL_STATUS[c.status] ?? c.status}

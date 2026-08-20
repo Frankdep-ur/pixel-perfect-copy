@@ -142,6 +142,24 @@ function Contratar() {
     [rascunho, listaExtras, precos],
   );
 
+  const airbnb = ehAirbnb(rascunho.tipo_imovel);
+  const precoAirbnb = Number(precos?.["airbnb_preco_fixo"] ?? 150);
+  const duracaoAirbnb = (Number(precos?.["airbnb_duracao_horas"] ?? 4) || 4) as 4 | 6 | 8;
+
+  // Airbnb tem escopo e duração fixos: preenchemos sem perguntar.
+  useEffect(() => {
+    if (!airbnb) return;
+    if (rascunho.duracao_horas !== duracaoAirbnb || rascunho.tipo_limpeza !== AIRBNB_TIPO_LIMPEZA) {
+      atualizar({ duracao_horas: duracaoAirbnb, tipo_limpeza: AIRBNB_TIPO_LIMPEZA });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [airbnb, duracaoAirbnb, rascunho.duracao_horas, rascunho.tipo_limpeza]);
+
+  const sequencia = airbnb ? PASSOS_AIRBNB : PASSOS_PADRAO;
+  const indice = Math.max(0, sequencia.indexOf(passo));
+  const total = sequencia.length;
+  const ultimo = indice === total - 1;
+
   const podeAvancar = (() => {
     switch (passo) {
       case 1:
@@ -175,8 +193,8 @@ function Contratar() {
   })();
 
   function avancar() {
-    if (passo < TOTAL_PASSOS) {
-      setPasso(passo + 1);
+    if (!ultimo) {
+      setPasso(sequencia[indice + 1]!);
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
@@ -194,7 +212,7 @@ function Contratar() {
       setFase("passos");
       return;
     }
-    if (passo > 1) setPasso(passo - 1);
+    if (indice > 0) setPasso(sequencia[indice - 1]!);
   }
 
 

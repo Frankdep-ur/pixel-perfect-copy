@@ -40,6 +40,27 @@ export async function abrirRodada(bookingId: string) {
   return data ?? 0;
 }
 
+/** Quantas profissionais eram elegíveis e quantas já foram convidadas (admin/cliente do pedido). */
+export async function diagnosticoOrquestra(bookingId: string) {
+  const { data, error } = await supabase.rpc("diagnostico_orquestra", {
+    _booking_id: bookingId,
+  });
+  if (error) throw error;
+  const linha = (data ?? [])[0];
+  return {
+    elegiveis: linha?.elegiveis ?? 0,
+    convidadas: linha?.convidadas ?? 0,
+  };
+}
+
+/** Cadastros de profissionais que compartilham o mesmo telefone (só admin). */
+export async function telefonesDuplicados() {
+  const { data, error } = await supabase.rpc("profissionais_telefone_duplicado");
+  if (error) throw error;
+  return data ?? [];
+}
+
+
 
 export async function listarAceites(bookingId: string): Promise<ProfissionalAceite[]> {
   const { data, error } = await supabase.rpc("convites_aceitos", { _booking_id: bookingId });

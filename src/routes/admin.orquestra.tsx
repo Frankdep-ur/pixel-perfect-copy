@@ -379,3 +379,54 @@ function AdminOrquestra() {
     </div>
   );
 }
+
+/** Quantas profissionais eram elegíveis para o pedido e quantas já foram convidadas. */
+function DiagnosticoPedido({ bookingId }: { bookingId: string }) {
+  const { data } = useQuery({
+    queryKey: ["orquestra-diagnostico", bookingId],
+    staleTime: 30_000,
+    queryFn: () => diagnosticoOrquestra(bookingId),
+  });
+
+  if (!data) return null;
+
+  return (
+    <Badge variant={data.elegiveis === 0 ? "destructive" : "outline"}>
+      {data.elegiveis === 0
+        ? "Nenhuma profissional elegível nesta data"
+        : `${data.elegiveis} elegíveis · ${data.convidadas} convidadas`}
+    </Badge>
+  );
+}
+
+/** Telefones repetidos entre profissionais impedem o aceite pela conversa do WhatsApp. */
+function AvisoTelefonesDuplicados() {
+  const { data } = useQuery({
+    queryKey: ["orquestra-telefones-duplicados"],
+    staleTime: 60_000,
+    queryFn: () => telefonesDuplicados(),
+  });
+
+  const linhas = data ?? [];
+  if (linhas.length === 0) return null;
+
+  const numeros = Array.from(new Set(linhas.map((l) => l.telefone))).filter(Boolean);
+
+  return (
+    <Painel className="border-destructive/40 p-4">
+      <div className="flex items-start gap-3">
+        <AlertTriangle className="mt-0.5 size-5 shrink-0 text-destructive" />
+        <div className="text-sm">
+          <p className="font-semibold">
+            {numeros.length} telefone(s) repetido(s) entre cadastros de profissionais
+          </p>
+          <p className="mt-1 text-muted-foreground">
+            {numeros.join(", ")} — nesses casos o aceite pela conversa do WhatsApp fica bloqueado
+            (para não confirmar pela pessoa errada). O link da mensagem e o app continuam
+            funcionando. Ajuste os cadastros duplicados na aba Profissionais.
+          </p>
+        </div>
+      </div>
+    </Painel>
+  );
+}

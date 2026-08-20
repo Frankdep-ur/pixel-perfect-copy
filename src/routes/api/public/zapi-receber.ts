@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { numeroInternacional } from "@/lib/whatsapp";
+
 /**
  * Webhook "Ao receber mensagem" da Z-API: permite que a profissional aceite
  * (ou recuse) a oportunidade respondendo direto na conversa do WhatsApp.

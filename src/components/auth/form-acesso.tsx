@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { CampoTelefone } from "@/components/campo-telefone";
 
 function mascaraCpf(valor: string) {
   const d = valor.replace(/\D/g, "").slice(0, 11);
@@ -197,16 +198,12 @@ export function FormAcesso({ papel, next }: Props) {
               <Label htmlFor="nome">Nome completo</Label>
               <Input id="nome" required value={nome} onChange={(e) => setNome(e.target.value)} />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="telefone">Telefone (WhatsApp)</Label>
-              <Input
-                id="telefone"
-                inputMode="tel"
-                value={telefone}
-                onChange={(e) => setTelefone(e.target.value)}
-                placeholder="(48) 99999-9999"
-              />
-            </div>
+            <CampoTelefone
+              id="telefone"
+              label="Telefone (WhatsApp)"
+              value={telefone}
+              onChange={setTelefone}
+            />
             <div className="space-y-2">
               <Label htmlFor="cpf-novo">CPF</Label>
               <Input

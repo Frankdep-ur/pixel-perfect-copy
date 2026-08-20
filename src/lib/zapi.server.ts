@@ -3,6 +3,9 @@
  * lidas de process.env dentro das funções, nunca no escopo do módulo.
  */
 
+import { numeroInternacional } from "@/lib/whatsapp";
+
+
 type Credenciais = {
   instancia: string;
   token: string;
@@ -27,13 +30,7 @@ function baseUrl(c: Credenciais) {
 
 /** Normaliza para o formato aceito pela Z-API: só dígitos, com código do país. */
 export function numeroZapi(telefone: string | null | undefined) {
-  const d = (telefone ?? "").replace(/\D/g, "");
-  if (!d) return null;
-  if (d.startsWith("55")) return d;
-  // Números brasileiros sem DDI (10 ou 11 dígitos) ganham o 55.
-  if (d.length >= 10 && d.length <= 11) return `55${d}`;
-  // Qualquer outro tamanho já traz o código do país (ex.: 351 de Portugal).
-  return d;
+  return numeroInternacional(telefone);
 }
 
 export type ResultadoEnvio =

@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { TIPOS_LIMPEZA } from "@/lib/catalogo";
 import { REGIOES, type RegiaoId } from "@/lib/regioes";
 import { UploadFoto } from "@/components/upload-foto";
+import { CampoTelefone } from "@/components/campo-telefone";
 
 type Props = { user: User };
 
@@ -89,15 +90,7 @@ export function CadastroProfissional({ user }: Props) {
             <Label htmlFor="nome">Nome completo</Label>
             <Input id="nome" value={nome} onChange={(e) => setNome(e.target.value)} />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="telefone">WhatsApp</Label>
-            <Input
-              id="telefone"
-              value={telefone}
-              onChange={(e) => setTelefone(e.target.value)}
-              placeholder="(48) 99999-0000"
-            />
-          </div>
+          <CampoTelefone value={telefone} onChange={setTelefone} />
           <div className="space-y-2">
             <Label htmlFor="anos">Anos de experiência</Label>
             <Input

@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UploadFoto } from "@/components/upload-foto";
+import { CampoTelefone } from "@/components/campo-telefone";
 
 type Perfil = {
   nome: string | null;
@@ -108,15 +109,7 @@ export function MeuPerfil({ userId }: { userId: string }) {
         </p>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="telefone">Telefone / WhatsApp</Label>
-            <Input
-              id="telefone"
-              inputMode="tel"
-              value={telefone}
-              onChange={(e) => setTelefone(e.target.value)}
-            />
-          </div>
+          <CampoTelefone label="Telefone / WhatsApp" value={telefone} onChange={setTelefone} />
           <div className="space-y-2">
             <Label htmlFor="email">E-mail</Label>
             <Input

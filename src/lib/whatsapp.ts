@@ -4,11 +4,41 @@ export function apenasDigitos(telefone: string | null | undefined) {
   return (telefone ?? "").replace(/\D/g, "");
 }
 
-/** Monta o número no formato internacional aceito pelo wa.me (Brasil por padrão). */
+/**
+ * Formatação leve durante a digitação. Números com +DDI ficam livres (só limpa
+ * caracteres inválidos); números brasileiros de 10/11 dígitos ganham máscara.
+ */
+export function formatarTelefone(entrada: string) {
+  const bruto = (entrada ?? "").replace(/[^\d+\s()-]/g, "");
+  if (bruto.trim().startsWith("+")) {
+    return "+" + bruto.replace(/\+/g, "").replace(/[^\d\s]/g, " ").replace(/\s{2,}/g, " ").trimStart();
+  }
+  const digitos = bruto.replace(/\D/g, "");
+  // Mais de 11 dígitos: já é um número com DDI (ex.: 5548..., 351...) — não mascara.
+  if (digitos.length > 11) return `+${digitos}`;
+  const d = digitos;
+  if (d.length <= 2) return d;
+  if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
+  if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
+  return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+}
+
+/** Aceita qualquer DDD/DDI — só exige um mínimo de dígitos. */
+export function telefoneValido(telefone: string | null | undefined) {
+  return apenasDigitos(telefone).length >= 8;
+}
+
+/**
+ * Normaliza para o formato internacional (só dígitos, com código do país).
+ * Se o usuário digitou +DDI, o DDI informado é preservado; números de 10/11
+ * dígitos sem DDI assumem Brasil (55). Qualquer outro caso é mantido.
+ */
 export function numeroInternacional(telefone: string | null | undefined) {
-  const d = apenasDigitos(telefone);
+  const bruto = (telefone ?? "").trim();
+  const d = apenasDigitos(bruto);
   if (!d) return null;
-  if (d.startsWith("55")) return d;
+  if (bruto.startsWith("+")) return d;
+  if (d.startsWith("55") && d.length >= 12) return d;
   if (d.length >= 10 && d.length <= 11) return `55${d}`;
   return d;
 }

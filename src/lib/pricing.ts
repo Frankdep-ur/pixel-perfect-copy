@@ -89,6 +89,27 @@ export function calcularOrcamento(
   const num = (chave: string, fallback = 0) =>
     typeof config[chave] === "number" ? config[chave] : fallback;
 
+  // Airbnb — Limpeza de Checkout: preço fixo definido pelo admin, sem adicionais.
+  if (input.perfil === "airbnb") {
+    const fixo = num("airbnb_preco_fixo", 150);
+    const valorExtrasAirbnb = input.extras.reduce((soma, e) => soma + (e.preco ?? 0), 0);
+    const valorProfissionalAirbnb = fixo + valorExtrasAirbnb;
+    const taxaBaseAirbnb = valorProfissionalAirbnb * num("taxa_admin_percentual");
+    const seguroAirbnb = num("valor_seguro");
+    return {
+      base: arredondar(fixo),
+      adicionalComodos: 0,
+      subtotalServico: arredondar(fixo),
+      valorExtras: arredondar(valorExtrasAirbnb),
+      valorProfissional: arredondar(valorProfissionalAirbnb),
+      taxaAdminBase: arredondar(taxaBaseAirbnb),
+      taxaAdmin: arredondar(taxaBaseAirbnb + seguroAirbnb),
+      valorSeguro: arredondar(seguroAirbnb),
+      qtdProfissionais: 1,
+      total: arredondar(valorProfissionalAirbnb + taxaBaseAirbnb + seguroAirbnb),
+    };
+  }
+
   const base = num(`preco_${input.duracao_horas}h`);
 
   let adicionalComodos = 0;

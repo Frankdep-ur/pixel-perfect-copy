@@ -26,7 +26,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AvaliarDialog } from "@/components/avaliar-dialog";
-import { STATUS_LABEL, formatBRL, labelTipoLimpeza } from "@/lib/catalogo";
+import { STATUS_LABEL, ehServicoAirbnb, formatBRL, labelTipoLimpeza } from "@/lib/catalogo";
+import { FotosServicoCliente } from "@/components/fotos-servico";
 import { useSession } from "@/hooks/use-auth";
 
 type Busca = { aba?: string };
@@ -327,6 +328,13 @@ function CartaoBooking({ booking, userId }: { booking: BookingLista; userId: str
             />
           </div>
         )}
+
+        {ehServicoAirbnb(null, booking.tipo_limpeza) &&
+          ["em_andamento", "finalizada", "concluida"].includes(booking.status) && (
+            <FotosServicoCliente bookingId={booking.id} />
+          )}
+
+
 
         {aguardandoConfirmacao && (
           <div className="space-y-2 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3">

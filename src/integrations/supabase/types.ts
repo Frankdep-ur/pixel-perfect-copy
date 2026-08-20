@@ -171,6 +171,48 @@ export type Database = {
           },
         ]
       }
+      booking_fotos: {
+        Row: {
+          autor_id: string
+          booking_id: string
+          caminho: string
+          criado_em: string
+          id: string
+          legenda: string | null
+        }
+        Insert: {
+          autor_id: string
+          booking_id: string
+          caminho: string
+          criado_em?: string
+          id?: string
+          legenda?: string | null
+        }
+        Update: {
+          autor_id?: string
+          booking_id?: string
+          caminho?: string
+          criado_em?: string
+          id?: string
+          legenda?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_fotos_autor_id_fkey"
+            columns: ["autor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_fotos_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bookings: {
         Row: {
           aceito_em: string | null
@@ -759,9 +801,12 @@ export type Database = {
       profissionais: {
         Row: {
           anos_experiencia: number | null
+          bairro: string | null
           bio: string | null
+          cep: string | null
           cidade: string | null
           cidades_atendidas: string[]
+          complemento: string | null
           comprovante_url: string | null
           criado_em: string
           disponivel: boolean
@@ -769,15 +814,18 @@ export type Database = {
           doc_identidade_url: string | null
           doc_tipo: string | null
           documento_url: string | null
+          estado: string | null
           id: string
           latitude: number | null
           longitude: number | null
           nota_media: number
+          numero: string | null
           pix_chave: string | null
           pix_tipo: string | null
           pix_titular: string | null
           raio_km: number | null
           regiao: string | null
+          rua: string | null
           status: string
           telefone_recado: string | null
           tipos_limpeza: string[]
@@ -788,9 +836,12 @@ export type Database = {
         }
         Insert: {
           anos_experiencia?: number | null
+          bairro?: string | null
           bio?: string | null
+          cep?: string | null
           cidade?: string | null
           cidades_atendidas?: string[]
+          complemento?: string | null
           comprovante_url?: string | null
           criado_em?: string
           disponivel?: boolean
@@ -798,15 +849,18 @@ export type Database = {
           doc_identidade_url?: string | null
           doc_tipo?: string | null
           documento_url?: string | null
+          estado?: string | null
           id?: string
           latitude?: number | null
           longitude?: number | null
           nota_media?: number
+          numero?: string | null
           pix_chave?: string | null
           pix_tipo?: string | null
           pix_titular?: string | null
           raio_km?: number | null
           regiao?: string | null
+          rua?: string | null
           status?: string
           telefone_recado?: string | null
           tipos_limpeza?: string[]
@@ -817,9 +871,12 @@ export type Database = {
         }
         Update: {
           anos_experiencia?: number | null
+          bairro?: string | null
           bio?: string | null
+          cep?: string | null
           cidade?: string | null
           cidades_atendidas?: string[]
+          complemento?: string | null
           comprovante_url?: string | null
           criado_em?: string
           disponivel?: boolean
@@ -827,15 +884,18 @@ export type Database = {
           doc_identidade_url?: string | null
           doc_tipo?: string | null
           documento_url?: string | null
+          estado?: string | null
           id?: string
           latitude?: number | null
           longitude?: number | null
           nota_media?: number
+          numero?: string | null
           pix_chave?: string | null
           pix_tipo?: string | null
           pix_titular?: string | null
           raio_km?: number | null
           regiao?: string | null
+          rua?: string | null
           status?: string
           telefone_recado?: string | null
           tipos_limpeza?: string[]
@@ -993,7 +1053,13 @@ export type Database = {
         Returns: {
           convidadas: number
           elegiveis: number
+          raio_km: number
+          tem_coordenada: boolean
         }[]
+      }
+      distancia_km: {
+        Args: { _lat1: number; _lat2: number; _lng1: number; _lng2: number }
+        Returns: number
       }
       expirar_convites_e_reservas: { Args: never; Returns: undefined }
       has_role: {
@@ -1003,9 +1069,36 @@ export type Database = {
         }
         Returns: boolean
       }
+      marcar_mensagens_lidas: { Args: { _booking_id: string }; Returns: number }
       participa_booking: {
         Args: { _booking_id: string; _user_id: string }
         Returns: boolean
+      }
+      profissionais_candidatas: {
+        Args: {
+          _data: string
+          _lat?: number
+          _lng?: number
+          _raio_km?: number
+          _regiao: string
+          _tipo_limpeza?: string
+        }
+        Returns: {
+          anos_experiencia: number
+          bio: string
+          cidade: string
+          distancia_km: number
+          foto_url: string
+          id: string
+          nome: string
+          nota_media: number
+          raio_km: number
+          regiao: string
+          total_avaliacoes: number
+          total_servicos: number
+          user_id: string
+          verificada: boolean
+        }[]
       }
       profissionais_disponiveis: {
         Args: { _data: string; _regiao: string; _tipo_limpeza?: string }

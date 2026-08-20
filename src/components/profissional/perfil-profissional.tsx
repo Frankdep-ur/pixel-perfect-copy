@@ -11,9 +11,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { UploadFoto } from "@/components/upload-foto";
-import { TIPOS_LIMPEZA } from "@/lib/catalogo";
+import { TIPOS_LIMPEZA, TIPOS_LIMPEZA_AIRBNB } from "@/lib/catalogo";
 import { REGIOES, type RegiaoId } from "@/lib/regioes";
 import { cn } from "@/lib/utils";
+import {
+  EnderecoProfissional,
+  ENDERECO_PROF_INICIAL,
+  type EnderecoProf,
+} from "@/components/profissional/endereco-profissional";
 
 export type PerfilProfissionalEdicao = {
   id: string;
@@ -31,6 +36,14 @@ export type PerfilProfissionalEdicao = {
   pix_tipo: string | null;
   pix_chave: string | null;
   pix_titular: string | null;
+  cep?: string | null;
+  rua?: string | null;
+  numero?: string | null;
+  complemento?: string | null;
+  bairro?: string | null;
+  estado?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
 };
 
 const TIPOS_PIX = [
@@ -57,6 +70,19 @@ export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdica
   const [pixTipo, setPixTipo] = useState(perfil.pix_tipo ?? "cpf");
   const [pixChave, setPixChave] = useState(perfil.pix_chave ?? "");
   const [pixTitular, setPixTitular] = useState(perfil.pix_titular ?? nome);
+  const [endereco, setEndereco] = useState<EnderecoProf>({
+    ...ENDERECO_PROF_INICIAL,
+    cep: perfil.cep ?? "",
+    rua: perfil.rua ?? "",
+    numero: perfil.numero ?? "",
+    complemento: perfil.complemento ?? "",
+    bairro: perfil.bairro ?? "",
+    cidade: perfil.cidade ?? "",
+    estado: perfil.estado ?? "",
+    latitude: perfil.latitude ?? null,
+    longitude: perfil.longitude ?? null,
+  });
+
 
 
   function alternar(lista: string[], set: (v: string[]) => void, valor: string) {
@@ -79,6 +105,12 @@ export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdica
         pixTitular.trim().toLowerCase() !== nome.trim().toLowerCase()
       )
         throw new Error("O titular do PIX deve ser exatamente o mesmo nome do seu cadastro.");
+      if (!dados) {
+        if (!endereco.rua.trim() || !endereco.numero.trim())
+          throw new Error("Informe seu endereço completo (rua e número).");
+        if (endereco.latitude === null || endereco.longitude === null)
+          throw new Error("Marque sua localização no mapa para receber serviços perto de você.");
+      }
 
       const { error: erroPerfil } = await supabase
         .from("profiles")
@@ -100,6 +132,14 @@ export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdica
           cidade: cidade || cidades[0] || null,
           cidades_atendidas: cidades,
           tipos_limpeza: tipos,
+          cep: endereco.cep || null,
+          rua: endereco.rua.trim() || null,
+          numero: endereco.numero.trim() || null,
+          complemento: endereco.complemento.trim() || null,
+          bairro: endereco.bairro.trim() || null,
+          estado: endereco.estado.trim() || null,
+          latitude: endereco.latitude,
+          longitude: endereco.longitude,
         })
         .eq("id", perfil.id);
       if (error) throw error;

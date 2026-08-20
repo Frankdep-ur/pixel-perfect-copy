@@ -22,10 +22,18 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { OportunidadesProfissional } from "@/components/profissional/oportunidades-profissional";
-import { STATUS_LABEL, formatBRL, labelTipoImovel, labelTipoLimpeza } from "@/lib/catalogo";
+import {
+  AIRBNB_MIN_FOTOS,
+  STATUS_LABEL,
+  ehServicoAirbnb,
+  formatBRL,
+  labelTipoImovel,
+  labelTipoLimpeza,
+} from "@/lib/catalogo";
 import { formatarData } from "@/lib/agenda";
 import { MENSAGENS } from "@/lib/whatsapp";
 import { ChatServico } from "@/components/chat-servico";
+import { FotosServicoProfissional, useFotosServico } from "@/components/fotos-servico";
 
 type Props = { profissionalId: string; nomeProfissional: string; userId: string };
 
@@ -327,6 +335,11 @@ function Cartao({
   const end = booking.enderecos;
   const aceito = !PENDENTES.includes(booking.status);
   const Icone = passo?.icone ?? Check;
+  const airbnb = ehServicoAirbnb(booking.tipo_imovel, booking.tipo_limpeza);
+  const { data: fotos = [] } = useFotosServico(booking.id, airbnb && aceito);
+  // No Airbnb o cliente quase nunca está no imóvel: só finaliza com as fotos enviadas.
+  const faltamFotos = airbnb && booking.status === "em_andamento" && fotos.length < AIRBNB_MIN_FOTOS;
+
 
   return (
     <Card>
@@ -381,6 +394,14 @@ function Cartao({
           />
         )}
 
+        {airbnb && aceito && (
+          <FotosServicoProfissional
+            bookingId={booking.id}
+            userId={userId}
+            minimo={AIRBNB_MIN_FOTOS}
+          />
+        )}
+
         {onAceitar && onRecusar && (
           <div className="grid gap-2 sm:grid-cols-2">
             <Button size="lg" disabled={pendente} onClick={onAceitar}>
@@ -399,14 +420,26 @@ function Cartao({
         )}
 
         {passo && onAvancar && (
-          <Button size="lg" className="w-full" disabled={pendente} onClick={onAvancar}>
-            {pendente ? (
-              <Loader2 className="mr-2 size-4 animate-spin" />
-            ) : (
-              <Icone className="mr-2 size-4" />
+          <>
+            <Button
+              size="lg"
+              className="w-full"
+              disabled={pendente || faltamFotos}
+              onClick={onAvancar}
+            >
+              {pendente ? (
+                <Loader2 className="mr-2 size-4 animate-spin" />
+              ) : (
+                <Icone className="mr-2 size-4" />
+              )}
+              {passo.label}
+            </Button>
+            {faltamFotos && (
+              <p className="text-xs text-muted-foreground">
+                Envie pelo menos {AIRBNB_MIN_FOTOS} fotos do imóvel para poder finalizar.
+              </p>
             )}
-            {passo.label}
-          </Button>
+          </>
         )}
 
         {booking.status === "finalizada" && (

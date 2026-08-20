@@ -24,7 +24,7 @@ import type { ProfissionalAceite } from "@/lib/orquestra";
 
 import { extrasQuery, pricingQuery } from "@/lib/queries";
 import { calcularOrcamento } from "@/lib/pricing";
-import { ehComercial, perfilImovel } from "@/lib/catalogo";
+import { AIRBNB_TIPO_LIMPEZA, ehAirbnb, ehComercial, perfilImovel } from "@/lib/catalogo";
 import {
   RASCUNHO_INICIAL,
   carregarRascunho,
@@ -55,7 +55,9 @@ export const Route = createFileRoute("/contratar")({
   component: Contratar,
 });
 
-const TOTAL_PASSOS = 8;
+const PASSOS_PADRAO = [1, 2, 3, 4, 5, 6, 7, 8];
+/** Airbnb é preço fixo com escopo definido: só endereço, imóvel, data e observações. */
+const PASSOS_AIRBNB = [1, 2, 7, 8];
 
 function Contratar() {
   const navigate = useNavigate();
@@ -140,6 +142,24 @@ function Contratar() {
     [rascunho, listaExtras, precos],
   );
 
+  const airbnb = ehAirbnb(rascunho.tipo_imovel);
+  const precoAirbnb = Number(precos?.["airbnb_preco_fixo"] ?? 150);
+  const duracaoAirbnb = (Number(precos?.["airbnb_duracao_horas"] ?? 4) || 4) as 4 | 6 | 8;
+
+  // Airbnb tem escopo e duração fixos: preenchemos sem perguntar.
+  useEffect(() => {
+    if (!airbnb) return;
+    if (rascunho.duracao_horas !== duracaoAirbnb || rascunho.tipo_limpeza !== AIRBNB_TIPO_LIMPEZA) {
+      atualizar({ duracao_horas: duracaoAirbnb, tipo_limpeza: AIRBNB_TIPO_LIMPEZA });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [airbnb, duracaoAirbnb, rascunho.duracao_horas, rascunho.tipo_limpeza]);
+
+  const sequencia = airbnb ? PASSOS_AIRBNB : PASSOS_PADRAO;
+  const indice = Math.max(0, sequencia.indexOf(passo));
+  const total = sequencia.length;
+  const ultimo = indice === total - 1;
+
   const podeAvancar = (() => {
     switch (passo) {
       case 1:
@@ -173,8 +193,8 @@ function Contratar() {
   })();
 
   function avancar() {
-    if (passo < TOTAL_PASSOS) {
-      setPasso(passo + 1);
+    if (!ultimo) {
+      setPasso(sequencia[indice + 1]!);
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
@@ -192,7 +212,7 @@ function Contratar() {
       setFase("passos");
       return;
     }
-    if (passo > 1) setPasso(passo - 1);
+    if (indice > 0) setPasso(sequencia[indice - 1]!);
   }
 
 
@@ -216,11 +236,11 @@ function Contratar() {
           <div className="mb-7">
             <div className="mb-2 flex items-center justify-between text-xs font-medium text-muted-foreground">
               <span>
-                Passo {passo} de {TOTAL_PASSOS}
+                Passo {indice + 1} de {total}
               </span>
-              <span className="text-primary">{Math.round((passo / TOTAL_PASSOS) * 100)}%</span>
+              <span className="text-primary">{Math.round(((indice + 1) / total) * 100)}%</span>
             </div>
-            <Progress value={(passo / TOTAL_PASSOS) * 100} className="h-2" />
+            <Progress value={((indice + 1) / total) * 100} className="h-2" />
           </div>
         )}
 
@@ -233,7 +253,13 @@ function Contratar() {
                   <PassoEndereco rascunho={rascunho} atualizar={atualizar} userId={user!.id} />
                 )}
 
-                {passo === 2 && <PassoImovel rascunho={rascunho} atualizar={atualizar} />}
+                {passo === 2 && (
+                  <PassoImovel
+                    rascunho={rascunho}
+                    atualizar={atualizar}
+                    precoAirbnb={precoAirbnb}
+                  />
+                )}
                 {passo === 3 && <PassoTamanho rascunho={rascunho} atualizar={atualizar} />}
                 {passo === 4 && (
                   <PassoDuracao rascunho={rascunho} atualizar={atualizar} precos={precos} />
@@ -252,13 +278,13 @@ function Contratar() {
                     size="lg"
                     className="min-h-14 w-full rounded-[24px] text-base font-bold"
                   >
-                    {passo === TOTAL_PASSOS ? "Buscar profissionais" : "Continuar"}
+                    {ultimo ? "Buscar profissionais" : "Continuar"}
                     <ArrowRight className="size-4" />
                   </Button>
                   <Button
                     variant="ghost"
                     onClick={voltar}
-                    disabled={passo === 1}
+                    disabled={indice === 0}
                     className="gap-2 text-muted-foreground"
                   >
                     <ArrowLeft className="size-4" /> Voltar

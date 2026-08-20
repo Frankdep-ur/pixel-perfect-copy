@@ -278,7 +278,7 @@ function Contratar() {
                     size="lg"
                     className="min-h-14 w-full rounded-[24px] text-base font-bold"
                   >
-                    {passo === TOTAL_PASSOS ? "Buscar profissionais" : "Continuar"}
+                    {ultimo ? "Buscar profissionais" : "Continuar"}
                     <ArrowRight className="size-4" />
                   </Button>
                   <Button

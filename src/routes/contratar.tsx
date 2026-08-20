@@ -284,7 +284,7 @@ function Contratar() {
                   <Button
                     variant="ghost"
                     onClick={voltar}
-                    disabled={passo === 1}
+                    disabled={indice === 0}
                     className="gap-2 text-muted-foreground"
                   >
                     <ArrowLeft className="size-4" /> Voltar

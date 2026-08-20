@@ -50,9 +50,15 @@ export const Route = createFileRoute("/api/public/zapi-receber")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const esperado = process.env["ZAPI_WEBHOOK_TOKEN"];
+        // Aceita o segredo interno (ZAPI_WEBHOOK_TOKEN) ou a chave publicável
+        // do projeto — o painel da Z-API só permite colar a URL, sem headers.
         const enviado = new URL(request.url).searchParams.get("token");
-        if (!esperado || !enviado || enviado !== esperado) {
+        const validos = [
+          process.env["ZAPI_WEBHOOK_TOKEN"],
+          process.env["SUPABASE_PUBLISHABLE_KEY"],
+          process.env["SUPABASE_ANON_KEY"],
+        ].filter((v): v is string => Boolean(v));
+        if (!enviado || !validos.includes(enviado)) {
           return new Response("Unauthorized", { status: 401 });
         }
 

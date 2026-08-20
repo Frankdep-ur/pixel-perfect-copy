@@ -79,6 +79,23 @@ export function ServicosProfissional({ profissionalId, nomeProfissional, userId 
     },
   });
 
+  useEffect(() => {
+    const canal = supabase
+      .channel(`bookings-prof-${profissionalId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "bookings",
+          filter: `profissional_id=eq.${profissionalId}`,
+        },
+        () => void queryClient.invalidateQueries({ queryKey: ["servicos-profissional", profissionalId] }),
+      )
+      .subscribe();
+    return () => void supabase.removeChannel(canal);
+  }, [profissionalId, queryClient]);
+
   function atualizarLista() {
     queryClient.invalidateQueries({ queryKey: ["servicos-profissional", profissionalId] });
   }

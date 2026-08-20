@@ -13,7 +13,10 @@ export function formatarTelefone(entrada: string) {
   if (bruto.trim().startsWith("+")) {
     return "+" + bruto.replace(/\+/g, "").replace(/[^\d\s]/g, " ").replace(/\s{2,}/g, " ").trimStart();
   }
-  const d = bruto.replace(/\D/g, "").slice(0, 11);
+  const digitos = bruto.replace(/\D/g, "");
+  // Mais de 11 dígitos: já é um número com DDI (ex.: 5548..., 351...) — não mascara.
+  if (digitos.length > 11) return `+${digitos}`;
+  const d = digitos;
   if (d.length <= 2) return d;
   if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
   if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;

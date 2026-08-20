@@ -3,6 +3,9 @@
  * lidas de process.env dentro das funções, nunca no escopo do módulo.
  */
 
+import { numeroInternacional } from "@/lib/whatsapp";
+
+
 type Credenciais = {
   instancia: string;
   token: string;

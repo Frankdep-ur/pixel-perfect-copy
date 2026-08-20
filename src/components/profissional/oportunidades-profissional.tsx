@@ -159,8 +159,8 @@ function CartaoConvite({
   pendente: boolean;
 }) {
   const restante = useContagem(convite.expira_em);
-  const b = convite.bookings;
-  const end = b?.enderecos;
+  const b = convite;
+  const end = convite;
   const expirado = restante <= 0;
 
   return (

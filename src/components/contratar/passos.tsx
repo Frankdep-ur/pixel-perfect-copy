@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Info, Loader2, MapPin, Minus, Plus } from "lucide-react";
+import { Check, ChevronRight, Info, Loader2, MapPin, Minus, Plus, Star } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import {
+  AIRBNB_INCLUSOS,
+  AIRBNB_TIPO_LIMPEZA,
   AREAS_EXTERNAS,
   DURACOES,
   FAIXAS_METRAGEM,
@@ -18,6 +20,7 @@ import {
   TIPOS_IMOVEL,
   TIPOS_LIMPEZA,
   TIPOS_LIMPEZA_COMERCIAL,
+  ehAirbnb,
   ehComercial,
   permiteMultiplasProfissionais,
   formatBRL,

@@ -317,6 +317,12 @@ function AdminOrquestra() {
               <Painel key={n.id} className="p-4">
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="secondary">{n.tipo}</Badge>
+                  {n.tipo === "resposta_convite" && !n.destinatario_nome && (
+                    <Badge variant="outline" className="gap-1">
+                      <AlertTriangle className="size-3" /> número não vinculado
+                    </Badge>
+                  )}
+
                   <span className="text-sm font-medium">{n.destinatario_nome ?? "—"}</span>
                   <span className="text-xs text-muted-foreground">
                     {n.telefone ?? "sem telefone"}

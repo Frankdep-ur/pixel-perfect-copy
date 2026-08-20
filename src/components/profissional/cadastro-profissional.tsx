@@ -200,7 +200,7 @@ export function CadastroProfissional({ user }: Props) {
         <div className="space-y-3">
           <Label>Tipos de limpeza que você faz</Label>
           <div className="grid gap-3 sm:grid-cols-2">
-            {TIPOS_LIMPEZA.map((t) => (
+            {[...TIPOS_LIMPEZA, ...TIPOS_LIMPEZA_AIRBNB].map((t) => (
               <label
                 key={t.id}
                 className="flex items-start gap-3 rounded-xl border border-border p-3 text-sm"

@@ -1,10 +1,18 @@
-import { Building2, Home, Briefcase, Factory, type LucideIcon } from "lucide-react";
+import {
+  Building2,
+  Home,
+  Briefcase,
+  Factory,
+  KeyRound,
+  type LucideIcon,
+} from "lucide-react";
 
-export const TIPOS_IMOVEL: { id: string; label: string; icon: LucideIcon }[] = [
+export const TIPOS_IMOVEL: { id: string; label: string; icon: LucideIcon; selo?: string }[] = [
   { id: "casa", label: "Casa", icon: Home },
   { id: "apartamento", label: "Apartamento", icon: Building2 },
   { id: "escritorio", label: "Escritório", icon: Briefcase },
   { id: "empresa", label: "Empresa", icon: Factory },
+  { id: "airbnb", label: "Airbnb", icon: KeyRound, selo: "Grande atrativo!" },
 ];
 
 /** Escritório e Empresa usam perguntas e níveis de limpeza próprios. */
@@ -12,11 +20,30 @@ export function ehComercial(tipoImovel: string | null | undefined) {
   return tipoImovel === "escritorio" || tipoImovel === "empresa";
 }
 
-export type PerfilImovel = "residencial" | "escritorio" | "empresa";
+/** Airbnb é uma modalidade de preço fixo, com escopo e fotos obrigatórias. */
+export function ehAirbnb(tipoImovel: string | null | undefined) {
+  return tipoImovel === "airbnb";
+}
+
+export const AIRBNB_TIPO_LIMPEZA = "airbnb_checkout";
+
+export const AIRBNB_INCLUSOS = [
+  "Troca de roupa de cama",
+  "Limpeza de cozinha",
+  "Limpeza de banheiros",
+  "Fotos após a limpeza (obrigatório)",
+];
+
+export function ehServicoAirbnb(tipoImovel: string | null | undefined, tipoLimpeza?: string | null) {
+  return ehAirbnb(tipoImovel) || tipoLimpeza === AIRBNB_TIPO_LIMPEZA;
+}
+
+export type PerfilImovel = "residencial" | "escritorio" | "empresa" | "airbnb";
 
 export function perfilImovel(tipoImovel: string | null | undefined): PerfilImovel {
   if (tipoImovel === "empresa") return "empresa";
   if (tipoImovel === "escritorio") return "escritorio";
+  if (tipoImovel === "airbnb") return "airbnb";
   return "residencial";
 }
 
@@ -37,6 +64,15 @@ export const TIPOS_LIMPEZA_COMERCIAL: { id: string; label: string; descricao: st
     id: "com_intensiva",
     label: "💎 Limpeza Intensiva",
     descricao: "Para ambientes que precisam de uma limpeza mais profunda.",
+  },
+];
+
+export const TIPOS_LIMPEZA_AIRBNB: { id: string; label: string; descricao: string }[] = [
+  {
+    id: AIRBNB_TIPO_LIMPEZA,
+    label: "Airbnb — Limpeza de Checkout",
+    descricao:
+      "Giro rápido entre hóspedes: troca de roupa de cama, cozinha, banheiros e fotos do imóvel pronto.",
   },
 ];
 

@@ -140,6 +140,15 @@ export function CadastroProfissional({ user }: Props) {
           />
         </div>
 
+        <div className="rounded-2xl bg-surface-tint p-4">
+          <EnderecoProfissional
+            valor={endereco}
+            onChange={(parcial) => setEndereco((atual) => ({ ...atual, ...parcial }))}
+          />
+        </div>
+
+
+
         <div className="space-y-3">
           <Label>Região de atuação</Label>
           <div className="grid gap-3 sm:grid-cols-2">

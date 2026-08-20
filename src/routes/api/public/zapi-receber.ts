@@ -83,8 +83,25 @@ export const Route = createFileRoute("/api/public/zapi-receber")({
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
+        // Só conversamos com números de profissionais cadastradas: qualquer
+        // outra pessoa que escreva para a instância é ignorada em silêncio.
+        const numero = numeroInternacional(telefone);
+        const { data: cadastradas, error: erroCadastro } = await supabaseAdmin
+          .from("profissionais")
+          .select("id, profiles!inner(telefone)");
+        if (erroCadastro) {
+          console.error("[zapi-receber] cadastro", erroCadastro);
+          return new Response("Erro ao identificar o número", { status: 500 });
+        }
+        const conhecida = (cadastradas ?? []).some((p) => {
+          const tel = (p as { profiles?: { telefone: string | null } | null }).profiles?.telefone;
+          return numero !== null && numeroInternacional(tel) === numero;
+        });
+        if (!conhecida) return Response.json({ ignorado: true });
+
         let resposta = RESPOSTAS["duvida"]!;
         let status = "duvida";
+
 
         if (intencao !== "desconhecida") {
           const { data, error } = await supabaseAdmin.rpc("responder_convite_whatsapp", {

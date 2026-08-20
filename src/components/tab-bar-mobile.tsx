@@ -25,6 +25,9 @@ export function TabBarMobile() {
     select: (s) => (s.location.search as { aba?: string } | undefined)?.aba,
   });
   const { data: naoLidas } = useNaoLidas(user);
+  const { data: papeis } = usePapeis(user);
+  // A profissional acompanha as faxinas dela no painel próprio, não na conta do cliente.
+  const ehProfissional = (papeis ?? []).includes("profissional");
 
   const bloqueada = ROTAS_SEM_BARRA.some((r) => pathname === r || pathname.startsWith(`${r}/`));
   const visivel = !!user && !bloqueada;
@@ -39,10 +42,14 @@ export function TabBarMobile() {
 
   const abas: Aba[] = [
     { label: "Início", icon: Home, to: "/", exact: true },
-    { label: "Minhas reservas", icon: CalendarCheck, to: "/minha-conta" },
+    ehProfissional
+      ? { label: "Minhas faxinas", icon: CalendarCheck, to: "/profissional" }
+      : { label: "Minhas reservas", icon: CalendarCheck, to: "/minha-conta" },
     { label: "Mensagens", icon: MessageCircle, to: "/mensagens", badge: naoLidas ?? 0 },
     { label: "Favoritos", icon: Heart, to: "/favoritos" },
-    { label: "Conta", icon: UserRound, to: "/minha-conta", search: { aba: "perfil" } },
+    ehProfissional
+      ? { label: "Conta", icon: UserRound, to: "/profissional", search: { aba: "perfil" } }
+      : { label: "Conta", icon: UserRound, to: "/minha-conta", search: { aba: "perfil" } },
   ];
 
   return (

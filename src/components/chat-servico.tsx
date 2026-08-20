@@ -107,11 +107,22 @@ export function ChatServico({ bookingId, userId, titulo, interlocutor }: Props) 
   const [texto, setTexto] = useState("");
   const [enviando, setEnviando] = useState(false);
   const fim = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
   const { data, isLoading } = useMensagens(bookingId, aberto);
+  const { data: naoLidas = 0 } = useNaoLidasChat(bookingId, userId);
 
   useEffect(() => {
     if (aberto) fim.current?.scrollIntoView({ block: "end" });
   }, [aberto, data]);
+
+  // Abrir o chat marca como lidas as mensagens recebidas: o balãozinho apaga.
+  useEffect(() => {
+    if (!aberto || naoLidas === 0) return;
+    void supabase.rpc("marcar_mensagens_lidas", { _booking_id: bookingId }).then(() => {
+      queryClient.invalidateQueries({ queryKey: ["nao-lidas-chat", bookingId] });
+      queryClient.invalidateQueries({ queryKey: ["mensagens-nao-lidas"] });
+    });
+  }, [aberto, naoLidas, bookingId, queryClient]);
 
   async function enviar(e: React.FormEvent) {
     e.preventDefault();
@@ -132,8 +143,16 @@ export function ChatServico({ bookingId, userId, titulo, interlocutor }: Props) 
   return (
     <Dialog open={aberto} onOpenChange={setAberto}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2">
+        <Button variant="outline" size="sm" className="relative gap-2">
           <MessagesSquare className="size-4" /> Chat do serviço
+          {naoLidas > 0 && (
+            <span
+              aria-label={`${naoLidas} mensagens não lidas`}
+              className="absolute -right-1.5 -top-1.5 flex min-w-5 items-center justify-center rounded-full bg-destructive px-1 text-[11px] font-bold leading-5 text-destructive-foreground"
+            >
+              {naoLidas > 9 ? "9+" : naoLidas}
+            </span>
+          )}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md">

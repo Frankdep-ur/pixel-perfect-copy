@@ -33,7 +33,7 @@ export function OportunidadesProfissional({ profissionalId }: { profissionalId: 
   const { data: convites = [] } = useQuery({
     queryKey: chave,
     refetchInterval: 5000,
-    queryFn: () => listarConvitesProfissional(profissionalId),
+    queryFn: () => listarConvitesProfissional(),
   });
 
   useEffect(() => {
@@ -73,9 +73,7 @@ export function OportunidadesProfissional({ profissionalId }: { profissionalId: 
   });
 
   const abertos = convites.filter((c) => c.status === "enviado");
-  const aguardando = convites.filter(
-    (c) => c.status === "aceito" && c.bookings?.profissional_id !== profissionalId,
-  );
+  const aguardando = convites.filter((c) => c.status === "aceito" && !c.escolhida);
   const historico = convites
     .filter((c) => c.status !== "enviado" && !aguardando.includes(c))
     .slice(0, 10);
@@ -88,26 +86,24 @@ export function OportunidadesProfissional({ profissionalId }: { profissionalId: 
             <Badge variant="secondary" className="gap-1">
               <Check className="size-3" /> Aceito — aguardando a escolha do cliente
             </Badge>
-            <p className="font-medium">{labelTipoLimpeza(c.bookings?.tipo_limpeza ?? "")}</p>
+            <p className="font-medium">{labelTipoLimpeza(c.tipo_limpeza ?? "")}</p>
             <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <CalendarDays className="size-4" />
-                {formatarData(c.bookings?.data ?? null)}
-                {c.bookings?.hora ? ` · ${c.bookings.hora.slice(0, 5)}` : ""}
+                {formatarData(c.data)}
+                {c.hora ? ` · ${c.hora.slice(0, 5)}` : ""}
               </span>
               <span className="flex items-center gap-1.5">
                 <Clock className="size-4" />
-                {c.bookings?.duracao_horas ?? 0}h
+                {c.duracao_horas ?? 0}h
               </span>
               <span className="flex items-center gap-1.5">
                 <MapPin className="size-4" />
-                {[c.bookings?.enderecos?.bairro, c.bookings?.enderecos?.cidade]
-                  .filter(Boolean)
-                  .join(", ") || "Sua região"}
+                {[c.bairro, c.cidade].filter(Boolean).join(", ") || "Sua região"}
               </span>
             </div>
             <p className="text-lg font-semibold">
-              Você recebe {formatBRL(Number(c.bookings?.valor_profissional ?? 0))}
+              Você recebe {formatBRL(c.valor_profissional)}
             </p>
           </CardContent>
         </Card>
@@ -140,8 +136,7 @@ export function OportunidadesProfissional({ profissionalId }: { profissionalId: 
               className="flex flex-wrap items-center gap-2 rounded-lg border border-border bg-card px-4 py-3 text-sm"
             >
               <span className="font-medium">
-                {labelTipoLimpeza(c.bookings?.tipo_limpeza ?? "")} ·{" "}
-                {formatarData(c.bookings?.data ?? null)}
+                {labelTipoLimpeza(c.tipo_limpeza ?? "")} · {formatarData(c.data)}
               </span>
               <Badge variant="secondary" className="ml-auto">
                 {LABEL_STATUS[c.status] ?? c.status}
@@ -164,8 +159,8 @@ function CartaoConvite({
   pendente: boolean;
 }) {
   const restante = useContagem(convite.expira_em);
-  const b = convite.bookings;
-  const end = b?.enderecos;
+  const b = convite;
+  const end = convite;
   const expirado = restante <= 0;
 
   return (

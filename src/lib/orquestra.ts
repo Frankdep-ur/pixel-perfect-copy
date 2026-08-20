@@ -117,32 +117,45 @@ export type ConviteProfissional = {
   expira_em: string;
   rodada: number;
   booking_id: string;
-  bookings: {
-    id: string;
-    codigo: string | null;
-    status: string;
-    data: string | null;
-    hora: string | null;
-    duracao_horas: number;
-    tipo_limpeza: string;
-    tipo_imovel: string | null;
-    valor_profissional: number;
-    profissional_id: string | null;
-    enderecos: { bairro: string | null; cidade: string | null } | null;
-  } | null;
+  booking_status: string;
+  codigo: string | null;
+  tipo_limpeza: string | null;
+  tipo_imovel: string | null;
+  duracao_horas: number | null;
+  data: string | null;
+  hora: string | null;
+  bairro: string | null;
+  cidade: string | null;
+  valor_profissional: number;
+  escolhida: boolean;
 };
 
-export async function listarConvitesProfissional(profissionalId: string) {
-  const { data, error } = await supabase
-    .from("booking_convites")
-    .select(
-      "id, status, expira_em, rodada, booking_id, bookings(id, codigo, status, data, hora, duracao_horas, tipo_limpeza, tipo_imovel, valor_profissional, profissional_id, enderecos(bairro, cidade))",
-    )
-    .eq("profissional_id", profissionalId)
-    .order("criado_em", { ascending: false })
-    .limit(30);
+/**
+ * Convites da profissional logada com o resumo seguro do serviço: durante a
+ * fase "buscando" o pedido ainda não é dela, então quem devolve os dados é a
+ * função do banco (sem endereço completo nem contato do cliente).
+ */
+export async function listarConvitesProfissional(): Promise<ConviteProfissional[]> {
+  const { data, error } = await supabase.rpc("convites_profissional");
   if (error) throw error;
-  return (data ?? []) as unknown as ConviteProfissional[];
+  return (data ?? []).map((c) => ({
+    id: c.id,
+    status: c.status,
+    expira_em: c.expira_em,
+    rodada: c.rodada,
+    booking_id: c.booking_id,
+    booking_status: c.booking_status,
+    codigo: c.codigo,
+    tipo_limpeza: c.tipo_limpeza,
+    tipo_imovel: c.tipo_imovel,
+    duracao_horas: c.duracao_horas,
+    data: c.data,
+    hora: c.hora,
+    bairro: c.bairro,
+    cidade: c.cidade,
+    valor_profissional: Number(c.valor_profissional ?? 0),
+    escolhida: !!c.escolhida,
+  }));
 }
 
 export async function responderConvite(conviteId: string, aceitar: boolean) {

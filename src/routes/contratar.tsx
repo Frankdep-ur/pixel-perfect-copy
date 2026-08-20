@@ -253,7 +253,13 @@ function Contratar() {
                   <PassoEndereco rascunho={rascunho} atualizar={atualizar} userId={user!.id} />
                 )}
 
-                {passo === 2 && <PassoImovel rascunho={rascunho} atualizar={atualizar} />}
+                {passo === 2 && (
+                  <PassoImovel
+                    rascunho={rascunho}
+                    atualizar={atualizar}
+                    precoAirbnb={precoAirbnb}
+                  />
+                )}
                 {passo === 3 && <PassoTamanho rascunho={rascunho} atualizar={atualizar} />}
                 {passo === 4 && (
                   <PassoDuracao rascunho={rascunho} atualizar={atualizar} precos={precos} />

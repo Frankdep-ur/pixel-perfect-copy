@@ -17,7 +17,10 @@ import {
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { HeroCarrossel } from "@/components/hero-carrossel";
-import { useSession } from "@/hooks/use-auth";
+import { useSession, usePapeis, useMeuPerfil } from "@/hooks/use-auth";
+import { proximaReservaQuery } from "@/lib/queries";
+import { HomeCliente } from "@/components/home/home-cliente";
+import { HomeClienteVazia } from "@/components/home/home-cliente-vazia";
 import { linkSuporte } from "@/lib/whatsapp";
 import { siteConfigQuery, CONFIG_PADRAO } from "@/lib/site-config";
 
@@ -77,6 +80,36 @@ function Home() {
   const { data } = useQuery(siteConfigQuery);
   const t = (data ?? CONFIG_PADRAO).textos;
   const { user } = useSession();
+  const { data: papeis } = usePapeis(user);
+  const { data: perfil } = useMeuPerfil(user);
+  const { data: reserva, isLoading: carregandoReserva } = useQuery(
+    proximaReservaQuery(user?.id),
+  );
+  const ehProfissional = (papeis ?? []).includes("profissional");
+  const nomeCliente = (perfil?.nome ?? "").split(" ")[0] || "cliente";
+
+  // Cliente logado vê o app: com faxina ativa (Estado 1) ou o painel vazio (Estado 2).
+  if (user && !ehProfissional) {
+    return (
+      <div className="flex min-h-screen flex-col bg-background">
+        <SiteHeader />
+        <main className="flex-1">
+          {carregandoReserva ? (
+            <div className="mx-auto w-full max-w-md space-y-4 px-4 py-6 md:max-w-2xl">
+              <div className="h-8 w-2/3 animate-pulse rounded-xl bg-surface" />
+              <div className="h-40 animate-pulse rounded-[20px] bg-surface" />
+              <div className="h-28 animate-pulse rounded-[20px] bg-surface" />
+            </div>
+          ) : reserva ? (
+            <HomeCliente nome={nomeCliente} reserva={reserva} />
+          ) : (
+            <HomeClienteVazia nome={nomeCliente} />
+          )}
+        </main>
+        <SiteFooter />
+      </div>
+    );
+  }
 
   return (
       <div className="flex min-h-screen flex-col bg-background">

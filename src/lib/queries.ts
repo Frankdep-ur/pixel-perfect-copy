@@ -131,3 +131,40 @@ export function profissionaisQuery(regiao: string | null) {
     },
   });
 }
+
+/** Status em que a reserva ainda está viva para o cliente. */
+export const STATUS_RESERVA_ATIVA = [
+  "aguardando_aceite",
+  "sem_profissional",
+  "solicitada",
+  "aceita",
+  "confirmada",
+  "a_caminho",
+  "em_andamento",
+  "finalizada",
+];
+
+/**
+ * Próxima reserva ativa do cliente logado (a mais próxima no tempo).
+ * Usada para decidir entre a home com faxina e a home vazia.
+ */
+export function proximaReservaQuery(userId: string | undefined) {
+  return queryOptions({
+    queryKey: ["proxima-reserva", userId],
+    enabled: !!userId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("bookings")
+        .select(
+          "*, enderecos(rua, numero, complemento, bairro, cidade, estado, cep), profissionais!bookings_profissional_id_fkey(id, cidade, nota_media, total_servicos, total_avaliacoes, anos_experiencia, profiles!profissionais_user_id_fkey(nome, foto_url))",
+        )
+        .eq("cliente_id", userId!)
+        .in("status", STATUS_RESERVA_ATIVA)
+        .order("data", { ascending: true, nullsFirst: false })
+        .order("hora", { ascending: true, nullsFirst: false })
+        .limit(1);
+      if (error) throw error;
+      return data?.[0] ?? null;
+    },
+  });
+}

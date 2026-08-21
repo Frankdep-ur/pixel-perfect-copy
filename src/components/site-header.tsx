@@ -160,7 +160,7 @@ export function SiteHeader() {
           >
             <Bell size={24} strokeWidth={1.5} />
             {!!naoLidas && naoLidas > 0 && (
-              <span className="absolute right-1.5 top-1.5 inline-flex min-w-[18px] items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold leading-[18px] text-accent-foreground">
+              <span className="absolute right-1.5 top-1.5 inline-flex min-w-[18px] items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold leading-[18px] text-destructive-foreground">
                 {naoLidas > 99 ? "99+" : naoLidas}
               </span>
             )}

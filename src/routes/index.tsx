@@ -72,38 +72,6 @@ const confianca = [
   { icon: Tag, texto: "Preço sem surpresa" },
 ];
 
-const vantagensProfissional = [
-  {
-    icon: Wallet,
-    titulo: "Receba 100% do valor da sua faxina",
-    texto:
-      "O valor informado para o serviço é o valor que você recebe. Não descontamos comissão do seu pagamento.",
-  },
-  {
-    icon: Lock,
-    titulo: "Pagamento garantido",
-    texto:
-      "Você não precisa ficar preocupada se o cliente vai pagar. Ao finalizar o serviço, basta informar no aplicativo “Faxina Finalizada” e o seu pagamento é processado conforme as condições da plataforma.",
-  },
-  {
-    icon: ShieldCheck,
-    titulo: "Trabalhe assegurada",
-    texto:
-      "Enquanto estiver realizando um serviço contratado pela Lar77, você conta com a proteção oferecida pela empresa, conforme as condições da contratação.",
-  },
-  {
-    icon: Smartphone,
-    titulo: "Tudo pelo aplicativo",
-    texto:
-      "Você recebe as oportunidades, acompanha seus serviços e, ao terminar a faxina, confirma a conclusão diretamente pelo aplicativo.",
-  },
-  {
-    icon: Gem,
-    titulo: "Valores padronizados",
-    texto:
-      "Para garantir mais transparência e igualdade, os valores dos serviços são previamente definidos pela Lar77 e seguem um padrão para todas as profissionais cadastradas.",
-  },
-];
 
 function Home() {
   const { data } = useQuery(siteConfigQuery);

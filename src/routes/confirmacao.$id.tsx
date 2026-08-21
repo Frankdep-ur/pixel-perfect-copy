@@ -235,39 +235,63 @@ function Confirmacao() {
               </div>
             )}
 
-            {/* Timeline */}
-            <div className="rounded-[24px] border border-border bg-card p-5">
-              <h2 className="flex items-center gap-2 font-display text-base font-bold">
-                <Sparkles className="size-4 text-primary" /> O que acontece agora?
-              </h2>
-              <ol className="-mx-5 mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                {etapas.map((etapa, i) => {
-                  const indiceAtual = indiceDoStatus(data.status);
-                  const jaPassou = i < indiceAtual;
-                  const atual = i === indiceAtual;
-                  const horarioReal = formatarHorarioReal(getTimestamp(data, etapa.campo));
-                  return (
-                    <li key={etapa.titulo} className="w-[92px] shrink-0 snap-start">
-                      <span
-                        className={`flex size-8 items-center justify-center rounded-full text-[13px] font-bold ${
-                          jaPassou
-                            ? "bg-success text-background"
-                            : atual
-                              ? "border-2 border-accent text-accent"
-                              : "border border-border text-muted-foreground"
-                        }`}
-                      >
-                        {jaPassou ? <CheckCircle2 className="size-4" /> : i + 1}
-                      </span>
-                      <p className="mt-2 text-[13px] font-semibold leading-snug">{etapa.titulo}</p>
-                      <p className="mt-1 text-[12px] leading-snug text-muted-foreground">
-                        {horarioReal ?? etapa.texto}
-                      </p>
-                    </li>
-                  );
-                })}
-              </ol>
-            </div>
+            {/* Timeline ou cancelamento */}
+            {(() => {
+              const indiceAtual = indiceDoStatus(data.status);
+              if (indiceAtual === -2) {
+                const cancelamento = Array.isArray(data.cancelamentos) ? data.cancelamentos[0] : null;
+                const horarioCancelamento = formatarHorarioReal(
+                  cancelamento && typeof cancelamento === "object" && "criado_em" in cancelamento
+                    ? (cancelamento as { criado_em?: string | null }).criado_em
+                    : null,
+                );
+                return (
+                  <div className="rounded-[24px] border border-destructive/40 bg-surface p-5">
+                    <h2 className="font-display text-base font-bold text-destructive">
+                      Contratação cancelada
+                    </h2>
+                    <p className="mt-1 text-[13px] text-muted-foreground">
+                      {horarioCancelamento
+                        ? `Cancelado em ${horarioCancelamento}`
+                        : "Este agendamento foi cancelado."}
+                    </p>
+                  </div>
+                );
+              }
+              return (
+                <div className="rounded-[24px] border border-border bg-card p-5">
+                  <h2 className="flex items-center gap-2 font-display text-base font-bold">
+                    <Sparkles className="size-4 text-primary" /> O que acontece agora?
+                  </h2>
+                  <ol className="-mx-5 mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                    {etapas.map((etapa, i) => {
+                      const jaPassou = i < indiceAtual;
+                      const atual = i === indiceAtual;
+                      const horarioReal = formatarHorarioReal(getTimestamp(data, etapa.campo));
+                      return (
+                        <li key={etapa.titulo} className="w-[92px] shrink-0 snap-start">
+                          <span
+                            className={`flex size-8 items-center justify-center rounded-full text-[13px] font-bold ${
+                              jaPassou
+                                ? "bg-success text-background"
+                                : atual
+                                  ? "border-2 border-accent text-accent"
+                                  : "border border-border text-muted-foreground"
+                            }`}
+                          >
+                            {jaPassou ? <CheckCircle2 className="size-4" /> : i + 1}
+                          </span>
+                          <p className="mt-2 text-[13px] font-semibold leading-snug">{etapa.titulo}</p>
+                          <p className="mt-1 text-[12px] leading-snug text-muted-foreground">
+                            {horarioReal ?? etapa.texto}
+                          </p>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </div>
+              );
+            })()}
 
             <div className="flex flex-col gap-3">
               <Button asChild className="min-h-14 w-full rounded-[24px] text-base font-bold">

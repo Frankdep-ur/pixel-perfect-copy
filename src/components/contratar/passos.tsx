@@ -124,13 +124,10 @@ export function PassoEndereco({
 
   return (
     <div className="space-y-5">
-      <div>
-        <h2 className="text-2xl font-semibold tracking-tight">Onde será a limpeza?</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Escolha um dos seus imóveis. Atendemos {REGIOES.grande_floripa.nome} e{" "}
-          {REGIOES.balneario.nome}.
-        </p>
-      </div>
+      <CabecalhoPasso
+        titulo="Onde será a limpeza?"
+        subtitulo={`Escolha um dos seus imóveis. Atendemos ${REGIOES.grande_floripa.nome} e ${REGIOES.balneario.nome}.`}
+      />
 
       {isLoading && (
         <div className="flex justify-center py-8">

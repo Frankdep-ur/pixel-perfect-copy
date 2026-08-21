@@ -219,20 +219,7 @@ export function PassoImovel({
                   ...(tipo.id === "empresa" ? {} : { faixa_metragem: null, qtd_profissionais: 1 }),
                 });
               }}
-            >
-              <span className="flex w-full items-center gap-3">
-                <Icone className="size-6 shrink-0 text-primary" strokeWidth={1.5} />
-                <span className="flex-1">
-                  <span className="block text-sm font-semibold">{tipo.label}</span>
-                  {tipo.selo && (
-                    <span className="mt-1 inline-block rounded-md border border-primary/50 px-2 py-0.5 text-[11px] font-semibold text-primary">
-                      {tipo.selo}
-                    </span>
-                  )}
-                </span>
-                <ChevronRight className="size-4 shrink-0 text-primary" />
-              </span>
-            </Cartao>
+            />
           );
         })}
       </div>

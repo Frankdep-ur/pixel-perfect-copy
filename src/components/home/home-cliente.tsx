@@ -19,7 +19,38 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BannerProtecao } from "@/components/home/banner-protecao";
 import { formatBRL, labelTipoLimpeza } from "@/lib/catalogo";
 
-type Reserva = Record<string, any>;
+export type ReservaHome = {
+  status?: string | null;
+  data?: string | null;
+  hora?: string | null;
+  duracao_horas?: number | null;
+  codigo?: string | null;
+  tipo_limpeza?: string | null;
+  valor_profissional?: number | null;
+  taxa_admin?: number | null;
+  valor_extras?: number | null;
+  valor_seguro?: number | null;
+  valor_total?: number | null;
+  aceito_em?: string | null;
+  checkin_em?: string | null;
+  iniciado_em?: string | null;
+  finalizado_em?: string | null;
+  enderecos?: {
+    rua?: string | null;
+    numero?: string | null;
+    complemento?: string | null;
+    bairro?: string | null;
+    cidade?: string | null;
+    estado?: string | null;
+    cep?: string | null;
+  } | null;
+  profissionais?: {
+    cidade?: string | null;
+    nota_media?: number | string | null;
+    total_servicos?: number | null;
+    profiles?: { nome?: string | null; foto_url?: string | null } | null;
+  } | null;
+};
 
 const ETAPAS = [
   { titulo: "Reserva confirmada", icon: CalendarDays, campo: "aceito_em", fallback: "Aguardando" },
@@ -58,15 +89,17 @@ function horarioCurto(ts: string | null | undefined): string | null {
 function faixaHorario(hora: string | null | undefined, duracao: number | null | undefined) {
   if (!hora) return "—";
   const inicio = hora.slice(0, 5);
-  const [h, m] = inicio.split(":").map(Number);
+  const partes = inicio.split(":").map(Number);
+  const h = partes[0] ?? NaN;
+  const m = partes[1] ?? 0;
   if (isNaN(h) || !duracao) return inicio;
-  const fim = `${String((h + duracao) % 24).padStart(2, "0")}:${String(m ?? 0).padStart(2, "0")}`;
+  const fim = `${String((h + duracao) % 24).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
   return `${inicio} – ${fim}`;
 }
 
 const TAGS = ["Experiente", "Pontual", "Caprichosa"];
 
-export function HomeCliente({ nome, reserva }: { nome: string; reserva: Reserva }) {
+export function HomeCliente({ nome, reserva }: { nome: string; reserva: ReservaHome }) {
   const prof = reserva.profissionais ?? null;
   const perfilProf = prof?.profiles ?? null;
   const nomeProf: string = perfilProf?.nome ?? "Profissional Lar77";
@@ -321,7 +354,7 @@ export function HomeCliente({ nome, reserva }: { nome: string; reserva: Reserva 
           {ETAPAS.map((etapa, i) => {
             const concluida = i < cumpridas;
             const atual = i === cumpridas;
-            const quando = horarioCurto(reserva[etapa.campo] as string | null);
+            const quando = horarioCurto((reserva as Record<string, unknown>)[etapa.campo] as string | null);
             return (
               <li
                 key={etapa.titulo}

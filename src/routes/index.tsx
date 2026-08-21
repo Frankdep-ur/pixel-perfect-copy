@@ -90,38 +90,32 @@ function Home() {
           </div>
         </section>
 
-        {/* Como funciona — faixa horizontal de passos */}
+        {/* Como funciona — grade de passos */}
         <section id="como-funciona" className="py-8">
-          <div className="mx-auto w-full max-w-md md:max-w-2xl">
-            <h2 className="px-4 font-display text-[18px] font-semibold text-accent">
+          <div className="mx-auto w-full max-w-md px-4 md:max-w-2xl">
+            <h2 className="font-display text-[18px] font-semibold text-accent">
               {t.como_titulo}
             </h2>
-            <ol className="no-scrollbar mt-5 flex snap-x snap-mandatory items-start gap-3 overflow-x-auto scroll-pl-6 pb-1 pl-6 pr-6">
+            <ol className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
               {comoFunciona.map((passo, i) => (
-                <li key={passo.titulo} className="flex shrink-0 items-start gap-3 snap-start">
-                  <div className="w-[148px]">
-                    <div className="relative">
-                      <span className="flex size-16 items-center justify-center rounded-[14px] bg-surface-tint">
-                        <passo.icon size={28} strokeWidth={1.5} className="text-accent" aria-hidden />
-                      </span>
-                      <span className="absolute -left-2 -top-2 flex size-[22px] items-center justify-center rounded-full border border-accent bg-background text-[12px] font-semibold text-accent">
-                        {i + 1}
-                      </span>
-                    </div>
-                    <h3 className="mt-3 font-display text-[14px] font-semibold leading-snug text-foreground line-clamp-2">
-                      {passo.titulo}
-                    </h3>
-                    <p className="mt-1 text-[12px] leading-snug text-muted-foreground line-clamp-3">
-                      {passo.descricao}
-                    </p>
+                <li
+                  key={passo.titulo}
+                  className="rounded-[14px] border border-border bg-surface p-3"
+                >
+                  <div className="relative inline-flex">
+                    <span className="flex size-[52px] items-center justify-center rounded-xl bg-surface-tint">
+                      <passo.icon size={26} strokeWidth={1.5} className="text-accent" aria-hidden />
+                    </span>
+                    <span className="absolute -left-2 -top-2 flex size-[22px] items-center justify-center rounded-full border border-accent bg-background text-[12px] font-semibold text-accent">
+                      {i + 1}
+                    </span>
                   </div>
-                  {i < comoFunciona.length - 1 && (
-                    <ChevronRight
-                      size={16}
-                      className="mt-6 shrink-0 text-accent opacity-50"
-                      aria-hidden
-                    />
-                  )}
+                  <h3 className="mt-3 font-display text-[14px] font-semibold leading-snug text-foreground">
+                    {passo.titulo}
+                  </h3>
+                  <p className="mt-1 text-[12px] leading-snug text-muted-foreground">
+                    {passo.descricao}
+                  </p>
                 </li>
               ))}
             </ol>

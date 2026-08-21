@@ -46,19 +46,29 @@ export function SiteHeader() {
           aria-label={open ? "Fechar menu" : "Abrir menu"}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
-          className="inline-flex size-11 items-center justify-center rounded-2xl text-primary transition-transform duration-200 ease-out active:scale-[0.96] md:hidden"
+          className="inline-flex size-11 items-center justify-center rounded-2xl text-accent transition-transform duration-200 ease-out active:scale-[0.96] md:hidden"
         >
-          {open ? <X strokeWidth={1.75} /> : <Menu strokeWidth={1.75} />}
+          {open ? <X size={24} strokeWidth={1.75} /> : <Menu size={24} strokeWidth={1.75} />}
         </button>
 
         <Link
           to="/"
           onClick={() => setOpen(false)}
-          className="mx-auto flex items-center gap-2 transition-transform duration-200 ease-out active:scale-[0.98] md:mx-0"
+          className="mx-auto flex h-11 flex-col items-center justify-center transition-transform duration-200 ease-out active:scale-[0.98] md:mx-0"
         >
-          <img src={logoLar77.url} alt="Lar77 — diaristas de confiança" className="h-8 w-auto md:h-10" />
-          <span className="sr-only">Lar77</span>
+          <img
+            src={logoLar77.url}
+            alt="Lar77 — diaristas de confiança"
+            className="h-[30px] w-auto md:h-9"
+          />
+          <span
+            className="mt-0.5 text-[8px] font-semibold uppercase leading-none text-accent"
+            style={{ letterSpacing: "0.28em" }}
+          >
+            Diaristas de confiança
+          </span>
         </Link>
+
 
 
         <nav className="hidden items-center gap-8 md:flex">

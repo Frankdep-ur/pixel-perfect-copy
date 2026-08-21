@@ -82,7 +82,7 @@ function Home() {
       <div className="flex min-h-screen flex-col bg-background">
       <SiteHeader />
 
-      <main className="flex-1">
+      <main>
         {/* Hero */}
         <section className="pt-4">
           <div className="mx-auto w-full max-w-md md:max-w-2xl">

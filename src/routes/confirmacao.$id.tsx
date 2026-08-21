@@ -242,7 +242,7 @@ function Confirmacao() {
                   const indiceAtual = indiceDoStatus(data.status);
                   const jaPassou = i < indiceAtual;
                   const atual = i === indiceAtual;
-                  const horarioReal = formatarHorarioReal((data as Record<string, string | null>)[etapa.campo]);
+                  const horarioReal = formatarHorarioReal(getTimestamp(data, etapa.campo));
                   return (
                     <li key={etapa.titulo} className="w-[92px] shrink-0 snap-start">
                       <span

@@ -103,126 +103,132 @@ function Home() {
 
       <main className="flex-1">
         {/* Hero */}
-        <section className="px-4 pt-4 md:px-5 md:pt-8">
-          <div className="mx-auto w-full max-w-md md:max-w-5xl">
-            <div className="relative overflow-hidden rounded-[28px] border border-border">
-              <HeroCarrossel />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-6">
-                <h1
-                  className="max-w-md leading-tight text-foreground"
-                  style={{ fontSize: "clamp(26px, 6.5vw, 44px)" }}
-                >
-                  {t.slogan}
-                </h1>
-                <a
-                  href="#como-funciona"
-                  className="mt-4 inline-flex min-h-11 items-center gap-1 rounded-full bg-primary px-5 text-sm font-bold text-primary-foreground transition-all duration-200 ease-out active:scale-[0.97]"
-                >
-                  Saiba mais <ChevronRight className="size-4" />
-                </a>
-              </div>
-            </div>
+        <section className="pt-4">
+          <div className="mx-auto w-full max-w-md md:max-w-2xl">
+            <HeroCarrossel tituloPadrao={t.slogan} subtituloPadrao={t.como_subtitulo} />
           </div>
         </section>
 
-        {/* Como funciona — 4 passos em ícones */}
-        <section id="como-funciona" className="px-4 py-10 md:px-5">
-          <div className="mx-auto w-full max-w-md md:max-w-5xl">
-            <h2 className="text-center text-xl text-foreground md:text-2xl">{t.como_titulo}</h2>
-            <ol className="mt-6 grid grid-cols-4 gap-1">
+        {/* Como funciona — faixa horizontal de passos */}
+        <section id="como-funciona" className="py-8">
+          <div className="mx-auto w-full max-w-md md:max-w-2xl">
+            <h2 className="px-4 font-display text-[18px] font-semibold text-accent">
+              {t.como_titulo}
+            </h2>
+            <ol className="no-scrollbar mt-4 flex snap-x snap-mandatory items-start gap-3 overflow-x-auto px-4">
               {comoFunciona.map((passo, i) => (
-                <li key={passo.titulo} className="relative flex flex-col items-center text-center">
-                  <span className="flex size-14 items-center justify-center rounded-full border border-primary/40 bg-primary/10">
-                    <passo.icon strokeWidth={1.6} className="size-6 text-primary" aria-hidden />
-                  </span>
-                  <span className="mt-2 text-[11px] font-medium leading-tight text-muted-foreground">
-                    {passo.titulo}
-                  </span>
+                <li key={passo.titulo} className="flex shrink-0 items-start gap-3 snap-start">
+                  <div className="w-[148px]">
+                    <div className="relative">
+                      <span className="flex size-16 items-center justify-center rounded-[14px] bg-surface-tint">
+                        <passo.icon size={28} strokeWidth={1.5} className="text-accent" aria-hidden />
+                      </span>
+                      <span className="absolute -left-2 -top-2 flex size-[22px] items-center justify-center rounded-full border border-accent bg-background text-[12px] font-semibold text-accent">
+                        {i + 1}
+                      </span>
+                    </div>
+                    <h3 className="mt-3 font-display text-[14px] font-semibold leading-snug text-foreground line-clamp-2">
+                      {passo.titulo}
+                    </h3>
+                    <p className="mt-1 text-[12px] leading-snug text-muted-foreground line-clamp-3">
+                      {passo.descricao}
+                    </p>
+                  </div>
                   {i < comoFunciona.length - 1 && (
                     <ChevronRight
-                      className="absolute -right-2 top-4 size-4 text-primary/50"
+                      size={16}
+                      className="mt-6 shrink-0 text-accent opacity-50"
                       aria-hidden
                     />
                   )}
                 </li>
               ))}
             </ol>
-            <p className="mt-6 text-center text-sm text-muted-foreground">{t.como_subtitulo}</p>
           </div>
         </section>
 
         {/* Ações principais */}
-        <section className="px-4 pb-4 md:px-5">
-          <div className="mx-auto grid w-full max-w-md gap-3 md:max-w-5xl md:grid-cols-3">
+        <section className="px-4 pb-4">
+          <div className="mx-auto flex w-full max-w-md flex-col gap-3 md:max-w-2xl">
             <Link
               to="/contratar"
-              className="flex items-center gap-4 rounded-[24px] bg-primary p-5 text-primary-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+              className="flex h-[76px] items-center gap-4 rounded-[14px] bg-accent px-4 transition-transform duration-200 ease-out active:scale-[0.98]"
+              style={{ color: "#04162F" }}
             >
-              <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary-foreground/10">
-                <Sprout strokeWidth={1.6} className="size-6" aria-hidden />
-              </span>
+              <Sprout size={28} strokeWidth={1.6} aria-hidden className="shrink-0" />
               <span className="min-w-0 flex-1">
-                <span className="block font-display text-lg font-bold">
+                <span className="block font-display text-[19px] font-bold leading-tight">
                   {t.hero_botao_cliente}
                 </span>
-                <span className="block text-sm opacity-80">Preço na hora, sem surpresa</span>
+                <span className="block text-[13px] opacity-80">Preço na hora, sem surpresa</span>
               </span>
-              <ChevronRight className="size-5 shrink-0" aria-hidden />
+              <ChevronRight size={20} className="shrink-0" aria-hidden />
             </Link>
 
             <Link
               to="/seja-profissional"
-              className="flex items-center gap-4 rounded-[24px] border border-primary/50 bg-card p-5 text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+              className="flex h-[76px] items-center gap-4 rounded-[14px] border border-accent bg-transparent px-4 transition-transform duration-200 ease-out active:scale-[0.98]"
             >
-              <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
-                <Sparkles strokeWidth={1.6} className="size-6 text-primary" aria-hidden />
-              </span>
+              <Sparkles size={28} strokeWidth={1.6} className="shrink-0 text-accent" aria-hidden />
               <span className="min-w-0 flex-1">
-                <span className="block font-display text-lg font-bold">
+                <span className="block font-display text-[19px] font-bold leading-tight text-accent">
                   {t.hero_botao_profissional}
                 </span>
-                <span className="block text-sm text-muted-foreground">
+                <span className="block text-[13px] text-muted-foreground">
                   Trabalhe como diarista Lar77
                 </span>
               </span>
-              <ChevronRight className="size-5 shrink-0 text-primary" aria-hidden />
+              <ChevronRight size={20} className="shrink-0 text-accent" aria-hidden />
             </Link>
 
             <a
               href={linkSuporte()}
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-4 rounded-[24px] border border-border bg-card p-5 text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+              className="flex h-[76px] items-center gap-4 rounded-[14px] bg-surface px-4 transition-transform duration-200 ease-out active:scale-[0.98]"
             >
-              <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-muted">
-                <LifeBuoy strokeWidth={1.6} className="size-6 text-primary" aria-hidden />
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-full border border-accent">
+                <LifeBuoy size={22} strokeWidth={1.6} className="text-accent" aria-hidden />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block font-display text-lg font-bold">Suporte</span>
-                <span className="block text-sm text-muted-foreground">
+                <span className="block font-display text-[19px] font-bold leading-tight text-foreground">
+                  Suporte
+                </span>
+                <span className="block text-[13px] text-muted-foreground">
                   Fale com a nossa equipe
                 </span>
               </span>
-              <ChevronRight className="size-5 shrink-0 text-muted-foreground" aria-hidden />
+              <ChevronRight size={20} className="shrink-0 text-muted-foreground" aria-hidden />
             </a>
           </div>
         </section>
 
         {/* Entrar / Criar conta */}
         {!user && (
-          <section className="px-4 pb-8 md:px-5">
-            <div className="mx-auto w-full max-w-md md:max-w-5xl">
+          <section className="px-4 pb-8">
+            <div className="mx-auto w-full max-w-md md:max-w-2xl">
               <Link
                 to="/entrar"
                 search={{ next: undefined }}
-                className="flex min-h-14 w-full items-center justify-center rounded-[24px] bg-primary text-base font-bold text-primary-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+                className="flex h-[52px] w-full items-center justify-center rounded-xl bg-accent text-base font-bold transition-transform duration-200 ease-out active:scale-[0.98]"
+                style={{ color: "#04162F" }}
               >
                 Entrar / Criar conta
               </Link>
+              <p className="mt-3 text-center text-[13px] text-muted-foreground">
+                Já tem uma conta?{" "}
+                <Link
+                  to="/entrar"
+                  search={{ next: undefined }}
+                  className="text-accent underline"
+                >
+                  Faça seu login
+                </Link>
+              </p>
             </div>
           </section>
         )}
+
 
         {/* Faixa de confiança */}
         <section className="border-y border-border bg-card px-4 py-5 md:px-5">

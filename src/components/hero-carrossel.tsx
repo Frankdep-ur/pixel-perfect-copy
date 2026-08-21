@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
 
 import { SLIDES_PADRAO, slidesQuery } from "@/lib/home-slides";
 

@@ -39,11 +39,34 @@ export const Route = createFileRoute("/confirmacao/$id")({
 });
 
 const etapas = [
-  { titulo: "Reserva confirmada", texto: "Pagamento aprovado e profissional reservada." },
-  { titulo: "Profissional a caminho", texto: "Você recebe um aviso quando ela sair." },
-  { titulo: "Faxina em andamento", texto: "Acompanhe o serviço pelo chat do pedido." },
-  { titulo: "Serviço concluído", texto: "Confirme a conclusão e avalie a profissional." },
-];
+  { titulo: "Reserva confirmada", texto: "Pagamento aprovado e profissional reservada.", campo: "aceito_em" },
+  { titulo: "Profissional a caminho", texto: "Você recebe um aviso quando ela sair.", campo: "checkin_em" },
+  { titulo: "Faxina em andamento", texto: "Acompanhe o serviço pelo chat do pedido.", campo: "iniciado_em" },
+  { titulo: "Serviço concluído", texto: "Confirme a conclusão e avalie a profissional.", campo: "finalizado_em" },
+] as const;
+
+function indiceDoStatus(status: string | null | undefined): number {
+  if (!status) return -1;
+  if (status === "aceita" || status === "confirmada") return 0;
+  if (status === "a_caminho") return 1;
+  if (status === "em_andamento") return 2;
+  if (status === "finalizada" || status === "concluida") return 3;
+  return -1;
+}
+
+function formatarHorarioReal(ts: string | null | undefined): string | null {
+  if (!ts) return null;
+  const d = new Date(ts);
+  if (isNaN(d.getTime())) return null;
+  return d
+    .toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+    .replace(",", "");
+}
 
 function Confirmacao() {
   const { id } = Route.useParams();

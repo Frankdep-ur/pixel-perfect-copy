@@ -22,6 +22,7 @@ import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as ProfissionalRouteImport } from './routes/profissional'
 import { Route as SejaProfissionalRouteImport } from './routes/seja-profissional'
 import { Route as TermosRouteImport } from './routes/termos'
+import { Route as TrabalheConoscoRouteImport } from './routes/trabalhe-conosco'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminAvaliacoesRouteImport } from './routes/admin.avaliacoes'
 import { Route as AdminCancelamentosRouteImport } from './routes/admin.cancelamentos'
@@ -104,6 +105,11 @@ const SejaProfissionalRoute = SejaProfissionalRouteImport.update({
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
   path: '/termos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrabalheConoscoRoute = TrabalheConoscoRouteImport.update({
+  id: '/trabalhe-conosco',
+  path: '/trabalhe-conosco',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -211,6 +217,7 @@ export interface FileRoutesByFullPath {
   '/profissional': typeof ProfissionalRoute
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
+  '/trabalhe-conosco': typeof TrabalheConoscoRoute
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
   '/admin/cancelamentos': typeof AdminCancelamentosRoute
   '/admin/carrossel': typeof AdminCarrosselRoute
@@ -243,6 +250,7 @@ export interface FileRoutesByTo {
   '/profissional': typeof ProfissionalRoute
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
+  '/trabalhe-conosco': typeof TrabalheConoscoRoute
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
   '/admin/cancelamentos': typeof AdminCancelamentosRoute
   '/admin/carrossel': typeof AdminCarrosselRoute
@@ -277,6 +285,7 @@ export interface FileRoutesById {
   '/profissional': typeof ProfissionalRoute
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
+  '/trabalhe-conosco': typeof TrabalheConoscoRoute
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
   '/admin/cancelamentos': typeof AdminCancelamentosRoute
   '/admin/carrossel': typeof AdminCarrosselRoute
@@ -312,6 +321,7 @@ export interface FileRouteTypes {
     | '/profissional'
     | '/seja-profissional'
     | '/termos'
+    | '/trabalhe-conosco'
     | '/admin/avaliacoes'
     | '/admin/cancelamentos'
     | '/admin/carrossel'
@@ -344,6 +354,7 @@ export interface FileRouteTypes {
     | '/profissional'
     | '/seja-profissional'
     | '/termos'
+    | '/trabalhe-conosco'
     | '/admin/avaliacoes'
     | '/admin/cancelamentos'
     | '/admin/carrossel'
@@ -377,6 +388,7 @@ export interface FileRouteTypes {
     | '/profissional'
     | '/seja-profissional'
     | '/termos'
+    | '/trabalhe-conosco'
     | '/admin/avaliacoes'
     | '/admin/cancelamentos'
     | '/admin/carrossel'
@@ -411,6 +423,7 @@ export interface RootRouteChildren {
   ProfissionalRoute: typeof ProfissionalRoute
   SejaProfissionalRoute: typeof SejaProfissionalRoute
   TermosRoute: typeof TermosRoute
+  TrabalheConoscoRoute: typeof TrabalheConoscoRoute
   AdminLoginRoute: typeof AdminLoginRoute
   ConfirmacaoIdRoute: typeof ConfirmacaoIdRoute
   OportunidadeTokenRoute: typeof OportunidadeTokenRoute
@@ -510,6 +523,13 @@ declare module '@tanstack/react-router' {
       path: '/termos'
       fullPath: '/termos'
       preLoaderRoute: typeof TermosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trabalhe-conosco': {
+      id: '/trabalhe-conosco'
+      path: '/trabalhe-conosco'
+      fullPath: '/trabalhe-conosco'
+      preLoaderRoute: typeof TrabalheConoscoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -687,6 +707,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfissionalRoute: ProfissionalRoute,
   SejaProfissionalRoute: SejaProfissionalRoute,
   TermosRoute: TermosRoute,
+  TrabalheConoscoRoute: TrabalheConoscoRoute,
   AdminLoginRoute: AdminLoginRoute,
   ConfirmacaoIdRoute: ConfirmacaoIdRoute,
   OportunidadeTokenRoute: OportunidadeTokenRoute,

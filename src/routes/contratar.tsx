@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
+import { TopoFunil } from "@/components/contratar/ui-funil";
 import {
   PassoDataHora,
   PassoDuracao,
@@ -160,6 +160,10 @@ function Contratar() {
   const total = sequencia.length;
   const ultimo = indice === total - 1;
 
+  /** As 8 etapas viram 4 bolinhas: local, serviço, detalhes e profissional. */
+  const grupoAtual =
+    fase === "passos" ? (passo <= 2 ? 1 : passo <= 6 ? 2 : 3) : fase === "busca" ? 4 : 4;
+
   const podeAvancar = (() => {
     switch (passo) {
       case 1:
@@ -230,19 +234,13 @@ function Contratar() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <SiteHeader />
-      <main className="mx-auto w-full max-w-md flex-1 px-4 py-6 lg:max-w-6xl lg:py-8">
-        {fase === "passos" && (
-          <div className="mb-7">
-            <div className="mb-2 flex items-center justify-between text-xs font-medium text-muted-foreground">
-              <span>
-                Passo {indice + 1} de {total}
-              </span>
-              <span className="text-primary">{Math.round(((indice + 1) / total) * 100)}%</span>
-            </div>
-            <Progress value={((indice + 1) / total) * 100} className="h-2" />
-          </div>
-        )}
+      <main className="mx-auto w-full max-w-md flex-1 px-4 pb-6 lg:max-w-6xl">
+        {/* Sem logo no funil: o espaço vertical fica para as opções. */}
+        <TopoFunil
+          grupoAtual={grupoAtual}
+          onVoltar={voltar}
+          podeVoltar={fase !== "passos" || indice > 0}
+        />
 
         <div className="grid gap-8 lg:grid-cols-[1fr_20rem]">
 

@@ -46,12 +46,13 @@ const etapas = [
 ] as const;
 
 function indiceDoStatus(status: string | null | undefined): number {
-  if (!status) return -1;
-  if (status === "aceita" || status === "confirmada") return 0;
-  if (status === "a_caminho") return 1;
-  if (status === "em_andamento") return 2;
-  if (status === "finalizada" || status === "concluida") return 3;
-  return -1;
+  if (!status) return 0;
+  if (status === "cancelada") return -2;
+  if (status === "aceita" || status === "confirmada") return 1;
+  if (status === "a_caminho") return 2;
+  if (status === "em_andamento") return 3;
+  if (status === "finalizada" || status === "concluida") return 4;
+  return 0;
 }
 
 function formatarHorarioReal(ts: string | null | undefined): string | null {
@@ -59,12 +60,14 @@ function formatarHorarioReal(ts: string | null | undefined): string | null {
   const d = new Date(ts);
   if (isNaN(d.getTime())) return null;
   return d
-    .toLocaleDateString("pt-BR", {
+    .toLocaleString("pt-BR", {
       day: "2-digit",
       month: "2-digit",
       hour: "2-digit",
       minute: "2-digit",
+      hour12: false,
     })
+    .replace("/", "/")
     .replace(",", "");
 }
 

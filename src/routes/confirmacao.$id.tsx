@@ -230,24 +230,28 @@ function Confirmacao() {
               <h2 className="flex items-center gap-2 font-display text-base font-bold">
                 <Sparkles className="size-4 text-primary" /> O que acontece agora?
               </h2>
-              {/* Só a etapa já cumprida fica verde: as futuras seguem neutras. */}
               <ol className="-mx-5 mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {etapas.map((etapa, i) => {
-                  const concluida = i === 0;
+                  const indiceAtual = indiceDoStatus(data.status);
+                  const jaPassou = i < indiceAtual;
+                  const atual = i === indiceAtual;
+                  const horarioReal = formatarHorarioReal((data as Record<string, string | null>)[etapa.campo]);
                   return (
                     <li key={etapa.titulo} className="w-[92px] shrink-0 snap-start">
                       <span
                         className={`flex size-8 items-center justify-center rounded-full text-[13px] font-bold ${
-                          concluida
+                          jaPassou
                             ? "bg-success text-background"
-                            : "border border-border text-muted-foreground"
+                            : atual
+                              ? "border-2 border-accent text-accent"
+                              : "border border-border text-muted-foreground"
                         }`}
                       >
-                        {concluida ? <CheckCircle2 className="size-4" /> : i + 1}
+                        {jaPassou ? <CheckCircle2 className="size-4" /> : i + 1}
                       </span>
                       <p className="mt-2 text-[13px] font-semibold leading-snug">{etapa.titulo}</p>
                       <p className="mt-1 text-[12px] leading-snug text-muted-foreground">
-                        {etapa.texto}
+                        {horarioReal ?? etapa.texto}
                       </p>
                     </li>
                   );

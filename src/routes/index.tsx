@@ -47,10 +47,26 @@ export const Route = createFileRoute("/")({
 });
 
 const comoFunciona = [
-  { icon: Search, titulo: "Escolha o serviço" },
-  { icon: CalendarClock, titulo: "Data e horário" },
-  { icon: UserRound, titulo: "Profissional ideal" },
-  { icon: ShieldCheck, titulo: "Faxina segura" },
+  {
+    icon: Search,
+    titulo: "Escolha o serviço",
+    descricao: "Diga o tipo de imóvel e o serviço que você precisa.",
+  },
+  {
+    icon: CalendarClock,
+    titulo: "Data e horário",
+    descricao: "Escolha o dia e a duração da faxina com preço na hora.",
+  },
+  {
+    icon: UserRound,
+    titulo: "Profissional ideal",
+    descricao: "Chamamos as diaristas verificadas mais próximas de você.",
+  },
+  {
+    icon: ShieldCheck,
+    titulo: "Faxina segura",
+    descricao: "Pagamento protegido e acompanhamento pelo aplicativo.",
+  },
 ];
 
 const confianca = [

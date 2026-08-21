@@ -55,6 +55,10 @@ const LABELS: Record<string, string> = {
   metragem_101_200: "101 a 200 m² (R$)",
   metragem_201_300: "201 a 300 m² (R$)",
   metragem_mais_301: "+ de 301 m² (R$)",
+
+  airbnb_preco_fixo: "Preço fixo da limpeza de checkout (R$)",
+  airbnb_duracao_horas: "Duração estimada (horas)",
+  airbnb_min_fotos: "Mínimo de fotos obrigatórias",
 };
 
 const COMERCIAL_COMODOS = [
@@ -117,6 +121,11 @@ const ABAS: { id: string; titulo: string; chaves: string[] }[] = [
     id: "empresa",
     titulo: "Empresa",
     chaves: [...COMERCIAL_COMODOS, ...COMERCIAL_PESSOAS, ...METRAGEM, ...COMERCIAL_MULT],
+  },
+  {
+    id: "airbnb",
+    titulo: "Airbnb",
+    chaves: ["airbnb_preco_fixo", "airbnb_duracao_horas", "airbnb_min_fotos"],
   },
 ];
 

@@ -122,6 +122,11 @@ const ABAS: { id: string; titulo: string; chaves: string[] }[] = [
     titulo: "Empresa",
     chaves: [...COMERCIAL_COMODOS, ...COMERCIAL_PESSOAS, ...METRAGEM, ...COMERCIAL_MULT],
   },
+  {
+    id: "airbnb",
+    titulo: "Airbnb",
+    chaves: ["airbnb_preco_fixo", "airbnb_duracao_horas", "airbnb_min_fotos"],
+  },
 ];
 
 function AdminPrecos() {

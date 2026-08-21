@@ -87,7 +87,7 @@ function Confirmacao() {
       const { data: booking, error } = await supabase
         .from("bookings")
         .select(
-          "*, enderecos(rua, numero, bairro, cidade), profissionais!bookings_profissional_id_fkey(user_id, profiles!profissionais_user_id_fkey(nome))",
+          "*, enderecos(rua, numero, bairro, cidade), profissionais!bookings_profissional_id_fkey(user_id, profiles!profissionais_user_id_fkey(nome)), cancelamentos(criado_em)",
         )
         .eq("id", id)
         .maybeSingle();

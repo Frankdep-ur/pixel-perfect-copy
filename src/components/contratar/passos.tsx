@@ -121,13 +121,16 @@ export function PassoEndereco({
 
   const lista = enderecos ?? [];
   const semImoveis = !isLoading && lista.length === 0;
+  const rotulo = labelTipoImovel(rascunho.tipo_imovel);
+  const titulo = rotulo ? `Endereço d${rotulo === "Airbnb" ? "o" : "a/o"} ${rotulo}`.replace("a/o ", "") : "Onde será a limpeza?";
 
   return (
     <div className="space-y-5">
       <CabecalhoPasso
-        titulo="Onde será a limpeza?"
+        titulo={rotulo ? `Endereço — ${rotulo}` : titulo}
         subtitulo={`Escolha um dos seus imóveis. Atendemos ${REGIOES.grande_floripa.nome} e ${REGIOES.balneario.nome}.`}
       />
+
 
       {isLoading && (
         <div className="flex justify-center py-8">

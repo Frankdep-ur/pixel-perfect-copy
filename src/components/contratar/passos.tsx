@@ -55,8 +55,8 @@ function Cartao({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex w-full flex-col items-start gap-1 rounded-xl border-2 bg-card p-4 text-left transition-all hover:border-primary/60",
-        ativo ? "border-primary bg-primary/5" : "border-border",
+        "flex w-full flex-col items-start gap-1 rounded-[14px] border bg-surface p-4 text-left transition-colors duration-200 ease-out active:scale-[0.99]",
+        ativo ? "border-accent bg-surface-tint" : "border-transparent",
       )}
     >
       {children}

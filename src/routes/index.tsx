@@ -131,7 +131,7 @@ function Home() {
             <h2 className="px-4 font-display text-[18px] font-semibold text-accent">
               {t.como_titulo}
             </h2>
-            <ol className="no-scrollbar mt-5 flex snap-x snap-mandatory items-start gap-3 overflow-x-auto pb-1 pl-6 pr-4">
+            <ol className="no-scrollbar mt-5 flex snap-x snap-mandatory items-start gap-3 overflow-x-auto scroll-pl-6 pb-1 pl-6 pr-4">
               {comoFunciona.map((passo, i) => (
                 <li key={passo.titulo} className="flex shrink-0 items-start gap-3 snap-start">
                   <div className="w-[148px]">

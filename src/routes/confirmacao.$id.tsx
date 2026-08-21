@@ -91,9 +91,14 @@ function Confirmacao() {
         {data && (
           <div className="space-y-5">
             <div>
-              <CheckCircle2 className="size-12 text-primary" />
-              <h1 className="mt-4 text-3xl leading-tight tracking-tight">
-                Sua faxina está confirmada.
+              <span
+                className="inline-block rounded-full px-3 py-1 text-[12px] font-semibold text-success"
+                style={{ backgroundColor: "rgba(61,214,140,0.15)" }}
+              >
+                Confirmado
+              </span>
+              <h1 className="mt-3 text-3xl leading-tight tracking-tight">
+                Sua faxina está confirmada!
               </h1>
               <p className="mt-2 text-sm text-muted-foreground">
                 Limpeza {labelTipoLimpeza(data.tipo_limpeza)} · {data.duracao_horas} horas
@@ -147,28 +152,28 @@ function Confirmacao() {
             {/* Detalhes da faxina */}
             <div className="rounded-[24px] border border-border bg-card p-5">
               <h2 className="font-display text-base font-bold">Detalhes da faxina</h2>
-              <dl className="mt-4 space-y-2 text-sm">
+              <dl className="mt-4 space-y-2 text-[13px]">
                 <div className="flex justify-between">
                   <dt className="text-muted-foreground">Valor do serviço</dt>
-                  <dd>{formatBRL(Number(data.valor_profissional ?? 0))}</dd>
+                  <dd className="text-foreground">{formatBRL(Number(data.valor_profissional ?? 0))}</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-muted-foreground">Taxa administrativa</dt>
-                  <dd>{formatBRL(Number(data.taxa_admin ?? 0))}</dd>
+                  <dd className="text-foreground">{formatBRL(Number(data.taxa_admin ?? 0))}</dd>
                 </div>
                 {Number(data.valor_extras ?? 0) > 0 && (
                   <div className="flex justify-between">
                     <dt className="text-muted-foreground">Extras</dt>
-                    <dd>{formatBRL(Number(data.valor_extras))}</dd>
+                    <dd className="text-foreground">{formatBRL(Number(data.valor_extras))}</dd>
                   </div>
                 )}
                 <div className="flex justify-between">
                   <dt className="text-muted-foreground">Seguro</dt>
-                  <dd>{formatBRL(Number(data.valor_seguro ?? 0))}</dd>
+                  <dd className="text-foreground">{formatBRL(Number(data.valor_seguro ?? 0))}</dd>
                 </div>
                 <div className="mt-3 flex items-baseline justify-between border-t border-border pt-3">
-                  <dt className="font-semibold">Total pago</dt>
-                  <dd className="font-display text-2xl font-bold text-primary">
+                  <dt className="text-[15px] font-semibold text-foreground">Total pago</dt>
+                  <dd className="font-display text-[20px] font-bold text-accent">
                     {formatBRL(Number(data.valor_total))}
                   </dd>
                 </div>
@@ -202,27 +207,25 @@ function Confirmacao() {
               <h2 className="flex items-center gap-2 font-display text-base font-bold">
                 <Sparkles className="size-4 text-primary" /> O que acontece agora?
               </h2>
-              <ol className="mt-5 space-y-5">
+              {/* Só a etapa já cumprida fica verde: as futuras seguem neutras. */}
+              <ol className="-mx-5 mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {etapas.map((etapa, i) => {
                   const concluida = i === 0;
                   return (
-                    <li key={etapa.titulo} className="relative flex gap-4">
-                      {i < etapas.length - 1 && (
-                        <span className="absolute left-[19px] top-10 h-full w-px bg-border" />
-                      )}
+                    <li key={etapa.titulo} className="w-[92px] shrink-0 snap-start">
                       <span
-                        className={`z-10 flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
+                        className={`flex size-8 items-center justify-center rounded-full text-[13px] font-bold ${
                           concluida
-                            ? "bg-primary text-primary-foreground"
-                            : "border border-border bg-muted text-muted-foreground"
+                            ? "bg-success text-background"
+                            : "border border-border text-muted-foreground"
                         }`}
                       >
-                        {concluida ? <CheckCircle2 className="size-5" /> : i + 1}
+                        {concluida ? <CheckCircle2 className="size-4" /> : i + 1}
                       </span>
-                      <div className="min-w-0 flex-1 pt-1">
-                        <p className="font-semibold">{etapa.titulo}</p>
-                        <p className="text-sm text-muted-foreground">{etapa.texto}</p>
-                      </div>
+                      <p className="mt-2 text-[13px] font-semibold leading-snug">{etapa.titulo}</p>
+                      <p className="mt-1 text-[12px] leading-snug text-muted-foreground">
+                        {etapa.texto}
+                      </p>
                     </li>
                   );
                 })}

@@ -303,12 +303,10 @@ function Contador({
 function TamanhoResidencial({ rascunho, atualizar }: Props) {
   return (
     <div className="space-y-5">
-      <div>
-        <h2 className="text-2xl font-semibold tracking-tight">Como é o imóvel?</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Quartos, banheiros e cozinhas influenciam o valor final.
-        </p>
-      </div>
+      <CabecalhoPasso
+        titulo="Como é o imóvel?"
+        subtitulo="Quartos, banheiros e cozinhas influenciam o valor final."
+      />
       <div className="grid gap-3 sm:grid-cols-2">
         <Contador
           label="Quartos"
@@ -370,14 +368,10 @@ function TamanhoComercial({ rascunho, atualizar }: Props) {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h2 className="text-2xl font-semibold tracking-tight">
-          Como é o {empresa ? "espaço da empresa" : "escritório"}?
-        </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Cada ambiente e o volume de pessoas ajustam o valor do serviço.
-        </p>
-      </div>
+      <CabecalhoPasso
+        titulo={`Como é o ${empresa ? "espaço da empresa" : "escritório"}?`}
+        subtitulo="Cada ambiente e o volume de pessoas ajustam o valor do serviço."
+      />
 
       <div className="grid gap-3 sm:grid-cols-2">
         <Contador
@@ -500,35 +494,21 @@ export function PassoDuracao({
 }: Props & { precos: Record<string, number> }) {
   return (
     <div className="space-y-5">
-      <div>
-        <h2 className="text-2xl font-semibold tracking-tight">
-          Quantas horas de serviço você precisa?
-        </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Na dúvida, 6 horas atende a maioria dos imóveis.
-        </p>
-      </div>
-      <div className="grid gap-3 sm:grid-cols-3">
+      <CabecalhoPasso
+        titulo="Qual tipo de serviço?"
+        subtitulo="Na dúvida, 6 horas atende a maioria dos imóveis."
+      />
+      <div className="grid gap-2.5">
         {DURACOES.map((duracao) => (
-          <Cartao
+          <CardDuracao
             key={duracao.horas}
+            nome={duracao.nivel}
+            horas={duracao.label}
+            descricao={duracao.descricao}
+            valor={formatBRL(precos[`preco_${duracao.horas}h`] ?? 0)}
             ativo={rascunho.duracao_horas === duracao.horas}
             onClick={() => atualizar({ duracao_horas: duracao.horas })}
-          >
-            <span className="inline-flex items-center gap-2">
-              <span className="text-lg font-semibold">{duracao.label}</span>
-              <span className="rounded-full bg-accent/12 px-2 py-0.5 text-xs font-semibold text-primary">
-                {duracao.nivel}
-              </span>
-              <InfoDescricao titulo={duracao.label} descricao={duracao.descricao} />
-            </span>
-            <span className="mt-1 text-sm font-medium text-primary">
-              a partir de {formatBRL(precos[`preco_${duracao.horas}h`] ?? 0)}
-            </span>
-            <span className="text-xs text-muted-foreground">
-              Início: {horariosPermitidos(duracao.horas).join(" · ")}
-            </span>
-          </Cartao>
+          />
         ))}
       </div>
     </div>
@@ -541,14 +521,10 @@ export function PassoTipoLimpeza({ rascunho, atualizar }: Props) {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h2 className="text-2xl font-semibold tracking-tight">
-          {comercial ? "Qual nível de serviço?" : "Qual tipo de limpeza?"}
-        </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Toque no ⓘ para ver o que está incluído em cada opção.
-        </p>
-      </div>
+      <CabecalhoPasso
+        titulo={comercial ? "Qual nível de serviço?" : "Qual tipo de limpeza?"}
+        subtitulo="Toque no ⓘ para ver o que está incluído em cada opção."
+      />
       <div className="grid gap-3 sm:grid-cols-2">
         {opcoes.map((tipo) => (
           <Cartao
@@ -581,12 +557,10 @@ export function PassoExtras({
 
   return (
     <div className="space-y-5">
-      <div>
-        <h2 className="text-2xl font-semibold tracking-tight">Quer incluir algum extra?</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Opcional — você pode seguir sem escolher nenhum.
-        </p>
-      </div>
+      <CabecalhoPasso
+        titulo="Quer incluir algum extra?"
+        subtitulo="Opcional — você pode seguir sem escolher nenhum."
+      />
       <div className="space-y-3">
         {extras.map((extra) => {
           const ativo = rascunho.extras_ids.includes(extra.id);
@@ -623,12 +597,10 @@ export function PassoDataHora({ rascunho, atualizar }: Props) {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h2 className="text-2xl font-semibold tracking-tight">Quando você precisa?</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Agende com pelo menos 24 horas de antecedência. Não atendemos domingos.
-        </p>
-      </div>
+      <CabecalhoPasso
+        titulo="Quando você precisa?"
+        subtitulo="Agende com pelo menos 24 horas de antecedência. Não atendemos domingos."
+      />
       <div className="space-y-2">
         <Label htmlFor="data">Data</Label>
         <Input
@@ -674,14 +646,10 @@ export function PassoDataHora({ rascunho, atualizar }: Props) {
 export function PassoObservacoes({ rascunho, atualizar }: Props) {
   return (
     <div className="space-y-5">
-      <div>
-        <h2 className="text-2xl font-semibold tracking-tight">
-          Algo que a profissional precisa saber?
-        </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Animais, acesso ao prédio, produtos disponíveis, prioridades da limpeza.
-        </p>
-      </div>
+      <CabecalhoPasso
+        titulo="Algo que a profissional precisa saber?"
+        subtitulo="Animais, acesso ao prédio, produtos disponíveis, prioridades da limpeza."
+      />
       <Textarea
         rows={6}
         placeholder="Ex.: tenho dois gatos, a chave fica com o porteiro, priorizar a cozinha."

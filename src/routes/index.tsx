@@ -79,10 +79,10 @@ function Home() {
   const { user } = useSession();
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+      <div className="flex min-h-screen flex-col bg-background">
       <SiteHeader />
 
-      <main className="flex-1">
+      <main>
         {/* Hero */}
         <section className="pt-4">
           <div className="mx-auto w-full max-w-md md:max-w-2xl">
@@ -96,7 +96,7 @@ function Home() {
             <h2 className="px-4 font-display text-[18px] font-semibold text-accent">
               {t.como_titulo}
             </h2>
-            <ol className="no-scrollbar mt-5 flex snap-x snap-mandatory items-start gap-3 overflow-x-auto scroll-pl-6 pb-1 pl-6 pr-4">
+            <ol className="no-scrollbar mt-5 flex snap-x snap-mandatory items-start gap-3 overflow-x-auto scroll-pl-6 pb-1 pl-6 pr-6">
               {comoFunciona.map((passo, i) => (
                 <li key={passo.titulo} className="flex shrink-0 items-start gap-3 snap-start">
                   <div className="w-[148px]">
@@ -196,12 +196,12 @@ function Home() {
               >
                 Entrar / Criar conta
               </Link>
-              <p className="mt-3 text-center text-[13px] text-muted-foreground">
+              <p className="mt-2 text-center text-[13px] text-muted-foreground">
                 Já tem uma conta?{" "}
                 <Link
                   to="/entrar"
                   search={{ next: undefined }}
-                  className="text-accent underline"
+                  className="inline-flex min-h-11 items-center px-1 text-accent underline"
                 >
                   Faça seu login
                 </Link>
@@ -217,10 +217,12 @@ function Home() {
             {confianca.map((item) => (
               <li
                 key={item.texto}
-                className="flex flex-col items-center gap-1.5 text-center text-foreground md:flex-row md:justify-center md:gap-2.5"
+                className="flex h-full min-h-[62px] flex-col items-center justify-start gap-1.5 text-center text-foreground md:min-h-0 md:flex-row md:justify-center md:gap-2.5"
               >
-                <item.icon strokeWidth={1.5} className="size-5 text-primary" aria-hidden />
-                <span className="text-xs font-medium md:text-sm">{item.texto}</span>
+                <item.icon strokeWidth={1.5} className="size-5 shrink-0 text-primary" aria-hidden />
+                <span className="text-[11px] font-medium leading-tight md:text-sm">
+                  {item.texto}
+                </span>
               </li>
             ))}
           </ul>

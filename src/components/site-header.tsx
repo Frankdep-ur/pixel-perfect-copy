@@ -59,11 +59,11 @@ export function SiteHeader() {
           <img
             src={logoLar77.url}
             alt="Lar77 — diaristas de confiança"
-            className="h-[30px] w-auto md:h-9"
+            className="h-[34px] w-auto md:h-10"
           />
           <span
-            className="mt-0.5 text-[8px] font-semibold uppercase leading-none text-accent"
-            style={{ letterSpacing: "0.28em" }}
+            className="mt-0.5 text-[9px] font-semibold uppercase leading-none text-accent"
+            style={{ letterSpacing: "0.24em" }}
           >
             Diaristas de confiança
           </span>

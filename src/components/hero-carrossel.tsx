@@ -46,10 +46,10 @@ export function HeroCarrossel({ tituloPadrao, subtituloPadrao }: Props) {
                 className="absolute inset-0"
                 style={{
                   backgroundImage:
-                    "linear-gradient(to right, rgba(245,247,250,0.92), rgba(245,247,250,0) 62%)",
+                    "linear-gradient(to right, rgba(245,247,250,0.97) 0%, rgba(245,247,250,0.9) 46%, rgba(245,247,250,0.35) 74%, rgba(245,247,250,0) 100%)",
                 }}
               />
-              <div className="relative flex h-full max-w-[68%] flex-col items-start justify-center p-5 text-left">
+              <div className="relative flex h-full max-w-[60%] flex-col items-start justify-center p-5 text-left">
                 <h1
                   className="font-display font-bold leading-[1.15] line-clamp-2"
                   style={{ fontSize: "26px", color: "#04162F" }}

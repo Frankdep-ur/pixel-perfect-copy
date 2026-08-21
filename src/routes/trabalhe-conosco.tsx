@@ -46,11 +46,11 @@ const vantagensProfissional = [
     icon: Lock,
     titulo: "Pagamento garantido",
     texto:
-      "Você não precisa ficar preocupada se o cliente vai pagar. Ao finalizar o serviço, basta informar no aplicativo “Faxina Finalizada” e o seu pagamento é processado conforme as condições da plataforma.",
+      "Você não precisa se preocupar se o cliente vai pagar. Ao finalizar o serviço, basta informar no aplicativo “Faxina finalizada” e o seu pagamento é processado conforme as condições da plataforma.",
   },
   {
     icon: ShieldCheck,
-    titulo: "Trabalhe assegurada",
+    titulo: "Trabalhe protegida",
     texto:
       "Enquanto estiver realizando um serviço contratado pela Lar77, você conta com a proteção oferecida pela empresa, conforme as condições da contratação.",
   },

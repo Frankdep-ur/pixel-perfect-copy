@@ -46,7 +46,7 @@ const vantagensProfissional = [
     icon: Lock,
     titulo: "Pagamento garantido",
     texto:
-      "Você não precisa ficar preocupada se o cliente vai pagar. Ao finalizar o serviço, basta informar no aplicativo “Faxina Finalizada” e o seu pagamento é processado conforme as condições da plataforma.",
+      "Você não precisa se preocupar se o cliente vai pagar. Ao finalizar o serviço, basta informar no aplicativo “Faxina finalizada” e o seu pagamento é processado conforme as condições da plataforma.",
   },
   {
     icon: ShieldCheck,

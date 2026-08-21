@@ -167,9 +167,9 @@ function Contratar() {
   const podeAvancar = (() => {
     switch (passo) {
       case 1:
-        return !!rascunho.endereco_id && !!rascunho.endereco.regiao;
-      case 2:
         return !!rascunho.tipo_imovel;
+      case 2:
+        return !!rascunho.endereco_id && !!rascunho.endereco.regiao;
       case 3:
         if (ehComercial(rascunho.tipo_imovel)) {
           return (

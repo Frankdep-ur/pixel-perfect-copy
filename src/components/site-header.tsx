@@ -59,7 +59,7 @@ export function SiteHeader() {
           <img
             src={logoLar77.url}
             alt="Lar77 — diaristas de confiança"
-            className="h-[34px] w-auto brightness-125 contrast-125 md:h-10"
+            className="h-[34px] w-auto md:h-10"
           />
           <span
             className="mt-0.5 text-[9px] font-semibold uppercase leading-none text-accent"

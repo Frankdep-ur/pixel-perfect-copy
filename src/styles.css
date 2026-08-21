@@ -48,7 +48,8 @@
   --color-destructive-foreground: var(--destructive-foreground);
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
-  --color-success: var(--accent);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -95,6 +96,9 @@
   --accent-soft: oklch(0.2658 0.0538 255);
   --destructive: oklch(0.6959 0.1645 22);
   --destructive-foreground: oklch(1 0 0);
+  /* Verde de status (#3DD68C) — usado só para estados concluídos/confirmados */
+  --success: oklch(0.8072 0.1568 160);
+  --success-soft: color-mix(in oklab, oklch(0.8072 0.1568 160) 15%, transparent);
   --warning: oklch(0.7794 0.1400 85);
   --warning-foreground: oklch(0.2014 0.0559 256);
   --border: oklch(0.3090 0.0640 259);

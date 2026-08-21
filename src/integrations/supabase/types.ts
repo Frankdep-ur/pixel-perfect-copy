@@ -1016,6 +1016,7 @@ export type Database = {
           anos_experiencia: number
           bio: string
           convite_id: string
+          distancia_km: number
           foto_url: string
           nome: string
           nota_media: number

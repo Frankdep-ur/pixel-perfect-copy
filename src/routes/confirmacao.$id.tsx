@@ -68,6 +68,13 @@ function formatarHorarioReal(ts: string | null | undefined): string | null {
     .replace(",", "");
 }
 
+function getTimestamp(data: unknown, campo: string): string | null {
+  if (!data || typeof data !== "object") return null;
+  const value = (data as Record<string, unknown>)[campo];
+  if (typeof value === "string") return value;
+  return null;
+}
+
 function Confirmacao() {
   const { id } = Route.useParams();
 

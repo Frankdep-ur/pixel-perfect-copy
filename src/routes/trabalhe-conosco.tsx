@@ -50,7 +50,7 @@ const vantagensProfissional = [
   },
   {
     icon: ShieldCheck,
-    titulo: "Trabalhe assegurada",
+    titulo: "Trabalhe protegida",
     texto:
       "Enquanto estiver realizando um serviço contratado pela Lar77, você conta com a proteção oferecida pela empresa, conforme as condições da contratação.",
   },

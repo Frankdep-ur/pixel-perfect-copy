@@ -107,9 +107,9 @@ export function CardOpcao({
   ativo,
   onClick,
 }: {
-  icone?: LucideIcon;
+  icone?: LucideIcon | undefined;
   label: string;
-  selo?: string;
+  selo?: string | undefined;
   ativo: boolean;
   onClick: () => void;
 }) {

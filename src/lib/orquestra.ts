@@ -29,6 +29,7 @@ export type ProfissionalAceite = {
   bio: string | null;
   verificada: boolean;
   respondido_em: string | null;
+  distancia_km: number | null;
 };
 
 export async function abrirRodada(bookingId: string) {
@@ -77,6 +78,7 @@ export async function listarAceites(bookingId: string): Promise<ProfissionalAcei
     bio: p.bio,
     verificada: !!p.verificada,
     respondido_em: p.respondido_em,
+    distancia_km: p.distancia_km == null ? null : Number(p.distancia_km),
   }));
 }
 

@@ -189,18 +189,19 @@ export function PassoImovel({
 
   return (
     <div className="space-y-5">
-      <div>
-        <h2 className="text-2xl font-semibold tracking-tight">Qual o tipo do imóvel?</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Essa informação nos ajuda a entender melhor suas necessidades.
-        </p>
-      </div>
-      <div className="grid gap-3">
+      <CabecalhoPasso
+        titulo="Qual o tipo do imóvel?"
+        subtitulo="Essa informação nos ajuda a entender melhor suas necessidades."
+      />
+      <div className="grid gap-2.5">
         {TIPOS_IMOVEL.map((tipo) => {
           const Icone = tipo.icon;
           return (
-            <Cartao
+            <CardOpcao
               key={tipo.id}
+              icone={Icone}
+              label={tipo.label}
+              selo={tipo.selo}
               ativo={rascunho.tipo_imovel === tipo.id}
               onClick={() => {
                 if (rascunho.tipo_imovel === tipo.id) return;

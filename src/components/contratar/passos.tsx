@@ -26,6 +26,7 @@ import {
   formatBRL,
 } from "@/lib/catalogo";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CabecalhoPasso, CardDuracao, CardOpcao } from "@/components/contratar/ui-funil";
 import { dataMinimaAgendamento, ehDomingo, horariosPermitidos } from "@/lib/agenda";
 import { type Rascunho } from "@/lib/contratacao";
 import { FormEndereco } from "@/components/enderecos/form-endereco";

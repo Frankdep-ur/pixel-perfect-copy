@@ -265,66 +265,87 @@ export function BuscaOrquestra({
       </div>
 
       {aceites.length > 0 && (
-        <h3 className="px-1 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-          Profissionais disponíveis
-        </h3>
+        <div className="flex items-end justify-between gap-3 px-1">
+          <div>
+            <h3 className="font-display text-[17px] font-semibold text-accent">
+              Profissionais disponíveis
+            </h3>
+            <p className="text-[13px] text-muted-foreground">
+              Encontramos {aceites.length}{" "}
+              {aceites.length === 1 ? "profissional próxima" : "profissionais próximas"} a você
+            </p>
+          </div>
+        </div>
       )}
 
-      {aceites.map((p) => (
-        <div key={p.convite_id} className="rounded-[24px] border border-border bg-card p-5">
-          <div className="flex items-start gap-4">
-            <Avatar className="size-16 ring-2 ring-primary/40">
-              {p.foto_url && <AvatarImage src={p.foto_url} alt={p.nome ?? "Profissional"} />}
-              <AvatarFallback>{(p.nome ?? "LA").slice(0, 2).toUpperCase()}</AvatarFallback>
-            </Avatar>
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="font-semibold">{p.nome ?? "Profissional Lar77"}</span>
-                {p.verificada && (
-                  <Badge variant="secondary" className="gap-1">
-                    <BadgeCheck className="size-3" /> Verificada
-                  </Badge>
+      {aceites.map((p) => {
+        // Em telas de 361px nada cabe numa linha só: duas faixas dentro do card.
+        const tags = [
+          p.verificada ? "Verificada" : null,
+          p.anos_experiencia ? `${p.anos_experiencia} anos` : null,
+        ]
+          .filter((t): t is string => !!t)
+          .slice(0, 2);
+
+        return (
+          <div key={p.convite_id} className="rounded-[14px] bg-surface p-[14px]">
+            <div className="flex items-center gap-3">
+              <Avatar className="size-14">
+                {p.foto_url && <AvatarImage src={p.foto_url} alt={p.nome ?? "Profissional"} />}
+                <AvatarFallback>{(p.nome ?? "LA").slice(0, 2).toUpperCase()}</AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-display text-[17px] font-semibold text-foreground">
+                  {p.nome ?? "Profissional Lar77"}
+                </p>
+                <p className="mt-0.5 flex items-center gap-1 text-[13px] text-foreground">
+                  <Star className="size-3.5 fill-accent text-accent" />
+                  {p.nota_media.toFixed(1).replace(".", ",")}
+                  <span className="text-muted-foreground">· {p.total_servicos} serviços</span>
+                </p>
+                {p.distancia_km != null && (
+                  <p className="mt-0.5 flex items-center gap-1 text-[13px] text-muted-foreground">
+                    <MapPin className="size-3.5" />
+                    {p.distancia_km.toFixed(1).replace(".", ",")} km de você
+                  </p>
                 )}
               </div>
-              <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1 font-medium text-foreground">
-                  <Star className="size-4 fill-primary text-primary" />
-                  {p.nota_media.toFixed(1)}
-                </span>
-                <span>{p.total_servicos} serviços</span>
-                {p.anos_experiencia ? <span>{p.anos_experiencia} anos</span> : null}
+            </div>
+
+            <div className="mt-2.5 flex items-end justify-between gap-3">
+              <div className="flex flex-wrap gap-1.5">
+                {tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="inline-flex items-center gap-1 rounded-full border border-accent px-2 py-0.5 text-[11px] font-semibold text-accent"
+                  >
+                    {tag === "Verificada" && <BadgeCheck className="size-3" />}
+                    {tag}
+                  </span>
+                ))}
               </div>
-              {p.bio && (
-                <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{p.bio}</p>
-              )}
+              <div className="flex shrink-0 items-center gap-3">
+                <div className="text-right">
+                  <p className="text-[11px] text-muted-foreground">A partir de</p>
+                  <p className="font-display text-[17px] font-bold text-accent">
+                    {formatBRL(orcamento.total)}
+                  </p>
+                </div>
+                <Button
+                  className="h-9 rounded-lg px-4 font-semibold"
+                  disabled={escolhendo !== null}
+                  onClick={() => void escolher(p)}
+                >
+                  {escolhendo === p.profissional_id && (
+                    <Loader2 className="mr-1.5 size-4 animate-spin" />
+                  )}
+                  Ver perfil
+                </Button>
+              </div>
             </div>
           </div>
-
-          <div className="mt-4 flex items-center justify-between rounded-2xl bg-muted px-4 py-3">
-            <div>
-              <p className="font-display text-lg font-bold text-primary">
-                {formatBRL(orcamento.total)}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {rascunho.duracao_horas ?? 4} horas de serviço
-              </p>
-            </div>
-            <Radar className="size-5 text-primary" />
-          </div>
-
-          <Button
-            className="mt-4 min-h-14 w-full rounded-[20px] text-base font-bold"
-            size="lg"
-            disabled={escolhendo !== null}
-            onClick={() => void escolher(p)}
-          >
-            {escolhendo === p.profissional_id && (
-              <Loader2 className="mr-2 size-4 animate-spin" />
-            )}
-            Escolher profissional
-          </Button>
-        </div>
-      ))}
+        );
+      })}
 
 
       {aceites.length === 0 && !encerrado && (

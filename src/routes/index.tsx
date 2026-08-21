@@ -4,17 +4,14 @@ import {
   BadgeCheck,
   CalendarClock,
   ChevronRight,
-  Gem,
   LifeBuoy,
   Lock,
   Search,
   ShieldCheck,
-  Smartphone,
   Sparkles,
   Sprout,
   Tag,
   UserRound,
-  Wallet,
 } from "lucide-react";
 
 import { SiteHeader } from "@/components/site-header";

@@ -217,10 +217,12 @@ function Home() {
             {confianca.map((item) => (
               <li
                 key={item.texto}
-                className="flex flex-col items-center gap-1.5 text-center text-foreground md:flex-row md:justify-center md:gap-2.5"
+                className="flex h-full min-h-[62px] flex-col items-center justify-start gap-1.5 text-center text-foreground md:min-h-0 md:flex-row md:justify-center md:gap-2.5"
               >
-                <item.icon strokeWidth={1.5} className="size-5 text-primary" aria-hidden />
-                <span className="text-xs font-medium md:text-sm">{item.texto}</span>
+                <item.icon strokeWidth={1.5} className="size-5 shrink-0 text-primary" aria-hidden />
+                <span className="text-[11px] font-medium leading-tight md:text-sm">
+                  {item.texto}
+                </span>
               </li>
             ))}
           </ul>

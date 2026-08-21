@@ -196,12 +196,12 @@ function Home() {
               >
                 Entrar / Criar conta
               </Link>
-              <p className="mt-3 text-center text-[13px] text-muted-foreground">
+              <p className="mt-2 text-center text-[13px] text-muted-foreground">
                 Já tem uma conta?{" "}
                 <Link
                   to="/entrar"
                   search={{ next: undefined }}
-                  className="text-accent underline"
+                  className="inline-flex min-h-11 items-center px-1 text-accent underline"
                 >
                   Faça seu login
                 </Link>

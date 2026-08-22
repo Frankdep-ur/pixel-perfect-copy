@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { Bell, CalendarCheck, Headset, LogOut, Menu, ShieldCheck, Sparkles, UserRound, X } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
-import { useSession, usePapeis } from "@/hooks/use-auth";
+import { useSession, usePapeis, marcarSaida } from "@/hooks/use-auth";
 import { useNaoLidas } from "@/hooks/use-nao-lidas";
 import { linkSuporte } from "@/lib/whatsapp";
 import logoLar77 from "@/assets/logo-lar77.png.asset.json";
@@ -13,7 +13,6 @@ const navLinksCliente = [{ label: "Como funciona", href: "/#como-funciona" }];
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user } = useSession();
   const { data: papeis } = usePapeis(user);
@@ -23,10 +22,12 @@ export function SiteHeader() {
 
   async function sair() {
     setOpen(false);
+    marcarSaida();
     await queryClient.cancelQueries();
     queryClient.clear();
     await supabase.auth.signOut();
-    navigate({ to: "/", replace: true });
+    // Recarrega a landing: sem isso, a página protegida vê user=null e manda pro /entrar.
+    window.location.replace("/");
   }
 
   useEffect(() => {

@@ -260,11 +260,6 @@
 }
 
 @layer base {
-  /* Rodapé nunca senta no meio da tela em páginas curtas */
-  main {
-    min-height: calc(100dvh - 56px - 64px);
-  }
-
   h1,
   h2,
   h3,

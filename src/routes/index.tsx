@@ -224,7 +224,7 @@ function Home() {
 
         {/* Entrar / Criar conta */}
         {!user && (
-          <section className="px-4 pb-8">
+          <section className="px-4 pb-4">
             <div className="mx-auto w-full max-w-md md:max-w-2xl">
               <Link
                 to="/entrar"
@@ -250,7 +250,7 @@ function Home() {
 
 
         {/* Faixa de confiança */}
-        <section className="border-y border-border bg-card px-4 py-5 md:px-5">
+        <section className="border-y border-border bg-card px-4 py-4 md:px-5">
           <ul className="mx-auto grid w-full max-w-md grid-cols-3 gap-3 md:max-w-5xl">
             {confianca.map((item) => (
               <li

@@ -17,7 +17,7 @@ import { EstadoVazio } from "@/components/estado-vazio";
 import { ServicosProfissional } from "@/components/profissional/servicos-profissional";
 
 import { nomeRegiao } from "@/lib/regioes";
-import { usePapeis, useSession } from "@/hooks/use-auth";
+import { usePapeis, useSession, estaSaindo } from "@/hooks/use-auth";
 
 type Busca = { aba?: string };
 
@@ -62,7 +62,7 @@ function AreaProfissional() {
   const { data: papeis } = usePapeis(user);
 
   useEffect(() => {
-    if (!carregando && !user) {
+    if (!carregando && !user && !estaSaindo()) {
       navigate({ to: "/profissional/entrar", search: { next: undefined }, replace: true });
     }
   }, [carregando, user, navigate]);

@@ -6,7 +6,7 @@ import { CalendarCheck, ChevronRight, Clock, Loader2, MapPin } from "lucide-reac
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { EstadoVazio } from "@/components/estado-vazio";
-import { useSession } from "@/hooks/use-auth";
+import { useSession, estaSaindo } from "@/hooks/use-auth";
 import { reservasClienteQuery, STATUS_RESERVA_ATIVA } from "@/lib/queries";
 import { formatBRL, labelTipoLimpeza } from "@/lib/catalogo";
 import { formatarData } from "@/lib/agenda";
@@ -59,7 +59,7 @@ function Reservas() {
   const { data: reservas, isLoading } = useQuery(reservasClienteQuery(user?.id));
 
   useEffect(() => {
-    if (!carregando && !user) {
+    if (!carregando && !user && !estaSaindo()) {
       navigate({ to: "/entrar", search: { next: "/reservas" }, replace: true });
     }
   }, [carregando, user, navigate]);

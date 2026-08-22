@@ -28,7 +28,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AvaliarDialog } from "@/components/avaliar-dialog";
 import { STATUS_LABEL, ehServicoAirbnb, formatBRL, labelTipoLimpeza } from "@/lib/catalogo";
 import { FotosServicoCliente } from "@/components/fotos-servico";
-import { useSession } from "@/hooks/use-auth";
+import { useSession, estaSaindo } from "@/hooks/use-auth";
 
 type Busca = { aba?: string };
 
@@ -79,7 +79,7 @@ function MinhaConta() {
   const { user, carregando } = useSession();
 
   useEffect(() => {
-    if (!carregando && !user) {
+    if (!carregando && !user && !estaSaindo()) {
       navigate({ to: "/auth", search: { next: "/minha-conta" }, replace: true });
     }
   }, [carregando, user, navigate]);

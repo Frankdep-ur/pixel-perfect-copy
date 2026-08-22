@@ -15,7 +15,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { PerfilProfissional } from "@/components/profissional/perfil-profissional";
 import { DocumentosProfissional } from "@/components/profissional/documentos-profissional";
 import { BloqueiosProfissional } from "@/components/profissional/bloqueios-profissional";
-import { usePapeis, useSession } from "@/hooks/use-auth";
+import { usePapeis, useSession, estaSaindo } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/profissional_/conta")({
   head: () => ({
@@ -45,7 +45,7 @@ function ContaProfissional() {
   const { data: papeis } = usePapeis(user);
 
   useEffect(() => {
-    if (!carregando && !user) {
+    if (!carregando && !user && !estaSaindo()) {
       navigate({ to: "/profissional/entrar", search: { next: undefined }, replace: true });
     }
   }, [carregando, user, navigate]);

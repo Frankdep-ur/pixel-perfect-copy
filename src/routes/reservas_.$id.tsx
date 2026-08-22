@@ -6,7 +6,7 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { HomeCliente } from "@/components/home/home-cliente";
-import { useMeuPerfil, useSession } from "@/hooks/use-auth";
+import { useMeuPerfil, useSession, estaSaindo } from "@/hooks/use-auth";
 import { reservaQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/reservas_/$id")({
@@ -35,7 +35,7 @@ function DetalheReserva() {
   const { data: reserva, isLoading } = useQuery(reservaQuery(id));
 
   useEffect(() => {
-    if (!carregando && !user) {
+    if (!carregando && !user && !estaSaindo()) {
       navigate({ to: "/entrar", search: { next: "/reservas" }, replace: true });
     }
   }, [carregando, user, navigate]);

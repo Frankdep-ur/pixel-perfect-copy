@@ -32,7 +32,7 @@ import {
   type Rascunho,
 } from "@/lib/contratacao";
 import { ehDomingo, horarioValido } from "@/lib/agenda";
-import { useSession } from "@/hooks/use-auth";
+import { useSession, estaSaindo } from "@/hooks/use-auth";
 
 
 export const Route = createFileRoute("/contratar")({
@@ -82,7 +82,7 @@ function Contratar() {
 
   // Contratar exige conta: sem login, mandamos para entrar/criar conta.
   useEffect(() => {
-    if (!carregando && !user) {
+    if (!carregando && !user && !estaSaindo()) {
       navigate({ to: "/auth", search: { next: "/contratar" }, replace: true });
     }
   }, [carregando, user, navigate]);

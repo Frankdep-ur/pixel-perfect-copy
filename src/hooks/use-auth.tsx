@@ -4,6 +4,17 @@ import { useQuery } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
 
+/** Evita que páginas protegidas mandem o usuário pro login no meio do Sair. */
+let saidaEmAndamento = false;
+
+export function marcarSaida() {
+  saidaEmAndamento = true;
+}
+
+export function estaSaindo() {
+  return saidaEmAndamento;
+}
+
 export function useSession() {
   const [session, setSession] = useState<Session | null>(null);
   const [carregando, setCarregando] = useState(true);

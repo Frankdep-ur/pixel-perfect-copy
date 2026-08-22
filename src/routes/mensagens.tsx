@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { EstadoVazio } from "@/components/estado-vazio";
-import { usePapeis, useSession } from "@/hooks/use-auth";
+import { usePapeis, useSession, estaSaindo } from "@/hooks/use-auth";
 import { labelTipoLimpeza } from "@/lib/catalogo";
 
 export const Route = createFileRoute("/mensagens")({
@@ -38,7 +38,7 @@ function Mensagens() {
   const ehProfissional = (papeis ?? []).includes("profissional");
 
   useEffect(() => {
-    if (!carregando && !user) {
+    if (!carregando && !user && !estaSaindo()) {
       navigate({ to: "/entrar", search: { next: "/mensagens" }, replace: true });
     }
   }, [carregando, user, navigate]);

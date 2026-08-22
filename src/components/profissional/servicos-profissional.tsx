@@ -200,7 +200,10 @@ export function ServicosProfissional({
       !PENDENTES.includes(b.status),
   );
 
-  const [aba, setAba] = useState<string | null>(null);
+  const [aba, setAba] = useState<string | null>(abaInicial ?? null);
+  useEffect(() => {
+    if (abaInicial) setAba(abaInicial);
+  }, [abaInicial]);
   useEffect(() => {
     if (isLoading || aba) return;
     setAba(meus.length > 0 ? "agenda" : pendentes.length > 0 ? "pedidos" : "oportunidades");

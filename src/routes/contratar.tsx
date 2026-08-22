@@ -288,10 +288,9 @@ function Contratar() {
                   <Button
                     variant="ghost"
                     onClick={voltar}
-                    disabled={indice === 0}
                     className="gap-2 text-muted-foreground"
                   >
-                    <ArrowLeft className="size-4" /> Voltar
+                    <ArrowLeft className="size-4" /> {indice === 0 ? "Sair" : "Voltar"}
                   </Button>
                 </div>
 

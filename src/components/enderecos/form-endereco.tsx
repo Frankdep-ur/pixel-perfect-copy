@@ -153,7 +153,7 @@ export function FormEndereco({
         <SeletorTipoImovel
           valor={campos.tipo_imovel || null}
           onChange={(id) => set("tipo_imovel", id)}
-          precoAirbnb={precoAirbnb}
+          {...(precoAirbnb != null ? { precoAirbnb } : {})}
         />
         <div className="flex flex-col items-center gap-2">
           <Button

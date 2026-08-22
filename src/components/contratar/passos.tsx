@@ -173,7 +173,7 @@ export function PassoEndereco({
             escolher(salvo);
             setNovo(false);
           }}
-          onCancelar={semImoveis ? undefined : () => setNovo(false)}
+          {...(semImoveis ? {} : { onCancelar: () => setNovo(false) })}
         />
       )}
 

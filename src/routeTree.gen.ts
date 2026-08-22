@@ -39,6 +39,7 @@ import { Route as AdminProfissionaisRouteImport } from './routes/admin.profissio
 import { Route as AdminLoginRouteImport } from './routes/admin_.login'
 import { Route as ConfirmacaoIdRouteImport } from './routes/confirmacao.$id'
 import { Route as OportunidadeTokenRouteImport } from './routes/oportunidade.$token'
+import { Route as ProfissionalContaRouteImport } from './routes/profissional_.conta'
 import { Route as ProfissionalEntrarRouteImport } from './routes/profissional_.entrar'
 import { Route as ReservasIdRouteImport } from './routes/reservas_.$id'
 import { Route as ApiPublicZapiDrenarRouteImport } from './routes/api/public/zapi-drenar'
@@ -194,6 +195,11 @@ const OportunidadeTokenRoute = OportunidadeTokenRouteImport.update({
   path: '/oportunidade/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfissionalContaRoute = ProfissionalContaRouteImport.update({
+  id: '/profissional_/conta',
+  path: '/profissional/conta',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfissionalEntrarRoute = ProfissionalEntrarRouteImport.update({
   id: '/profissional_/entrar',
   path: '/profissional/entrar',
@@ -245,6 +251,7 @@ export interface FileRoutesByFullPath {
   '/admin/login': typeof AdminLoginRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
   '/oportunidade/$token': typeof OportunidadeTokenRoute
+  '/profissional/conta': typeof ProfissionalContaRoute
   '/profissional/entrar': typeof ProfissionalEntrarRoute
   '/reservas/$id': typeof ReservasIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -280,6 +287,7 @@ export interface FileRoutesByTo {
   '/admin/login': typeof AdminLoginRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
   '/oportunidade/$token': typeof OportunidadeTokenRoute
+  '/profissional/conta': typeof ProfissionalContaRoute
   '/profissional/entrar': typeof ProfissionalEntrarRoute
   '/reservas/$id': typeof ReservasIdRoute
   '/admin': typeof AdminIndexRoute
@@ -317,6 +325,7 @@ export interface FileRoutesById {
   '/admin_/login': typeof AdminLoginRoute
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
   '/oportunidade/$token': typeof OportunidadeTokenRoute
+  '/profissional_/conta': typeof ProfissionalContaRoute
   '/profissional_/entrar': typeof ProfissionalEntrarRoute
   '/reservas_/$id': typeof ReservasIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -355,6 +364,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/confirmacao/$id'
     | '/oportunidade/$token'
+    | '/profissional/conta'
     | '/profissional/entrar'
     | '/reservas/$id'
     | '/admin/'
@@ -390,6 +400,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/confirmacao/$id'
     | '/oportunidade/$token'
+    | '/profissional/conta'
     | '/profissional/entrar'
     | '/reservas/$id'
     | '/admin'
@@ -426,6 +437,7 @@ export interface FileRouteTypes {
     | '/admin_/login'
     | '/confirmacao/$id'
     | '/oportunidade/$token'
+    | '/profissional_/conta'
     | '/profissional_/entrar'
     | '/reservas_/$id'
     | '/admin/'
@@ -452,6 +464,7 @@ export interface RootRouteChildren {
   AdminLoginRoute: typeof AdminLoginRoute
   ConfirmacaoIdRoute: typeof ConfirmacaoIdRoute
   OportunidadeTokenRoute: typeof OportunidadeTokenRoute
+  ProfissionalContaRoute: typeof ProfissionalContaRoute
   ProfissionalEntrarRoute: typeof ProfissionalEntrarRoute
   ReservasIdRoute: typeof ReservasIdRoute
   ApiPublicZapiDrenarRoute: typeof ApiPublicZapiDrenarRoute
@@ -670,6 +683,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OportunidadeTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profissional_/conta': {
+      id: '/profissional_/conta'
+      path: '/profissional/conta'
+      fullPath: '/profissional/conta'
+      preLoaderRoute: typeof ProfissionalContaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profissional_/entrar': {
       id: '/profissional_/entrar'
       path: '/profissional/entrar'
@@ -752,6 +772,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminLoginRoute: AdminLoginRoute,
   ConfirmacaoIdRoute: ConfirmacaoIdRoute,
   OportunidadeTokenRoute: OportunidadeTokenRoute,
+  ProfissionalContaRoute: ProfissionalContaRoute,
   ProfissionalEntrarRoute: ProfissionalEntrarRoute,
   ReservasIdRoute: ReservasIdRoute,
   ApiPublicZapiDrenarRoute: ApiPublicZapiDrenarRoute,

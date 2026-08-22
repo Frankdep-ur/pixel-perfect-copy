@@ -33,9 +33,14 @@ export function horariosPermitidos(duracao: Duracao | null, airbnb = false): str
   return HORARIOS_POR_DURACAO[duracao];
 }
 
-export function horarioValido(duracao: Duracao | null, hora: string | null): boolean {
-  if (!duracao || !hora) return false;
-  return horariosPermitidos(duracao).includes(hora.slice(0, 5));
+export function horarioValido(
+  duracao: Duracao | null,
+  hora: string | null,
+  airbnb = false,
+): boolean {
+  if (!hora) return false;
+  if (!airbnb && !duracao) return false;
+  return horariosPermitidos(duracao, airbnb).includes(hora.slice(0, 5));
 }
 
 /** Domingo é bloqueado em todo o sistema. */

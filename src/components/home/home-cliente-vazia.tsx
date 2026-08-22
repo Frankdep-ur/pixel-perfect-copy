@@ -49,8 +49,7 @@ export function HomeClienteVazia({ nome }: { nome: string }) {
 
       <div className="grid grid-cols-2 gap-3">
         <Link
-          to="/minha-conta"
-          search={{ aba: "historico" }}
+          to="/reservas"
           className="rounded-[20px] border border-accent/20 bg-card p-4 transition-transform duration-200 ease-out active:scale-[0.98]"
         >
           <CalendarCheck size={24} strokeWidth={1.6} className="text-accent" aria-hidden />

@@ -34,6 +34,8 @@ export const Route = createFileRoute("/mensagens")({
 function Mensagens() {
   const navigate = useNavigate();
   const { user, carregando } = useSession();
+  const { data: papeis } = usePapeis(user);
+  const ehProfissional = (papeis ?? []).includes("profissional");
 
   useEffect(() => {
     if (!carregando && !user) {

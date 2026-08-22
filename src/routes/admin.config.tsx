@@ -11,6 +11,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { LimparContasTeste } from "@/components/admin/excluir-conta";
+import {
+  CORES_PADRAO,
+  TEXTOS_PADRAO,
+  type CoresSite,
+  type TextosSite,
+  salvarConfig,
+  siteConfigQuery,
+} from "@/lib/site-config";
 
 export const Route = createFileRoute("/admin/config")({
   component: AdminConfig,

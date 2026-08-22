@@ -56,6 +56,15 @@ const BLOCOS: Bloco[] = [
     ],
   },
   {
+    titulo: "Proteção e verificação",
+    itens: [
+      "Toda profissional passa por cadastro, documentos e análise da Lar77 antes de atender.",
+      "O pagamento fica na plataforma até a conclusão do serviço.",
+      "A taxa administrativa (17%) cobre operação, suporte e a proteção da contratação. Não é um seguro à parte na hora de pagar.",
+      "Em caso de problema, fale pelo Ajuda / Suporte da reserva ou pelo WhatsApp da central.",
+    ],
+  },
+  {
     titulo: "Falar com a profissional",
     itens: [
       "Use o chat interno na tela da sua reserva. Não divulgamos telefones para preservar a segurança de todos.",

@@ -65,8 +65,14 @@ function Reservas() {
   }, [carregando, user, navigate]);
 
   const lista = reservas ?? [];
-  const ativas = lista.filter((r) => STATUS_RESERVA_ATIVA.includes(r.status));
-  const passadas = lista.filter((r) => !STATUS_RESERVA_ATIVA.includes(r.status));
+  const proximas = lista.filter((r) =>
+    ["buscando", "solicitada", "aguardando_aceite", "aceita", "confirmada"].includes(r.status),
+  );
+  const andamento = lista.filter((r) => ["a_caminho", "em_andamento"].includes(r.status));
+  const concluidas = lista.filter((r) => ["finalizada", "concluida"].includes(r.status));
+  const canceladas = lista.filter((r) =>
+    ["cancelada", "recusada", "sem_profissional"].includes(r.status),
+  );
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -91,10 +97,10 @@ function Reservas() {
           />
         ) : (
           <div className="mt-5 space-y-5">
-            {ativas.length > 0 && (
-              <Grupo titulo="Em andamento" reservas={ativas} />
-            )}
-            {passadas.length > 0 && <Grupo titulo="Histórico" reservas={passadas} />}
+            {andamento.length > 0 && <Grupo titulo="Em andamento" reservas={andamento} />}
+            {proximas.length > 0 && <Grupo titulo="Próximas" reservas={proximas} />}
+            {concluidas.length > 0 && <Grupo titulo="Concluídas" reservas={concluidas} />}
+            {canceladas.length > 0 && <Grupo titulo="Canceladas" reservas={canceladas} />}
           </div>
         )}
       </main>

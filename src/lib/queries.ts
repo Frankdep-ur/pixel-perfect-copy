@@ -146,7 +146,7 @@ export const STATUS_RESERVA_ATIVA = [
 ];
 
 const SELECT_RESERVA =
-  "*, enderecos(rua, numero, complemento, bairro, cidade, estado, cep), profissionais!bookings_profissional_id_fkey(id, cidade, nota_media, total_servicos, total_avaliacoes, anos_experiencia, profiles!profissionais_user_id_fkey(nome, foto_url))";
+  "*, observacoes, enderecos(rua, numero, complemento, bairro, cidade, estado, cep), profissionais!bookings_profissional_id_fkey(id, cidade, nota_media, total_servicos, total_avaliacoes, anos_experiencia, bio, verificada, profiles!profissionais_user_id_fkey(nome, foto_url)), booking_extras(preco_congelado, extras(nome))";
 
 /**
  * Próxima reserva ativa do cliente logado (a mais próxima no tempo).

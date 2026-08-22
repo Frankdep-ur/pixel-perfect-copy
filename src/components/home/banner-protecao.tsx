@@ -17,8 +17,8 @@ export function BannerProtecao({ curto = false }: { curto?: boolean }) {
         </span>
         <span className="mt-0.5 block text-[12px] leading-snug text-muted-foreground">
           {curto
-            ? "Diaristas verificadas e serviço com seguro."
-            : "Todas as nossas diaristas são verificadas e o serviço possui seguro durante a prestação."}
+            ? "Profissionais verificadas e pagamento protegido."
+            : "Profissionais verificadas pela Lar77 e pagamento protegido pela plataforma."}
         </span>
       </span>
       <ChevronRight size={18} className="shrink-0 text-muted-foreground" aria-hidden />

@@ -1,4 +1,4 @@
-import { ArrowLeft, ChevronRight, Clock, Headset } from "lucide-react";
+import { ArrowLeft, ChevronRight, Clock, Headset, X } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";

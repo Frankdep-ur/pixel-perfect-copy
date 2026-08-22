@@ -174,6 +174,7 @@ export const STATUS_BOOKING = [
 ] as const;
 
 export const STATUS_LABEL: Record<string, string> = {
+  buscando: "Buscando profissional",
   aguardando_aceite: "Aguardando aceite",
   sem_profissional: "Buscando profissional",
   solicitada: "Solicitada",

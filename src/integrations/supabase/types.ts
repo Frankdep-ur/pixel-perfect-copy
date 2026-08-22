@@ -987,6 +987,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_excluir_usuario: { Args: { alvo: string }; Returns: undefined }
+      admin_limpar_contas_exceto: {
+        Args: { manter: string[] }
+        Returns: Json
+      }
       abrir_rodada_convites: { Args: { _booking_id: string }; Returns: number }
       abrir_rodada_interna: { Args: { _booking_id: string }; Returns: number }
       confirmar_pagamento_booking: {

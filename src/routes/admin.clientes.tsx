@@ -6,7 +6,7 @@ import { Loader2, MapPin } from "lucide-react";
 import { adminBookingsQuery, adminClientesQuery, type AdminCliente } from "@/lib/admin-queries";
 import { Painel, TituloSecao, formatarData } from "@/components/admin/ui";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { STATUS_LABEL, formatBRL, labelTipoLimpeza } from "@/lib/catalogo";
+import { BotaoExcluirConta } from "@/components/admin/excluir-conta";
 
 export const Route = createFileRoute("/admin/clientes")({
   component: AdminClientes,
@@ -134,6 +134,12 @@ function AdminClientes() {
                     </ul>
                   )}
                 </div>
+
+                <BotaoExcluirConta
+                  userId={selecionado.id}
+                  nome={selecionado.nome}
+                  onExcluido={() => setSelecionado(null)}
+                />
               </div>
             </>
           )}

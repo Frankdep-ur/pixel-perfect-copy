@@ -52,6 +52,9 @@ export function Painel({ children, className }: { children: ReactNode; className
 }
 
 const VARIANTE_STATUS: Record<string, string> = {
+  buscando: "bg-warning/12 text-warning-foreground border-warning/30",
+  aguardando_aceite: "bg-warning/12 text-warning-foreground border-warning/30",
+  sem_profissional: "bg-warning/12 text-warning-foreground border-warning/30",
   solicitada: "bg-warning/12 text-warning-foreground border-warning/30",
   aceita: "bg-accent/12 text-accent-foreground border-accent/30",
   confirmada: "bg-accent/12 text-accent-foreground border-accent/30",
@@ -63,6 +66,7 @@ const VARIANTE_STATUS: Record<string, string> = {
   pendente: "bg-warning/12 text-warning-foreground border-warning/30",
   aprovada: "bg-primary/12 text-primary border-primary/30",
   reprovada: "bg-destructive/10 text-destructive border-destructive/30",
+  recusada: "bg-destructive/10 text-destructive border-destructive/30",
   bloqueada: "bg-destructive/10 text-destructive border-destructive/30",
 };
 
@@ -81,6 +85,7 @@ export function rotuloStatusProfissional(status: string) {
   const mapa: Record<string, string> = {
     pendente: "Em análise",
     aprovada: "Aprovada",
+    recusada: "Reprovada",
     reprovada: "Reprovada",
     bloqueada: "Bloqueada",
   };

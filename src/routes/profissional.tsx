@@ -159,7 +159,7 @@ function AreaProfissional() {
                       <Badge className="gap-1 text-[13px]">
                         <BadgeCheck className="size-3.5" /> Aprovada
                       </Badge>
-                    ) : perfil.status === "recusada" ? (
+                    ) : perfil.status === "recusada" || perfil.status === "reprovada" ? (
                       <Badge variant="destructive" className="text-[13px]">
                         Recusada
                       </Badge>

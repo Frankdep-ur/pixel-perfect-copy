@@ -19,7 +19,19 @@ export const Route = createFileRoute("/admin/contratacoes")({
   component: AdminContratacoes,
 });
 
-const STATUS = ["solicitada", "aceita", "confirmada", "em_andamento", "concluida", "cancelada"];
+const STATUS = [
+  "buscando",
+  "aguardando_aceite",
+  "sem_profissional",
+  "solicitada",
+  "aceita",
+  "confirmada",
+  "a_caminho",
+  "em_andamento",
+  "finalizada",
+  "concluida",
+  "cancelada",
+];
 
 function AdminContratacoes() {
   const { data: bookings } = useQuery(adminBookingsQuery);

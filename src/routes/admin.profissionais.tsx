@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 import { labelTipoLimpeza } from "@/lib/catalogo";
 import { nomeRegiao } from "@/lib/regioes";
 import { FichaProfissional } from "@/components/admin/ficha-profissional";
+import { BotaoExcluirConta } from "@/components/admin/excluir-conta";
 
 export const Route = createFileRoute("/admin/profissionais")({
   component: AdminProfissionais,
@@ -236,6 +237,11 @@ function AdminProfissionais() {
                   >
                     Bloquear
                   </Button>
+                  <BotaoExcluirConta
+                    userId={selecionada.user_id}
+                    nome={selecionada.nome}
+                    onExcluido={() => setSelecionada(null)}
+                  />
                 </div>
               </div>
             </>

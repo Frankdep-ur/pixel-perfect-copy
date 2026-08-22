@@ -1,4 +1,4 @@
-import { ArrowLeft, ChevronRight, Clock, Headset } from "lucide-react";
+import { ArrowLeft, ChevronRight, Clock, Headset, X } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -20,10 +20,12 @@ export function TopoFunil({
   grupoAtual,
   onVoltar,
   podeVoltar = true,
+  onCancelar,
 }: {
   grupoAtual: number;
   onVoltar: () => void;
   podeVoltar?: boolean;
+  onCancelar?: () => void;
 }) {
   return (
     <div className="flex h-14 items-center gap-2">
@@ -73,6 +75,17 @@ export function TopoFunil({
       >
         <Headset size={22} strokeWidth={1.5} />
       </a>
+
+      {onCancelar && (
+        <button
+          type="button"
+          onClick={onCancelar}
+          aria-label="Cancelar e sair"
+          className="inline-flex size-11 shrink-0 items-center justify-center rounded-2xl text-muted-foreground transition-transform duration-200 ease-out active:scale-[0.96]"
+        >
+          <X size={22} strokeWidth={1.75} />
+        </button>
+      )}
     </div>
   );
 }

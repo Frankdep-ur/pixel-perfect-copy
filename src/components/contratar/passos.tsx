@@ -595,7 +595,8 @@ export function PassoExtras({
 
 export function PassoDataHora({ rascunho, atualizar }: Props) {
   const minimo = dataMinimaAgendamento();
-  const horarios = horariosPermitidos(rascunho.duracao_horas);
+  const airbnbHorarios = ehAirbnb(rascunho.tipo_imovel);
+  const horarios = horariosPermitidos(rascunho.duracao_horas, airbnbHorarios);
   const domingo = ehDomingo(rascunho.data);
 
   return (

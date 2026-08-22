@@ -470,6 +470,7 @@ export type Database = {
           padrao: boolean
           regiao: string | null
           rua: string | null
+          tipo_imovel: string | null
           user_id: string
         }
         Insert: {
@@ -487,6 +488,7 @@ export type Database = {
           padrao?: boolean
           regiao?: string | null
           rua?: string | null
+          tipo_imovel?: string | null
           user_id: string
         }
         Update: {
@@ -504,6 +506,7 @@ export type Database = {
           padrao?: boolean
           regiao?: string | null
           rua?: string | null
+          tipo_imovel?: string | null
           user_id?: string
         }
         Relationships: [
@@ -1064,6 +1067,10 @@ export type Database = {
       distancia_km: {
         Args: { _lat1: number; _lat2: number; _lng1: number; _lng2: number }
         Returns: number
+      }
+      enfileirar_disponibilidade: {
+        Args: { _convite_id: string }
+        Returns: undefined
       }
       expirar_convites_e_reservas: { Args: never; Returns: undefined }
       has_role: {

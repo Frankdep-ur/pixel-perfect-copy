@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Loader2, MapPin, Pencil, Plus, Star, Trash2 } from "lucide-react";
+import { Home, Loader2, MapPin, Pencil, Plus, Star, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -55,29 +55,29 @@ export function MeusImoveis({ userId }: { userId: string }) {
       }),
   });
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-10">
+        <Loader2 className="size-5 animate-spin text-primary" />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
-      {isLoading && (
-        <div className="flex justify-center py-10">
-          <Loader2 className="size-5 animate-spin text-primary" />
-        </div>
-      )}
-
       {lista.map((e) =>
         editando?.id === e.id ? (
-          <Card key={e.id}>
-            <CardContent className="pt-6">
-              <FormEndereco
-                userId={userId}
-                endereco={e}
-                onSalvo={() => {
-                  invalidar();
-                  setEditando(null);
-                }}
-                onCancelar={() => setEditando(null)}
-              />
-            </CardContent>
-          </Card>
+          <div key={e.id} className="rounded-[24px] border border-border bg-card p-4">
+            <FormEndereco
+              userId={userId}
+              endereco={e}
+              onSalvo={() => {
+                invalidar();
+                setEditando(null);
+              }}
+              onCancelar={() => setEditando(null)}
+            />
+          </div>
         ) : (
           <Card key={e.id}>
             <CardContent className="flex flex-wrap items-start justify-between gap-4 pt-6">
@@ -129,21 +129,33 @@ export function MeusImoveis({ userId }: { userId: string }) {
       )}
 
       {novo ? (
-        <Card>
-          <CardContent className="pt-6">
-            <FormEndereco
-              userId={userId}
-              onSalvo={() => {
-                invalidar();
-                setNovo(false);
-              }}
-              onCancelar={() => setNovo(false)}
-            />
-          </CardContent>
-        </Card>
+        <div className="rounded-[24px] border border-border bg-card p-4 sm:p-5">
+          <FormEndereco
+            userId={userId}
+            onSalvo={() => {
+              invalidar();
+              setNovo(false);
+            }}
+            onCancelar={() => setNovo(false)}
+          />
+        </div>
+      ) : lista.length === 0 ? (
+        <div className="rounded-[28px] border border-border bg-card px-5 py-10 text-center">
+          <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-primary/15 text-primary">
+            <Home className="size-7" strokeWidth={1.5} />
+          </span>
+          <h3 className="mt-4 font-display text-lg font-semibold">Nenhum imóvel ainda</h3>
+          <p className="mx-auto mt-1 max-w-[32ch] text-sm text-muted-foreground">
+            Pode usar o app agora. O tipo e o endereço a gente pede na hora de contratar — ou
+            cadastra aqui, se preferir.
+          </p>
+          <Button className="mt-5 min-h-12 gap-2 rounded-2xl px-6" onClick={() => setNovo(true)}>
+            <Plus className="size-4" /> Cadastrar imóvel
+          </Button>
+        </div>
       ) : (
-        <Button className="gap-2" onClick={() => setNovo(true)}>
-          <Plus className="size-4" /> Cadastrar imóvel
+        <Button className="min-h-12 w-full gap-2 rounded-2xl" onClick={() => setNovo(true)}>
+          <Plus className="size-4" /> Cadastrar outro imóvel
         </Button>
       )}
     </div>

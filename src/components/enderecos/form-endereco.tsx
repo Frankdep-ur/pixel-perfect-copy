@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Loader2, Search } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2, Search } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -9,7 +9,8 @@ import { Label } from "@/components/ui/label";
 import { buscarCep, mascaraCep } from "@/lib/contratacao";
 import { REGIOES, regiaoPorCidade } from "@/lib/regioes";
 import type { Endereco } from "@/lib/enderecos";
-import { TIPOS_IMOVEL, labelTipoImovel } from "@/lib/catalogo";
+import { labelTipoImovel } from "@/lib/catalogo";
+import { SeletorTipoImovel } from "@/components/enderecos/seletor-tipo-imovel";
 
 type Campos = {
   apelido: string;
@@ -48,13 +49,18 @@ export function FormEndereco({
   endereco,
   onSalvo,
   onCancelar,
+  precoAirbnb,
 }: {
   userId: string;
   endereco?: Endereco | null;
   onSalvo: (endereco: Endereco) => void;
   onCancelar?: () => void;
+  precoAirbnb?: number;
 }) {
   const [campos, setCampos] = useState<Campos>(() => inicial(endereco));
+  const [etapa, setEtapa] = useState<"tipo" | "endereco">(
+    endereco?.tipo_imovel ? "endereco" : "tipo",
+  );
   const [buscando, setBuscando] = useState(false);
   const [salvando, setSalvando] = useState(false);
 
@@ -95,6 +101,7 @@ export function FormEndereco({
 
   async function salvar() {
     if (!campos.tipo_imovel) {
+      setEtapa("tipo");
       toast.error("Escolha o tipo do imóvel.");
       return;
     }
@@ -106,7 +113,7 @@ export function FormEndereco({
     try {
       const payload = {
         user_id: userId,
-        apelido: campos.apelido.trim() || "Meu imóvel",
+        apelido: campos.apelido.trim() || labelTipoImovel(campos.tipo_imovel) || "Meu imóvel",
         tipo_imovel: campos.tipo_imovel,
         cep: campos.cep,
         rua: campos.rua,
@@ -140,41 +147,58 @@ export function FormEndereco({
     }
   }
 
-  return (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="apelido">Nome do imóvel</Label>
-        <Input
-          id="apelido"
-          placeholder="Casa, Apartamento da praia, Escritório…"
-          value={campos.apelido}
-          onChange={(e) => set("apelido", e.target.value)}
+  if (etapa === "tipo") {
+    return (
+      <div className="space-y-6">
+        <SeletorTipoImovel
+          valor={campos.tipo_imovel || null}
+          onChange={(id) => set("tipo_imovel", id)}
+          precoAirbnb={precoAirbnb}
         />
+        <div className="flex flex-col items-center gap-2">
+          <Button
+            type="button"
+            size="lg"
+            className="min-h-14 w-full rounded-[24px] text-base font-bold"
+            disabled={!campos.tipo_imovel}
+            onClick={() => setEtapa("endereco")}
+          >
+            Continuar
+            <ArrowRight className="size-4" />
+          </Button>
+          {onCancelar && (
+            <Button type="button" variant="ghost" className="text-muted-foreground" onClick={onCancelar}>
+              Agora não
+            </Button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-5">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            {labelTipoImovel(campos.tipo_imovel)}
+          </p>
+          <h2 className="font-display text-xl font-bold">Onde fica?</h2>
+          <p className="text-sm text-muted-foreground">CEP primeiro — o resto a gente completa.</p>
+        </div>
+        <Button type="button" variant="ghost" size="sm" onClick={() => setEtapa("tipo")}>
+          Trocar tipo
+        </Button>
       </div>
 
       <div className="space-y-2">
-        <Label>Tipo do imóvel</Label>
-        <div className="grid grid-cols-2 gap-2">
-          {TIPOS_IMOVEL.map((tipo) => (
-            <button
-              key={tipo.id}
-              type="button"
-              onClick={() => set("tipo_imovel", tipo.id)}
-              className={
-                campos.tipo_imovel === tipo.id
-                  ? "min-h-11 rounded-xl border-2 border-primary bg-primary/10 px-3 text-sm font-semibold"
-                  : "min-h-11 rounded-xl border border-border bg-card px-3 text-sm"
-              }
-            >
-              {tipo.label}
-            </button>
-          ))}
-        </div>
-        {campos.tipo_imovel ? (
-          <p className="text-xs text-muted-foreground">
-            {labelTipoImovel(campos.tipo_imovel)} — isso define o tipo de faxina neste endereço.
-          </p>
-        ) : null}
+        <Label htmlFor="apelido">Nome do imóvel (opcional)</Label>
+        <Input
+          id="apelido"
+          placeholder={`${labelTipoImovel(campos.tipo_imovel) || "Meu imóvel"}`}
+          value={campos.apelido}
+          onChange={(e) => set("apelido", e.target.value)}
+        />
       </div>
 
       <div className="space-y-2">
@@ -199,7 +223,7 @@ export function FormEndereco({
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-[2fr_1fr]">
+      <div className="grid gap-4 grid-cols-[2fr_1fr]">
         <div className="space-y-2">
           <Label htmlFor="rua">Rua</Label>
           <Input id="rua" value={campos.rua} onChange={(e) => set("rua", e.target.value)} />
@@ -210,12 +234,12 @@ export function FormEndereco({
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="complemento">Complemento</Label>
           <Input
             id="complemento"
-            placeholder="Apto, bloco, referência"
+            placeholder="Apto, bloco"
             value={campos.complemento}
             onChange={(e) => set("complemento", e.target.value)}
           />
@@ -226,7 +250,7 @@ export function FormEndereco({
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-[2fr_1fr]">
+      <div className="grid gap-4 grid-cols-[2fr_1fr]">
         <div className="space-y-2">
           <Label htmlFor="cidade">Cidade</Label>
           <Input
@@ -256,16 +280,25 @@ export function FormEndereco({
         </p>
       )}
 
-      <div className="flex flex-wrap gap-2">
-        <Button type="button" onClick={salvar} disabled={salvando} className="gap-2">
+      <div className="flex flex-col items-center gap-2 pt-1">
+        <Button
+          type="button"
+          size="lg"
+          className="min-h-14 w-full rounded-[24px] text-base font-bold"
+          onClick={salvar}
+          disabled={salvando}
+        >
           {salvando && <Loader2 className="size-4 animate-spin" />}
           {endereco ? "Salvar alterações" : "Salvar imóvel"}
         </Button>
-        {onCancelar && (
-          <Button type="button" variant="ghost" onClick={onCancelar}>
-            Cancelar
-          </Button>
-        )}
+        <Button
+          type="button"
+          variant="ghost"
+          className="gap-2 text-muted-foreground"
+          onClick={() => (endereco && onCancelar ? onCancelar() : setEtapa("tipo"))}
+        >
+          <ArrowLeft className="size-4" /> Voltar
+        </Button>
       </div>
     </div>
   );

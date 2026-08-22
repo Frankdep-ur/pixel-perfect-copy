@@ -32,6 +32,7 @@ import { CabecalhoPasso, CardDuracao, CardOpcao } from "@/components/contratar/u
 import { dataMinimaAgendamento, ehDomingo, horariosPermitidos } from "@/lib/agenda";
 import { type Rascunho } from "@/lib/contratacao";
 import { FormEndereco } from "@/components/enderecos/form-endereco";
+import { SeletorTipoImovel } from "@/components/enderecos/seletor-tipo-imovel";
 import { enderecosQuery, resumoEndereco, type Endereco } from "@/lib/enderecos";
 import { REGIOES } from "@/lib/regioes";
 import type { RegiaoId } from "@/lib/regioes";
@@ -124,16 +125,16 @@ export function PassoEndereco({
 
   const lista = enderecos ?? [];
   const semImoveis = !isLoading && lista.length === 0;
-  const rotulo = TIPOS_IMOVEL.find((t) => t.id === rascunho.tipo_imovel)?.label;
+  const cadastrando = novo || semImoveis;
 
   return (
     <div className="space-y-5">
-      <CabecalhoPasso
-        titulo={rotulo ? `Endereço — ${rotulo}` : "Onde será a limpeza?"}
-
-        subtitulo={`Escolha um dos seus imóveis. Atendemos ${REGIOES.grande_floripa.nome} e ${REGIOES.balneario.nome}.`}
-      />
-
+      {!cadastrando && (
+        <CabecalhoPasso
+          titulo="Onde será a limpeza?"
+          subtitulo={`Escolha um dos seus imóveis. Atendemos ${REGIOES.grande_floripa.nome} e ${REGIOES.balneario.nome}.`}
+        />
+      )}
 
       {isLoading && (
         <div className="flex justify-center py-8">
@@ -141,7 +142,7 @@ export function PassoEndereco({
         </div>
       )}
 
-      {lista.length > 0 && (
+      {!cadastrando && lista.length > 0 && (
         <div className="grid gap-3">
           {lista.map((e) => (
             <Cartao
@@ -164,51 +165,34 @@ export function PassoEndereco({
         </div>
       )}
 
-      {(novo || semImoveis) && (
-        <div className="rounded-2xl border border-border bg-card p-4">
-          <p className="mb-4 text-sm font-semibold">
-            {semImoveis ? "Cadastre seu primeiro imóvel" : "Novo imóvel"}
-          </p>
-          <FormEndereco
-            userId={userId}
-            onSalvo={(salvo) => {
-              queryClient.invalidateQueries({ queryKey: ["enderecos"] });
-              escolher(salvo);
-              setNovo(false);
-            }}
-            {...(semImoveis ? {} : { onCancelar: () => setNovo(false) })}
-          />
-        </div>
+      {cadastrando && (
+        <FormEndereco
+          userId={userId}
+          onSalvo={(salvo) => {
+            queryClient.invalidateQueries({ queryKey: ["enderecos"] });
+            escolher(salvo);
+            setNovo(false);
+          }}
+          onCancelar={semImoveis ? undefined : () => setNovo(false)}
+        />
       )}
 
-      {!novo && !semImoveis && (
-        <Button type="button" variant="outline" onClick={() => setNovo(true)} className="gap-2">
+      {!cadastrando && (
+        <Button type="button" variant="outline" onClick={() => setNovo(true)} className="min-h-12 w-full gap-2 rounded-2xl">
           <Plus className="size-4" /> Cadastrar outro imóvel
         </Button>
       )}
 
-      {rascunho.endereco_id && !rascunho.tipo_imovel && (
-        <div className="space-y-3 rounded-2xl border border-warning/40 bg-warning/10 p-4">
-          <p className="text-sm font-semibold">Qual o tipo deste imóvel?</p>
-          <div className="grid grid-cols-2 gap-2">
-            {TIPOS_IMOVEL.map((tipo) => (
-              <button
-                key={tipo.id}
-                type="button"
-                onClick={() => {
-                  atualizar({ tipo_imovel: tipo.id });
-                  void supabase
-                    .from("enderecos")
-                    .update({ tipo_imovel: tipo.id })
-                    .eq("id", rascunho.endereco_id!);
-                }}
-                className="min-h-11 rounded-xl border border-border bg-card px-3 text-sm font-medium"
-              >
-                {tipo.label}
-              </button>
-            ))}
-          </div>
-        </div>
+      {rascunho.endereco_id && !rascunho.tipo_imovel && !cadastrando && (
+        <SeletorTipoImovel
+          valor={null}
+          onChange={(id) => {
+            atualizar({ tipo_imovel: id });
+            void supabase.from("enderecos").update({ tipo_imovel: id }).eq("id", rascunho.endereco_id!);
+          }}
+          titulo="Qual o tipo deste imóvel?"
+          subtitulo="Esse endereço ainda não tem o tipo. Escolha uma vez — fica salvo."
+        />
       )}
     </div>
   );

@@ -154,6 +154,7 @@ function Contratar() {
 
   const airbnb = ehAirbnb(rascunho.tipo_imovel);
   const duracaoAirbnb = (Number(precos?.["airbnb_duracao_horas"] ?? 4) || 4) as 4 | 6 | 8;
+  const cadastrandoImovel = passo === 2 && !rascunho.endereco_id;
 
   // Airbnb tem escopo e duração fixos: preenchemos sem perguntar.
   useEffect(() => {
@@ -263,6 +264,7 @@ function Contratar() {
                   </div>
                 )}
 
+                {!cadastrandoImovel && (
                 <div className="mt-8 flex flex-col items-center gap-2">
                   <Button
                     onClick={avancar}
@@ -281,6 +283,7 @@ function Contratar() {
                     <ArrowLeft className="size-4" /> {indice === 0 ? "Sair" : "Voltar"}
                   </Button>
                 </div>
+                )}
 
               </>
             )}

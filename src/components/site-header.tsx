@@ -52,7 +52,7 @@ export function SiteHeader() {
         </button>
 
         <Link
-          to="/"
+          to={ehProfissional ? "/profissional" : "/"}
           onClick={() => setOpen(false)}
           className="mx-auto flex h-11 flex-col items-center justify-center transition-transform duration-200 ease-out active:scale-[0.98] md:mx-0"
         >
@@ -61,13 +61,15 @@ export function SiteHeader() {
             alt="Lar77 — diaristas de confiança"
             className="h-[34px] w-auto md:h-10"
           />
+          {/* Assinatura só no desktop: em 390px ela virava texto de 9px ilegível. */}
           <span
-            className="mt-0.5 text-[9px] font-semibold uppercase leading-none text-accent"
+            className="mt-0.5 hidden text-[11px] font-semibold uppercase leading-none text-accent md:block"
             style={{ letterSpacing: "0.24em" }}
           >
             Diaristas de confiança
           </span>
         </Link>
+
 
 
 

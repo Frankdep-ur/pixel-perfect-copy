@@ -164,7 +164,7 @@ function Contratar() {
   const total = sequencia.length;
   const ultimo = indice === total - 1;
 
-  /** As 8 etapas viram 4 bolinhas: local, serviço, detalhes e profissional. */
+  /** As etapas viram 4 bolinhas: local, serviço, detalhes e profissional. */
   const grupoAtual =
     fase === "passos" ? (passo <= 2 ? 1 : passo <= 6 ? 2 : 3) : fase === "busca" ? 4 : 4;
 
@@ -174,7 +174,8 @@ function Contratar() {
         return !!rascunho.tipo_imovel;
       case 2:
         return !!rascunho.endereco_id && !!rascunho.endereco.regiao;
-      case 3:
+      case 4:
+        if (!rascunho.duracao_horas || !rascunho.tipo_limpeza) return false;
         if (ehComercial(rascunho.tipo_imovel)) {
           return (
             !!rascunho.faixa_pessoas &&
@@ -182,17 +183,11 @@ function Contratar() {
           );
         }
         return true;
-      case 4:
-        return !!rascunho.duracao_horas;
-      case 5:
-        return !!rascunho.tipo_limpeza;
-      case 6:
-        return true;
       case 7:
         return (
           !!rascunho.data &&
           !ehDomingo(rascunho.data) &&
-          horarioValido(rascunho.duracao_horas, rascunho.hora)
+          horarioValido(rascunho.duracao_horas, rascunho.hora, airbnb)
         );
 
       default:

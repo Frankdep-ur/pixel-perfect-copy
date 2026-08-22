@@ -20,10 +20,12 @@ export function TopoFunil({
   grupoAtual,
   onVoltar,
   podeVoltar = true,
+  onCancelar,
 }: {
   grupoAtual: number;
   onVoltar: () => void;
   podeVoltar?: boolean;
+  onCancelar?: () => void;
 }) {
   return (
     <div className="flex h-14 items-center gap-2">

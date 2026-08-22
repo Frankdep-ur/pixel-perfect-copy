@@ -20,6 +20,7 @@ import { Route as MensagensRouteImport } from './routes/mensagens'
 import { Route as MinhaContaRouteImport } from './routes/minha-conta'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as ProfissionalRouteImport } from './routes/profissional'
+import { Route as ReservasRouteImport } from './routes/reservas'
 import { Route as SejaProfissionalRouteImport } from './routes/seja-profissional'
 import { Route as TermosRouteImport } from './routes/termos'
 import { Route as TrabalheConoscoRouteImport } from './routes/trabalhe-conosco'
@@ -95,6 +96,11 @@ const PrivacidadeRoute = PrivacidadeRouteImport.update({
 const ProfissionalRoute = ProfissionalRouteImport.update({
   id: '/profissional',
   path: '/profissional',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReservasRoute = ReservasRouteImport.update({
+  id: '/reservas',
+  path: '/reservas',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SejaProfissionalRoute = SejaProfissionalRouteImport.update({
@@ -215,6 +221,7 @@ export interface FileRoutesByFullPath {
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
   '/profissional': typeof ProfissionalRoute
+  '/reservas': typeof ReservasRoute
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
   '/trabalhe-conosco': typeof TrabalheConoscoRoute
@@ -248,6 +255,7 @@ export interface FileRoutesByTo {
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
   '/profissional': typeof ProfissionalRoute
+  '/reservas': typeof ReservasRoute
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
   '/trabalhe-conosco': typeof TrabalheConoscoRoute
@@ -283,6 +291,7 @@ export interface FileRoutesById {
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
   '/profissional': typeof ProfissionalRoute
+  '/reservas': typeof ReservasRoute
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
   '/trabalhe-conosco': typeof TrabalheConoscoRoute
@@ -319,6 +328,7 @@ export interface FileRouteTypes {
     | '/minha-conta'
     | '/privacidade'
     | '/profissional'
+    | '/reservas'
     | '/seja-profissional'
     | '/termos'
     | '/trabalhe-conosco'
@@ -352,6 +362,7 @@ export interface FileRouteTypes {
     | '/minha-conta'
     | '/privacidade'
     | '/profissional'
+    | '/reservas'
     | '/seja-profissional'
     | '/termos'
     | '/trabalhe-conosco'
@@ -386,6 +397,7 @@ export interface FileRouteTypes {
     | '/minha-conta'
     | '/privacidade'
     | '/profissional'
+    | '/reservas'
     | '/seja-profissional'
     | '/termos'
     | '/trabalhe-conosco'
@@ -421,6 +433,7 @@ export interface RootRouteChildren {
   MinhaContaRoute: typeof MinhaContaRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   ProfissionalRoute: typeof ProfissionalRoute
+  ReservasRoute: typeof ReservasRoute
   SejaProfissionalRoute: typeof SejaProfissionalRoute
   TermosRoute: typeof TermosRoute
   TrabalheConoscoRoute: typeof TrabalheConoscoRoute
@@ -509,6 +522,13 @@ declare module '@tanstack/react-router' {
       path: '/profissional'
       fullPath: '/profissional'
       preLoaderRoute: typeof ProfissionalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reservas': {
+      id: '/reservas'
+      path: '/reservas'
+      fullPath: '/reservas'
+      preLoaderRoute: typeof ReservasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/seja-profissional': {
@@ -705,6 +725,7 @@ const rootRouteChildren: RootRouteChildren = {
   MinhaContaRoute: MinhaContaRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   ProfissionalRoute: ProfissionalRoute,
+  ReservasRoute: ReservasRoute,
   SejaProfissionalRoute: SejaProfissionalRoute,
   TermosRoute: TermosRoute,
   TrabalheConoscoRoute: TrabalheConoscoRoute,

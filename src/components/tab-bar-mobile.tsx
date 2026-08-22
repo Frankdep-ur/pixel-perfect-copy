@@ -65,7 +65,7 @@ export function TabBarMobile() {
       {/* Espaçador em fluxo: garante que o fim do conteúdo nunca fique sob a barra fixa. */}
       <div
         aria-hidden
-        className="h-[calc(72px+env(safe-area-inset-bottom))] md:hidden"
+        className="h-[calc(84px+env(safe-area-inset-bottom))] md:hidden"
         data-tab-bar-spacer
       />
       <nav

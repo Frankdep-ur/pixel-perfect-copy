@@ -44,9 +44,8 @@ export function TabBarMobile() {
     { label: "Início", icon: Home, to: "/", exact: true },
     ehProfissional
       ? { label: "Minhas faxinas", icon: CalendarCheck, to: "/profissional" }
-      : { label: "Minhas reservas", icon: CalendarCheck, to: "/minha-conta" },
+      : { label: "Minhas reservas", icon: CalendarCheck, to: "/reservas" },
     { label: "Mensagens", icon: MessageCircle, to: "/mensagens", badge: naoLidas ?? 0 },
-    { label: "Favoritos", icon: Heart, to: "/favoritos" },
     { label: "Conta", icon: UserRound, to: "/minha-conta", search: { aba: "perfil" } },
   ];
 

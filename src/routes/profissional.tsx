@@ -21,7 +21,7 @@ import { DocumentosProfissional } from "@/components/profissional/documentos-pro
 import { BloqueiosProfissional } from "@/components/profissional/bloqueios-profissional";
 
 import { nomeRegiao } from "@/lib/regioes";
-import { useSession } from "@/hooks/use-auth";
+import { usePapeis, useSession } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/profissional")({
   head: () => ({

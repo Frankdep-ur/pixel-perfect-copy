@@ -205,6 +205,11 @@ function Contratar() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  /** Sair do wizard sem criar pedido: volta para a home do cliente. */
+  function sair() {
+    navigate({ to: "/" });
+  }
+
   function voltar() {
     if (fase === "checkout") {
       setReserva(null);
@@ -215,7 +220,9 @@ function Contratar() {
       setFase("passos");
       return;
     }
+    // Na primeira etapa o Voltar nunca prende o usuário: sai do fluxo.
     if (indice > 0) setPasso(sequencia[indice - 1]!);
+    else sair();
   }
 
 

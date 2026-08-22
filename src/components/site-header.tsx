@@ -244,9 +244,12 @@ export function SiteHeader() {
               </a>
             ))
           )}
-          <span className="mt-4 px-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Acessos
-          </span>
+          {!ehProfissional && (
+            <span className="mt-4 px-2 text-[13px] font-semibold uppercase tracking-wide text-muted-foreground">
+              Acessos
+            </span>
+          )}
+
           {user ? (
             <>
               <Link

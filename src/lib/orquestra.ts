@@ -192,7 +192,9 @@ export function segundosRestantes(iso: string | null | undefined) {
 }
 
 export function formatarContagem(segundos: number) {
-  const m = Math.floor(segundos / 60);
+  const h = Math.floor(segundos / 3600);
+  const m = Math.floor((segundos % 3600) / 60);
   const s = segundos % 60;
+  if (h > 0) return `${h}h${String(m).padStart(2, "0")}`;
   return `${m}:${String(s).padStart(2, "0")}`;
 }

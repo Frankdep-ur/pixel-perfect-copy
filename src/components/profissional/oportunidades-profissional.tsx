@@ -161,7 +161,9 @@ function CartaoConvite({
   const restante = useContagem(convite.expira_em);
   const b = convite;
   const end = convite;
-  const expirado = restante <= 0;
+  // O prazo é verificado direto na data de expiração: assim o botão nunca nasce
+  // desabilitado por causa do primeiro tique do relógio.
+  const expirado = new Date(convite.expira_em).getTime() <= Date.now();
 
   return (
     <Card className="border-2 border-primary/40">

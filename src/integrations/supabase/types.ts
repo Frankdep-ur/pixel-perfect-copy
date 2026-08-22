@@ -1076,6 +1076,7 @@ export type Database = {
         Args: { _booking_id: string; _user_id: string }
         Returns: boolean
       }
+      prazo_convite: { Args: { _data: string; _hora: string }; Returns: string }
       profissionais_candidatas: {
         Args: {
           _data: string

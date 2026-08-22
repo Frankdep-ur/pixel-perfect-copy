@@ -90,9 +90,13 @@ function Mensagens() {
           <EstadoVazio
             icon={MessageCircle}
             titulo="Nenhuma conversa ainda"
-            texto="O chat abre quando uma profissional aceita o seu serviço. Assim que isso acontecer, a conversa aparece aqui."
-            acaoLabel="Contratar faxina"
-            acaoTo="/contratar"
+            texto={
+              ehProfissional
+                ? "O chat abre quando um cliente te escolhe para a faxina. Assim que isso acontecer, a conversa aparece aqui."
+                : "O chat abre quando uma profissional aceita o seu serviço. Assim que isso acontecer, a conversa aparece aqui."
+            }
+            acaoLabel={ehProfissional ? "Ver oportunidades" : "Contratar faxina"}
+            acaoTo={ehProfissional ? "/profissional" : "/contratar"}
           />
         )}
 

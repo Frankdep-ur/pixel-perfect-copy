@@ -55,9 +55,13 @@ export const Route = createFileRoute("/contratar")({
   component: Contratar,
 });
 
-const PASSOS_PADRAO = [1, 2, 3, 4, 5, 6, 7, 8];
-/** Airbnb é preço fixo com escopo definido: só endereço, imóvel, data e observações. */
-const PASSOS_AIRBNB = [1, 2, 7, 8];
+/**
+ * Wizard curto: 1) tipo do imóvel, 2) endereço, 4) serviço (duração + cômodos,
+ * tipo de limpeza e extras opcionais na mesma tela), 7) data/hora + observações.
+ */
+const PASSOS_PADRAO = [1, 2, 4, 7];
+/** Airbnb é preço fixo com escopo definido: só imóvel, endereço e data. */
+const PASSOS_AIRBNB = [1, 2, 7];
 
 function Contratar() {
   const navigate = useNavigate();

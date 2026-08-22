@@ -9,7 +9,6 @@ import { SiteHeader } from "@/components/site-header";
 import { PwaInstalar } from "@/components/pwa-instalar";
 import { SiteFooter } from "@/components/site-footer";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { CadastroProfissional } from "@/components/profissional/cadastro-profissional";
@@ -21,6 +20,15 @@ import { nomeRegiao } from "@/lib/regioes";
 import { usePapeis, useSession } from "@/hooks/use-auth";
 
 type Busca = { aba?: string };
+
+/** Nome em Title Case: o cadastro às vezes vem todo em maiúsculas. */
+function tituloNome(nome: string) {
+  return nome
+    .toLocaleLowerCase("pt-BR")
+    .split(" ")
+    .map((p) => (p.length > 2 ? p.charAt(0).toLocaleUpperCase("pt-BR") + p.slice(1) : p))
+    .join(" ");
+}
 
 export const Route = createFileRoute("/profissional")({
   validateSearch: (busca: Record<string, unknown>): Busca =>
@@ -103,7 +111,7 @@ function AreaProfissional() {
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
-      <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-6">
+      <main className="mx-auto w-full max-w-4xl flex-1 px-4 pb-24 pt-5 md:pb-10">
         {(carregando || isLoading) && (
           <div className="flex justify-center py-16">
             <Loader2 className="size-6 animate-spin text-primary" />

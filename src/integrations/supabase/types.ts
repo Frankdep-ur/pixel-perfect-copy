@@ -988,6 +988,7 @@ export type Database = {
     }
     Functions: {
       abrir_rodada_convites: { Args: { _booking_id: string }; Returns: number }
+      abrir_rodada_interna: { Args: { _booking_id: string }; Returns: number }
       confirmar_pagamento_booking: {
         Args: { _booking_id: string }
         Returns: string
@@ -1130,6 +1131,7 @@ export type Database = {
           telefone: string
         }[]
       }
+      reabrir_rodadas_pendentes: { Args: never; Returns: number }
       recusar_booking: { Args: { _booking_id: string }; Returns: string }
       reservar_profissional: {
         Args: { _booking_id: string; _profissional_id: string }

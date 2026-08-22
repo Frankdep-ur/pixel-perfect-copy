@@ -70,7 +70,12 @@ const PROXIMO: Record<string, { status: string; label: string; icone: LucideIcon
   em_andamento: { status: "finalizada", label: "Faxina finalizada", icone: Check },
 };
 
-export function ServicosProfissional({ profissionalId, nomeProfissional, userId }: Props) {
+export function ServicosProfissional({
+  profissionalId,
+  nomeProfissional,
+  userId,
+  abaInicial,
+}: Props & { abaInicial?: string }) {
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({

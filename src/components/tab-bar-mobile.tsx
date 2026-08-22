@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { CalendarCheck, Heart, Home, MessageCircle, UserRound } from "lucide-react";
+import { CalendarCheck, Home, MessageCircle, UserRound } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import { usePapeis, useSession } from "@/hooks/use-auth";

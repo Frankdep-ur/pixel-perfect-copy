@@ -65,7 +65,7 @@ export function TabBarMobile() {
       {/* Espaçador em fluxo: garante que o fim do conteúdo nunca fique sob a barra fixa. */}
       <div
         aria-hidden
-        className="h-[calc(72px+env(safe-area-inset-bottom))] md:hidden"
+        className="h-[calc(84px+env(safe-area-inset-bottom))] md:hidden"
         data-tab-bar-spacer
       />
       <nav
@@ -86,7 +86,7 @@ export function TabBarMobile() {
                 to={aba.to}
                 {...(aba.search ? { search: aba.search as never } : {})}
                 aria-label={aba.label}
-                className={`flex min-h-[56px] min-w-12 flex-col items-center justify-center gap-1 px-1 py-2 transition-colors duration-200 ease-out ${
+                className={`flex min-h-[60px] min-w-11 flex-col items-center justify-center gap-1 px-0.5 py-2 transition-colors duration-200 ease-out ${
                   ativa ? "text-accent" : "text-muted-foreground"
                 }`}
               >
@@ -98,7 +98,11 @@ export function TabBarMobile() {
                     </span>
                   )}
                 </span>
-                <span className="text-[11px] font-medium leading-none">{aba.label}</span>
+                {/* Rótulo inteiro, podendo quebrar em duas linhas — nunca cortado. */}
+                <span className="text-center text-[11px] font-medium leading-tight">
+                  {aba.label}
+                </span>
+
               </Link>
             </li>
           );

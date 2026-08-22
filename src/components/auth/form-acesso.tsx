@@ -138,27 +138,27 @@ export function FormAcesso({ papel, next }: Props) {
   const Icone = papel === "profissional" ? Sparkles : ShieldCheck;
 
   return (
-    <main className="mx-auto w-full max-w-md flex-1 px-5 py-10">
+    <main className="mx-auto w-full max-w-md flex-1 px-5 pb-16 pt-8">
       <span className="mx-auto flex size-12 items-center justify-center rounded-full bg-accent/12">
         <Icone className="size-5 text-primary" />
       </span>
       <h1 className="mt-4 text-center text-3xl font-semibold tracking-tight">{config.titulo}</h1>
-      <p className="mt-2 text-center text-sm text-muted-foreground">{config.subtitulo}</p>
+      <p className="mt-2 text-center text-[15px] text-muted-foreground">{config.subtitulo}</p>
 
-      <Button type="button" variant="outline" className="mt-7 w-full" onClick={entrarComGoogle}>
+      <Button type="button" variant="outline" className="mt-7 h-12 w-full text-base" onClick={entrarComGoogle}>
         Continuar com Google
       </Button>
 
-      <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
+      <div className="my-6 flex items-center gap-3 text-[13px] text-muted-foreground">
         <span className="h-px flex-1 bg-border" />
         ou use seu e-mail
         <span className="h-px flex-1 bg-border" />
       </div>
 
       <Tabs defaultValue="entrar">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="entrar">Entrar</TabsTrigger>
-          <TabsTrigger value="criar">Criar conta</TabsTrigger>
+        <TabsList className="grid h-auto w-full grid-cols-2 p-1">
+          <TabsTrigger value="entrar" className="min-h-11 text-[13px]">Entrar</TabsTrigger>
+          <TabsTrigger value="criar" className="min-h-11 text-[13px]">Criar conta</TabsTrigger>
         </TabsList>
 
         <TabsContent value="entrar">
@@ -166,6 +166,7 @@ export function FormAcesso({ papel, next }: Props) {
             <div className="space-y-2">
               <Label htmlFor="email-login">E-mail</Label>
               <Input
+                className="h-12"
                 id="email-login"
                 type="email"
                 autoComplete="email"
@@ -177,6 +178,7 @@ export function FormAcesso({ papel, next }: Props) {
             <div className="space-y-2">
               <Label htmlFor="senha-login">Senha</Label>
               <Input
+                className="h-12"
                 id="senha-login"
                 type="password"
                 autoComplete="current-password"
@@ -185,7 +187,7 @@ export function FormAcesso({ papel, next }: Props) {
                 onChange={(e) => setSenha(e.target.value)}
               />
             </div>
-            <Button type="submit" className="w-full" size="lg" disabled={enviando}>
+            <Button type="submit" className="h-12 w-full text-base" size="lg" disabled={enviando}>
               {enviando && <Loader2 className="mr-2 size-4 animate-spin" />}
               Entrar
             </Button>
@@ -196,7 +198,7 @@ export function FormAcesso({ papel, next }: Props) {
           <form className="space-y-4 pt-4" onSubmit={cadastrar}>
             <div className="space-y-2">
               <Label htmlFor="nome">Nome completo</Label>
-              <Input id="nome" required value={nome} onChange={(e) => setNome(e.target.value)} />
+              <Input id="nome" className="h-12" required value={nome} onChange={(e) => setNome(e.target.value)} />
             </div>
             <CampoTelefone
               id="telefone"
@@ -207,6 +209,7 @@ export function FormAcesso({ papel, next }: Props) {
             <div className="space-y-2">
               <Label htmlFor="cpf-novo">CPF</Label>
               <Input
+                className="h-12"
                 id="cpf-novo"
                 inputMode="numeric"
                 required
@@ -214,13 +217,14 @@ export function FormAcesso({ papel, next }: Props) {
                 onChange={(e) => setCpf(mascaraCpf(e.target.value))}
                 placeholder="000.000.000-00"
               />
-              <p className="text-xs text-muted-foreground">
+              <p className="text-[13px] text-muted-foreground">
                 Obrigatório para validarmos sua conta na Lar77.
               </p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="email-novo">E-mail</Label>
               <Input
+                className="h-12"
                 id="email-novo"
                 type="email"
                 autoComplete="email"
@@ -232,6 +236,7 @@ export function FormAcesso({ papel, next }: Props) {
             <div className="space-y-2">
               <Label htmlFor="senha-nova">Senha</Label>
               <Input
+                className="h-12"
                 id="senha-nova"
                 type="password"
                 autoComplete="new-password"
@@ -240,9 +245,9 @@ export function FormAcesso({ papel, next }: Props) {
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
               />
-              <p className="text-xs text-muted-foreground">Mínimo de 6 caracteres.</p>
+              <p className="text-[13px] text-muted-foreground">Mínimo de 6 caracteres.</p>
             </div>
-            <Button type="submit" className="w-full" size="lg" disabled={enviando}>
+            <Button type="submit" className="h-12 w-full text-base" size="lg" disabled={enviando}>
               {enviando && <Loader2 className="mr-2 size-4 animate-spin" />}
               {config.ctaCriar}
             </Button>
@@ -259,12 +264,15 @@ export function FormAcesso({ papel, next }: Props) {
           {config.labelOposta}
         </Link>
       )}
-      <Link
-        to="/admin/login"
-        className="mt-2 flex min-h-12 items-center justify-center text-xs text-muted-foreground transition-colors hover:text-primary"
-      >
-        Acesso administrativo
-      </Link>
+      {/* Acesso administrativo não faz parte do app da profissional. */}
+      {papel === "cliente" && (
+        <Link
+          to="/admin/login"
+          className="mt-2 flex min-h-12 items-center justify-center text-[13px] text-muted-foreground transition-colors hover:text-primary"
+        >
+          Acesso administrativo
+        </Link>
+      )}
     </main>
   );
 }

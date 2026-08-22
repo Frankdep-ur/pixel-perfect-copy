@@ -241,20 +241,28 @@ export function ServicosProfissional({
           <span className="ml-auto text-xs font-semibold text-primary">Ver na agenda</span>
         </button>
       )}
-      <TabsList className="w-full">
-        <TabsTrigger value="oportunidades" className="flex-1">
+      {/* Quatro abas em grid: cabem em 390px, sem arrastar e sem cortar palavra. */}
+      <TabsList className="grid h-auto w-full grid-cols-4 gap-1 p-1">
+        <TabsTrigger
+          value="oportunidades"
+          className="min-h-11 whitespace-normal break-words px-1 text-[13px] leading-tight"
+        >
           Oportunidades
         </TabsTrigger>
-        <TabsTrigger value="pedidos" className="flex-1">
-          Pedidos ({pendentes.length})
+
+        <TabsTrigger value="pedidos" className="min-h-11 gap-1 px-1 text-[13px] leading-tight">
+          Pedidos
+          {pendentes.length > 0 && <ContadorAba valor={pendentes.length} />}
         </TabsTrigger>
-        <TabsTrigger value="agenda" className="flex-1">
-          Agenda ({meus.length})
+        <TabsTrigger value="agenda" className="min-h-11 gap-1 px-1 text-[13px] leading-tight">
+          Agenda
+          {meus.length > 0 && <ContadorAba valor={meus.length} />}
         </TabsTrigger>
-        <TabsTrigger value="historico" className="flex-1">
-          Histórico ({concluidos.length})
+        <TabsTrigger value="historico" className="min-h-11 px-1 text-[13px] leading-tight">
+          Histórico
         </TabsTrigger>
       </TabsList>
+
 
       <TabsContent value="oportunidades" className="mt-6">
         <OportunidadesProfissional profissionalId={profissionalId} />
@@ -457,5 +465,14 @@ function Cartao({
         )}
       </CardContent>
     </Card>
+  );
+}
+
+/** Contagem da aba em badge — o número nunca vai no meio do rótulo. */
+function ContadorAba({ valor }: { valor: number }) {
+  return (
+    <span className="inline-flex min-w-[18px] items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold leading-[18px] text-accent-foreground">
+      {valor > 99 ? "99+" : valor}
+    </span>
   );
 }

@@ -4,7 +4,14 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -154,208 +161,237 @@ export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdica
 
   return (
     <Card className="mt-3">
-      <CardHeader>
-        <CardTitle>Meu perfil</CardTitle>
-        <p className="text-sm text-muted-foreground">
-          Essas informações aparecem para os clientes na hora de escolher a profissional.
+      <CardHeader className="pb-2">
+        <CardTitle className="text-lg">Minha conta</CardTitle>
+        <p className="text-[13px] text-muted-foreground">
+          Toque em cada bloco para abrir. Suas informações aparecem para os clientes na hora de
+          escolher a profissional.
         </p>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <UploadFoto
-          userId={perfil.user_id}
-          url={foto}
-          nome={nome}
-          onChange={(url) => {
-            setFoto(url);
-            salvar.mutate({ foto_url: url });
-          }}
-        />
-
-        <div className="space-y-3 rounded-xl bg-surface-tint p-4 text-sm">
-          <p className="font-semibold text-foreground">Dados cadastrais</p>
-          <div className="grid gap-2 sm:grid-cols-2">
-            <p className="text-muted-foreground">
-              Nome: <span className="font-medium text-foreground">{nome || "—"}</span>
-            </p>
-            <p className="text-muted-foreground">
-              WhatsApp: <span className="font-medium text-foreground">{telefone || "—"}</span>
-            </p>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Nome, telefone, e-mail e documentos só podem ser alterados pela equipe Lar77 — fale
-            com o suporte se algo estiver errado.
-          </p>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="p-anos">Anos de experiência *</Label>
-            <Input
-              id="p-anos"
-              type="number"
-              min={0}
-              value={anos}
-              onChange={(e) => setAnos(e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="p-raio">Distância máxima que atende (km) *</Label>
-            <Input
-              id="p-raio"
-              type="number"
-              min={1}
-              value={raio}
-              onChange={(e) => setRaio(e.target.value)}
-            />
-          </div>
-        </div>
-
-
-        <div className="space-y-2">
-          <Label htmlFor="p-bio">Sobre você</Label>
-          <Textarea
-            id="p-bio"
-            rows={3}
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            placeholder="Conte sua experiência, cuidados e diferenciais no atendimento."
-          />
-        </div>
-
-        <div className="rounded-2xl bg-surface-tint p-4">
-          <EnderecoProfissional
-            valor={endereco}
-            onChange={(parcial) => setEndereco((atual) => ({ ...atual, ...parcial }))}
-          />
-        </div>
-
-
-
-        <div className="space-y-3">
-          <Label>Região de atuação</Label>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {(Object.keys(REGIOES) as RegiaoId[]).map((id) => (
-              <button
-                key={id}
-                type="button"
-                onClick={() => {
-                  setRegiao(id);
-                  setCidades([]);
-                  setCidade("");
+      <CardContent className="pt-2">
+        {/* Blocos recolhíveis: no celular o formulário inteiro era uma rolagem sem fim. */}
+        <Accordion type="multiple" defaultValue={["perfil"]} className="w-full">
+          <AccordionItem value="perfil">
+            <AccordionTrigger className="min-h-12 text-[15px] font-semibold">
+              Perfil
+            </AccordionTrigger>
+            <AccordionContent className="space-y-6">
+              <UploadFoto
+                userId={perfil.user_id}
+                url={foto}
+                nome={nome}
+                onChange={(url) => {
+                  setFoto(url);
+                  salvar.mutate({ foto_url: url });
                 }}
-                className={cn(
-                  "rounded-xl border p-4 text-left text-sm transition",
-                  regiao === id
-                    ? "border-primary bg-primary/5 text-foreground"
-                    : "border-border hover:border-primary/40",
-                )}
-              >
-                <span className="font-medium">{REGIOES[id].nome}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="space-y-3">
-          <Label>Cidades atendidas</Label>
-          <div className="flex flex-wrap gap-4">
-            {REGIOES[regiao].cidades.map((c) => (
-              <label key={c} className="flex items-center gap-2 text-sm">
-                <Checkbox
-                  checked={cidades.includes(c)}
-                  onCheckedChange={() => alternar(cidades, setCidades, c)}
-                />
-                {c}
-              </label>
-            ))}
-          </div>
-          {cidades.length > 0 && (
-            <div className="space-y-2">
-              <Label htmlFor="p-cidade">Cidade onde você mora</Label>
-              <select
-                id="p-cidade"
-                value={cidades.includes(cidade) ? cidade : cidades[0]}
-                onChange={(e) => setCidade(e.target.value)}
-                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-              >
-                {cidades.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-        </div>
-
-        <div className="space-y-3">
-          <Label>Tipos de limpeza</Label>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {[...TIPOS_LIMPEZA, ...TIPOS_LIMPEZA_AIRBNB].map((t) => (
-              <label
-                key={t.id}
-                className="flex items-start gap-3 rounded-xl border border-border p-3 text-sm"
-              >
-                <Checkbox
-                  checked={tipos.includes(t.id)}
-                  onCheckedChange={() => alternar(tipos, setTipos, t.id)}
-                />
-                <span>
-                  <span className="font-medium">{t.label}</span>
-                  <span className="block text-xs text-muted-foreground">{t.descricao}</span>
-                </span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        <div className="space-y-3 rounded-xl border border-border p-4">
-          <div>
-            <Label>Conta PIX para recebimento *</Label>
-            <p className="mt-1 text-xs text-muted-foreground">
-              A conta precisa estar no mesmo nome do seu cadastro. É por aqui que a Lar77
-              repassa os seus pagamentos.
-            </p>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="p-pix-tipo">Tipo de chave</Label>
-              <select
-                id="p-pix-tipo"
-                value={pixTipo}
-                onChange={(e) => setPixTipo(e.target.value)}
-                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-              >
-                {TIPOS_PIX.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="p-pix-chave">Chave PIX</Label>
-              <Input
-                id="p-pix-chave"
-                value={pixChave}
-                onChange={(e) => setPixChave(e.target.value)}
-                placeholder="Sua chave PIX"
               />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="p-pix-titular">Nome do titular</Label>
-            <Input
-              id="p-pix-titular"
-              value={pixTitular}
-              onChange={(e) => setPixTitular(e.target.value)}
-              placeholder="Igual ao nome do cadastro"
-            />
-          </div>
-        </div>
+
+              <div className="space-y-3 rounded-xl bg-surface-tint p-4 text-[13px]">
+                <p className="font-semibold text-foreground">Dados cadastrais</p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <p className="text-muted-foreground">
+                    Nome: <span className="font-medium text-foreground">{nome || "—"}</span>
+                  </p>
+                  <p className="text-muted-foreground">
+                    WhatsApp: <span className="font-medium text-foreground">{telefone || "—"}</span>
+                  </p>
+                </div>
+                <p className="text-[13px] text-muted-foreground">
+                  Nome, telefone, e-mail e documentos só podem ser alterados pela equipe Lar77 —
+                  fale com o suporte se algo estiver errado.
+                </p>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="p-anos">Anos de experiência *</Label>
+                  <Input
+                    id="p-anos"
+                    className="h-12"
+                    type="number"
+                    min={0}
+                    value={anos}
+                    onChange={(e) => setAnos(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="p-raio">Distância máxima que atende (km) *</Label>
+                  <Input
+                    id="p-raio"
+                    className="h-12"
+                    type="number"
+                    min={1}
+                    value={raio}
+                    onChange={(e) => setRaio(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="p-bio">Sobre você</Label>
+                <Textarea
+                  id="p-bio"
+                  rows={3}
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  placeholder="Conte sua experiência, cuidados e diferenciais no atendimento."
+                />
+              </div>
+
+              <div className="space-y-3">
+                <Label>Região de atuação</Label>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {(Object.keys(REGIOES) as RegiaoId[]).map((id) => (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => {
+                        setRegiao(id);
+                        setCidades([]);
+                        setCidade("");
+                      }}
+                      className={cn(
+                        "min-h-12 rounded-xl border p-4 text-left text-[13px] transition",
+                        regiao === id
+                          ? "border-primary bg-primary/5 text-foreground"
+                          : "border-border hover:border-primary/40",
+                      )}
+                    >
+                      <span className="font-medium">{REGIOES[id].nome}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <Label>Cidades atendidas</Label>
+                <div className="flex flex-wrap gap-x-4 gap-y-1">
+                  {REGIOES[regiao].cidades.map((c) => (
+                    <label
+                      key={c}
+                      className="flex min-h-11 items-center gap-2 text-[13px] leading-tight"
+                    >
+                      <Checkbox
+                        checked={cidades.includes(c)}
+                        onCheckedChange={() => alternar(cidades, setCidades, c)}
+                      />
+                      {c}
+                    </label>
+                  ))}
+                </div>
+                {cidades.length > 0 && (
+                  <div className="space-y-2">
+                    <Label htmlFor="p-cidade">Cidade onde você mora</Label>
+                    <select
+                      id="p-cidade"
+                      value={cidades.includes(cidade) ? cidade : cidades[0]}
+                      onChange={(e) => setCidade(e.target.value)}
+                      className="h-12 w-full rounded-md border border-input bg-background px-3 text-[13px]"
+                    >
+                      {cidades.map((c) => (
+                        <option key={c} value={c}>
+                          {c}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-3">
+                <Label>Tipos de limpeza</Label>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {[...TIPOS_LIMPEZA, ...TIPOS_LIMPEZA_AIRBNB].map((t) => (
+                    <label
+                      key={t.id}
+                      className="flex items-start gap-3 rounded-xl border border-border p-3 text-[13px]"
+                    >
+                      <Checkbox
+                        checked={tipos.includes(t.id)}
+                        onCheckedChange={() => alternar(tipos, setTipos, t.id)}
+                      />
+                      <span className="min-w-0">
+                        <span className="font-medium">{t.label}</span>
+                        <span className="block text-[13px] text-muted-foreground">
+                          {t.descricao}
+                        </span>
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="endereco">
+            <AccordionTrigger className="min-h-12 text-[15px] font-semibold">
+              Endereço e mapa
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="rounded-2xl bg-surface-tint p-4">
+                <EnderecoProfissional
+                  valor={endereco}
+                  onChange={(parcial) => setEndereco((atual) => ({ ...atual, ...parcial }))}
+                />
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="pix">
+            <AccordionTrigger className="min-h-12 text-[15px] font-semibold">PIX</AccordionTrigger>
+            <AccordionContent>
+              <div className="space-y-3 rounded-xl border border-border p-4">
+                <div>
+                  <Label>Conta PIX para recebimento *</Label>
+                  <p className="mt-1 text-[13px] text-muted-foreground">
+                    A conta precisa estar no mesmo nome do seu cadastro. É por aqui que a Lar77
+                    repassa os seus pagamentos.
+                  </p>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="p-pix-tipo">Tipo de chave</Label>
+                    <select
+                      id="p-pix-tipo"
+                      value={pixTipo}
+                      onChange={(e) => setPixTipo(e.target.value)}
+                      className="h-12 w-full rounded-md border border-input bg-background px-3 text-[13px]"
+                    >
+                      {TIPOS_PIX.map((t) => (
+                        <option key={t.id} value={t.id}>
+                          {t.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="p-pix-chave">Chave PIX</Label>
+                    <Input
+                      id="p-pix-chave"
+                      className="h-12"
+                      value={pixChave}
+                      onChange={(e) => setPixChave(e.target.value)}
+                      placeholder="Sua chave PIX"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="p-pix-titular">Nome do titular</Label>
+                  <Input
+                    id="p-pix-titular"
+                    className="h-12"
+                    value={pixTitular}
+                    onChange={(e) => setPixTitular(e.target.value)}
+                    placeholder="Igual ao nome do cadastro"
+                  />
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
 
         <Button
-          className="w-full"
+          className="mt-5 h-12 w-full text-base"
           size="lg"
           disabled={salvar.isPending}
           onClick={() => salvar.mutate(undefined)}
@@ -367,3 +403,4 @@ export function PerfilProfissional({ perfil }: { perfil: PerfilProfissionalEdica
     </Card>
   );
 }
+

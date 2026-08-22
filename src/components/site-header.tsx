@@ -52,7 +52,7 @@ export function SiteHeader() {
         </button>
 
         <Link
-          to="/"
+          to={ehProfissional ? "/profissional" : "/"}
           onClick={() => setOpen(false)}
           className="mx-auto flex h-11 flex-col items-center justify-center transition-transform duration-200 ease-out active:scale-[0.98] md:mx-0"
         >
@@ -61,13 +61,15 @@ export function SiteHeader() {
             alt="Lar77 — diaristas de confiança"
             className="h-[34px] w-auto md:h-10"
           />
+          {/* Assinatura só no desktop: em 390px ela virava texto de 9px ilegível. */}
           <span
-            className="mt-0.5 text-[9px] font-semibold uppercase leading-none text-accent"
+            className="mt-0.5 hidden text-[11px] font-semibold uppercase leading-none text-accent md:block"
             style={{ letterSpacing: "0.24em" }}
           >
             Diaristas de confiança
           </span>
         </Link>
+
 
 
 
@@ -201,44 +203,9 @@ export function SiteHeader() {
         </div>
 
         <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-5 pt-4">
-          {/* Profissional e cliente têm apps diferentes; visitante vê os links institucionais. */}
-          {user && ehProfissional ? (
-            <>
-              <Link
-                to="/profissional"
-                onClick={() => setOpen(false)}
-                className="flex min-h-14 items-center gap-2 rounded-xl px-2 text-lg font-medium text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
-              >
-                <Sparkles className="size-5" />
-                Oportunidades
-              </Link>
-              <Link
-                to="/profissional"
-                search={{ aba: "agenda" }}
-                onClick={() => setOpen(false)}
-                className="flex min-h-14 items-center gap-2 rounded-xl px-2 text-lg font-medium text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
-              >
-                <CalendarCheck className="size-5" />
-                Minhas faxinas
-              </Link>
-              <Link
-                to="/mensagens"
-                onClick={() => setOpen(false)}
-                className="flex min-h-14 items-center gap-2 rounded-xl px-2 text-lg font-medium text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
-              >
-                <Headset className="size-5" />
-                Mensagens
-              </Link>
-              <Link
-                to="/profissional/conta"
-                onClick={() => setOpen(false)}
-                className="flex min-h-14 items-center gap-2 rounded-xl px-2 text-lg font-medium text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
-              >
-                <UserRound className="size-5" />
-                Minha conta
-              </Link>
-            </>
-          ) : user ? (
+          {/* A profissional navega pelo menu inferior; aqui só Minha área, Sair e Suporte. */}
+          {user && ehProfissional ? null : user ? (
+
             <>
               <Link
                 to="/reservas"
@@ -277,9 +244,12 @@ export function SiteHeader() {
               </a>
             ))
           )}
-          <span className="mt-4 px-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Acessos
-          </span>
+          {!ehProfissional && (
+            <span className="mt-4 px-2 text-[13px] font-semibold uppercase tracking-wide text-muted-foreground">
+              Acessos
+            </span>
+          )}
+
           {user ? (
             <>
               <Link

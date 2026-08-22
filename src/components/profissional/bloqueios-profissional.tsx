@@ -104,7 +104,7 @@ export function BloqueiosProfissional({ profissionalId }: { profissionalId: stri
             {SEMANA.map((d, i) => (
               <span
                 key={`${d}-${i}`}
-                className="pb-1 text-center text-xs font-semibold text-muted-foreground"
+                className="pb-1 text-center text-[13px] font-semibold text-muted-foreground"
               >
                 {d}
               </span>
@@ -122,7 +122,7 @@ export function BloqueiosProfissional({ profissionalId }: { profissionalId: stri
                   disabled={desabilitado || alternar.isPending}
                   onClick={() => alternar.mutate(dia.iso)}
                   className={cn(
-                    "flex h-11 items-center justify-center rounded-xl border text-sm font-medium transition",
+                    "flex h-12 items-center justify-center rounded-xl border text-sm font-medium transition",
                     desabilitado && "border-transparent bg-muted/50 text-muted-foreground/60",
                     !desabilitado && indisponivel && "border-destructive bg-destructive/10 text-destructive",
                     !desabilitado &&
@@ -138,7 +138,7 @@ export function BloqueiosProfissional({ profissionalId }: { profissionalId: stri
           </div>
         )}
 
-        <div className="mt-4 flex flex-wrap gap-4 text-xs text-muted-foreground">
+        <div className="mt-4 flex flex-wrap gap-4 text-[13px] text-muted-foreground">
           <span className="flex items-center gap-1.5">
             <span className="size-3 rounded border border-destructive bg-destructive/10" /> Você
             não atende

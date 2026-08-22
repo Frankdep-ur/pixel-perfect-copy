@@ -118,7 +118,7 @@ export function DocumentosProfissional({
             placeholder="(48) 98888-0000"
             onChange={(e) => setRecado(e.target.value)}
           />
-          <p className="text-xs text-muted-foreground">
+          <p className="text-[13px] text-muted-foreground">
             Um número de familiar ou pessoa próxima, usado só em caso de emergência.
           </p>
           <Button

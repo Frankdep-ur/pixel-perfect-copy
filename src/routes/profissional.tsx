@@ -9,7 +9,6 @@ import { SiteHeader } from "@/components/site-header";
 import { PwaInstalar } from "@/components/pwa-instalar";
 import { SiteFooter } from "@/components/site-footer";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { CadastroProfissional } from "@/components/profissional/cadastro-profissional";
@@ -21,6 +20,15 @@ import { nomeRegiao } from "@/lib/regioes";
 import { usePapeis, useSession } from "@/hooks/use-auth";
 
 type Busca = { aba?: string };
+
+/** Nome em Title Case: o cadastro às vezes vem todo em maiúsculas. */
+function tituloNome(nome: string) {
+  return nome
+    .toLocaleLowerCase("pt-BR")
+    .split(" ")
+    .map((p) => (p.length > 2 ? p.charAt(0).toLocaleUpperCase("pt-BR") + p.slice(1) : p))
+    .join(" ");
+}
 
 export const Route = createFileRoute("/profissional")({
   validateSearch: (busca: Record<string, unknown>): Busca =>
@@ -103,7 +111,7 @@ function AreaProfissional() {
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
-      <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-6">
+      <main className="mx-auto w-full max-w-4xl flex-1 px-4 pb-24 pt-5 md:pb-10">
         {(carregando || isLoading) && (
           <div className="flex justify-center py-16">
             <Loader2 className="size-6 animate-spin text-primary" />
@@ -124,16 +132,17 @@ function AreaProfissional() {
 
         {!isLoading && perfil && (
           <>
-            <Card className="overflow-hidden">
-              <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center">
-                <Avatar className="size-16 shrink-0 border border-border shadow-sm">
+            {/* Faixa de perfil enxuta: cabe numa tela de 390px sem empurrar as abas. */}
+            <div className="rounded-2xl border border-border bg-surface p-4">
+              <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3">
+                <Avatar className="size-12 shrink-0 border border-border shadow-sm">
                   {perfil.profiles?.foto_url && (
                     <AvatarImage
                       src={perfil.profiles.foto_url}
                       alt={perfil.profiles?.nome ?? "Foto de perfil"}
                     />
                   )}
-                  <AvatarFallback className="bg-surface-tint text-base font-semibold text-primary">
+                  <AvatarFallback className="bg-surface-tint text-sm font-semibold text-primary">
                     {(perfil.profiles?.nome ?? "LAR")
                       .split(" ")
                       .slice(0, 2)
@@ -141,49 +150,57 @@ function AreaProfissional() {
                       .join("")}
                   </AvatarFallback>
                 </Avatar>
-                <div className="space-y-2">
-                  <h1 className="text-xl font-bold tracking-tight text-foreground">
-                    {perfil.profiles?.nome ?? "Profissional Lar77"}
+                <div className="min-w-0">
+                  <h1 className="truncate text-[17px] font-bold leading-tight tracking-tight text-foreground">
+                    {tituloNome(perfil.profiles?.nome ?? "Profissional Lar77")}
                   </h1>
-                  <div className="flex flex-wrap items-center gap-2">
+                  <div className="mt-1 flex flex-wrap items-center gap-1.5">
                     {perfil.status === "aprovada" ? (
-                      <Badge className="gap-1">
-                        <BadgeCheck className="size-3.5" /> Perfil aprovado
+                      <Badge className="gap-1 text-[13px]">
+                        <BadgeCheck className="size-3.5" /> Aprovada
                       </Badge>
                     ) : perfil.status === "recusada" ? (
-                      <Badge variant="destructive">Cadastro recusado</Badge>
+                      <Badge variant="destructive" className="text-[13px]">
+                        Recusada
+                      </Badge>
                     ) : (
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-warning/12 px-3 py-1 text-xs font-semibold text-warning">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-warning/12 px-2.5 py-1 text-[13px] font-semibold text-warning">
                         <Clock3 className="size-3.5" /> Em análise
                       </span>
                     )}
-                    {perfil.verificada && <Badge variant="outline">Verificada</Badge>}
-                  </div>
-                  <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                    <span className="flex items-center gap-1.5">
-                      <MapPin className="size-4" />
-                      {nomeRegiao(perfil.regiao)} · até {perfil.raio_km ?? "—"} km
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <Star className="size-4 fill-accent text-accent" />
-                      {Number(perfil.nota_media).toFixed(1)} ({perfil.total_avaliacoes} avaliações)
-                    </span>
+                    {perfil.verificada && (
+                      <Badge variant="outline" className="text-[13px]">
+                        Verificada
+                      </Badge>
+                    )}
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
 
-            <div className="mt-3 flex items-center justify-between gap-4 rounded-2xl bg-surface-tint p-5">
-              <Label htmlFor="disponivel" className="text-sm font-semibold text-foreground">
-                Disponível para novos serviços
-              </Label>
-              <Switch
-                id="disponivel"
-                checked={perfil.disponivel}
-                disabled={semMapa && !perfil.disponivel}
-                onCheckedChange={(v) => alternarDisponivel.mutate(v)}
-              />
+              <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[13px] text-muted-foreground">
+                <span className="flex items-center gap-1.5">
+                  <MapPin className="size-4 shrink-0" />
+                  {nomeRegiao(perfil.regiao)} · até {perfil.raio_km ?? "—"} km
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Star className="size-4 shrink-0 fill-accent text-accent" />
+                  {Number(perfil.nota_media).toFixed(1)} ({perfil.total_avaliacoes})
+                </span>
+              </div>
+
+              <div className="mt-3 flex min-h-12 items-center justify-between gap-3 rounded-xl bg-surface-tint px-3">
+                <Label htmlFor="disponivel" className="text-[13px] font-semibold text-foreground">
+                  Disponível para novos serviços
+                </Label>
+                <Switch
+                  id="disponivel"
+                  checked={perfil.disponivel}
+                  disabled={semMapa && !perfil.disponivel}
+                  onCheckedChange={(v) => alternarDisponivel.mutate(v)}
+                />
+              </div>
             </div>
+
 
             {semMapa && (
               <Link

@@ -13,7 +13,22 @@ export const HORARIOS_POR_DURACAO: Record<Duracao, string[]> = {
   8: ["07:00", "08:00"],
 };
 
-export function horariosPermitidos(duracao: Duracao | null): string[] {
+/** Airbnb é limpeza de checkout: janela ampla entre 07:00 e 16:00. */
+export const HORARIOS_AIRBNB = [
+  "07:00",
+  "08:00",
+  "09:00",
+  "10:00",
+  "11:00",
+  "12:00",
+  "13:00",
+  "14:00",
+  "15:00",
+  "16:00",
+];
+
+export function horariosPermitidos(duracao: Duracao | null, airbnb = false): string[] {
+  if (airbnb) return HORARIOS_AIRBNB;
   if (!duracao) return [];
   return HORARIOS_POR_DURACAO[duracao];
 }

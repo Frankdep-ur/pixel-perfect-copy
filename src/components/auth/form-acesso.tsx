@@ -250,12 +250,15 @@ export function FormAcesso({ papel, next }: Props) {
         </TabsContent>
       </Tabs>
 
-      <Link
-        to={config.rotaOposta}
-        className="mt-8 flex min-h-12 items-center justify-center rounded-xl border border-border text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-      >
-        {config.labelOposta}
-      </Link>
+      {/* O acesso da profissional é uma jornada fechada: sem atalho para o lado cliente. */}
+      {papel === "cliente" && (
+        <Link
+          to={config.rotaOposta}
+          className="mt-8 flex min-h-12 items-center justify-center rounded-xl border border-border text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+        >
+          {config.labelOposta}
+        </Link>
+      )}
       <Link
         to="/admin/login"
         className="mt-2 flex min-h-12 items-center justify-center text-xs text-muted-foreground transition-colors hover:text-primary"

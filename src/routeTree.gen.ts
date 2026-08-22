@@ -40,6 +40,7 @@ import { Route as AdminLoginRouteImport } from './routes/admin_.login'
 import { Route as ConfirmacaoIdRouteImport } from './routes/confirmacao.$id'
 import { Route as OportunidadeTokenRouteImport } from './routes/oportunidade.$token'
 import { Route as ProfissionalEntrarRouteImport } from './routes/profissional_.entrar'
+import { Route as ReservasIdRouteImport } from './routes/reservas_.$id'
 import { Route as ApiPublicZapiDrenarRouteImport } from './routes/api/public/zapi-drenar'
 import { Route as ApiPublicZapiReceberRouteImport } from './routes/api/public/zapi-receber'
 
@@ -198,6 +199,11 @@ const ProfissionalEntrarRoute = ProfissionalEntrarRouteImport.update({
   path: '/profissional/entrar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReservasIdRoute = ReservasIdRouteImport.update({
+  id: '/reservas_/$id',
+  path: '/reservas/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicZapiDrenarRoute = ApiPublicZapiDrenarRouteImport.update({
   id: '/api/public/zapi-drenar',
   path: '/api/public/zapi-drenar',
@@ -240,6 +246,7 @@ export interface FileRoutesByFullPath {
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
   '/oportunidade/$token': typeof OportunidadeTokenRoute
   '/profissional/entrar': typeof ProfissionalEntrarRoute
+  '/reservas/$id': typeof ReservasIdRoute
   '/admin/': typeof AdminIndexRoute
   '/api/public/zapi-drenar': typeof ApiPublicZapiDrenarRoute
   '/api/public/zapi-receber': typeof ApiPublicZapiReceberRoute
@@ -274,6 +281,7 @@ export interface FileRoutesByTo {
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
   '/oportunidade/$token': typeof OportunidadeTokenRoute
   '/profissional/entrar': typeof ProfissionalEntrarRoute
+  '/reservas/$id': typeof ReservasIdRoute
   '/admin': typeof AdminIndexRoute
   '/api/public/zapi-drenar': typeof ApiPublicZapiDrenarRoute
   '/api/public/zapi-receber': typeof ApiPublicZapiReceberRoute
@@ -310,6 +318,7 @@ export interface FileRoutesById {
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
   '/oportunidade/$token': typeof OportunidadeTokenRoute
   '/profissional_/entrar': typeof ProfissionalEntrarRoute
+  '/reservas_/$id': typeof ReservasIdRoute
   '/admin/': typeof AdminIndexRoute
   '/api/public/zapi-drenar': typeof ApiPublicZapiDrenarRoute
   '/api/public/zapi-receber': typeof ApiPublicZapiReceberRoute
@@ -347,6 +356,7 @@ export interface FileRouteTypes {
     | '/confirmacao/$id'
     | '/oportunidade/$token'
     | '/profissional/entrar'
+    | '/reservas/$id'
     | '/admin/'
     | '/api/public/zapi-drenar'
     | '/api/public/zapi-receber'
@@ -381,6 +391,7 @@ export interface FileRouteTypes {
     | '/confirmacao/$id'
     | '/oportunidade/$token'
     | '/profissional/entrar'
+    | '/reservas/$id'
     | '/admin'
     | '/api/public/zapi-drenar'
     | '/api/public/zapi-receber'
@@ -416,6 +427,7 @@ export interface FileRouteTypes {
     | '/confirmacao/$id'
     | '/oportunidade/$token'
     | '/profissional_/entrar'
+    | '/reservas_/$id'
     | '/admin/'
     | '/api/public/zapi-drenar'
     | '/api/public/zapi-receber'
@@ -441,6 +453,7 @@ export interface RootRouteChildren {
   ConfirmacaoIdRoute: typeof ConfirmacaoIdRoute
   OportunidadeTokenRoute: typeof OportunidadeTokenRoute
   ProfissionalEntrarRoute: typeof ProfissionalEntrarRoute
+  ReservasIdRoute: typeof ReservasIdRoute
   ApiPublicZapiDrenarRoute: typeof ApiPublicZapiDrenarRoute
   ApiPublicZapiReceberRoute: typeof ApiPublicZapiReceberRoute
 }
@@ -664,6 +677,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfissionalEntrarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reservas_/$id': {
+      id: '/reservas_/$id'
+      path: '/reservas/$id'
+      fullPath: '/reservas/$id'
+      preLoaderRoute: typeof ReservasIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/zapi-drenar': {
       id: '/api/public/zapi-drenar'
       path: '/api/public/zapi-drenar'
@@ -733,6 +753,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConfirmacaoIdRoute: ConfirmacaoIdRoute,
   OportunidadeTokenRoute: OportunidadeTokenRoute,
   ProfissionalEntrarRoute: ProfissionalEntrarRoute,
+  ReservasIdRoute: ReservasIdRoute,
   ApiPublicZapiDrenarRoute: ApiPublicZapiDrenarRoute,
   ApiPublicZapiReceberRoute: ApiPublicZapiReceberRoute,
 }

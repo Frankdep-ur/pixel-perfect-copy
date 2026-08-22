@@ -122,7 +122,7 @@ function Grupo({ titulo, reservas }: { titulo: string; reservas: Reserva[] }) {
       {reservas.map((r) => (
         <Link
           key={r.id}
-          to="/reservas/$id"
+          to="/reservas_/$id"
           params={{ id: r.id }}
           className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-[18px] border border-accent/20 bg-card p-4 transition-transform duration-200 ease-out active:scale-[0.99]"
         >

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { Bell, Headset, LogOut, Menu, ShieldCheck, Sparkles, UserRound, X } from "lucide-react";
+import { Bell, CalendarCheck, Headset, LogOut, Menu, ShieldCheck, Sparkles, UserRound, X } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useSession, usePapeis } from "@/hooks/use-auth";

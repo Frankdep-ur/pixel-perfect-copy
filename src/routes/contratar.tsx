@@ -257,16 +257,20 @@ function Contratar() {
                 {passo === 2 && (
                   <PassoEndereco rascunho={rascunho} atualizar={atualizar} userId={user!.id} />
                 )}
-                {passo === 3 && <PassoTamanho rascunho={rascunho} atualizar={atualizar} />}
                 {passo === 4 && (
-                  <PassoDuracao rascunho={rascunho} atualizar={atualizar} precos={precos} />
+                  <div className="space-y-8">
+                    <PassoDuracao rascunho={rascunho} atualizar={atualizar} precos={precos} />
+                    <PassoTipoLimpeza rascunho={rascunho} atualizar={atualizar} />
+                    <PassoTamanho rascunho={rascunho} atualizar={atualizar} />
+                    <PassoExtras rascunho={rascunho} atualizar={atualizar} extras={listaExtras} />
+                  </div>
                 )}
-                {passo === 5 && <PassoTipoLimpeza rascunho={rascunho} atualizar={atualizar} />}
-                {passo === 6 && (
-                  <PassoExtras rascunho={rascunho} atualizar={atualizar} extras={listaExtras} />
+                {passo === 7 && (
+                  <div className="space-y-8">
+                    <PassoDataHora rascunho={rascunho} atualizar={atualizar} />
+                    <PassoObservacoes rascunho={rascunho} atualizar={atualizar} />
+                  </div>
                 )}
-                {passo === 7 && <PassoDataHora rascunho={rascunho} atualizar={atualizar} />}
-                {passo === 8 && <PassoObservacoes rascunho={rascunho} atualizar={atualizar} />}
 
                 <div className="mt-8 flex flex-col items-center gap-2">
                   <Button

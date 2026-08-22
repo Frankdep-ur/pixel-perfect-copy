@@ -243,9 +243,13 @@ export function ServicosProfissional({
       )}
       {/* Quatro abas em grid: cabem em 390px, sem arrastar e sem cortar palavra. */}
       <TabsList className="grid h-auto w-full grid-cols-4 gap-1 p-1">
-        <TabsTrigger value="oportunidades" className="min-h-11 px-1 text-[13px] leading-tight">
-          Vagas
+        <TabsTrigger
+          value="oportunidades"
+          className="min-h-11 whitespace-normal break-words px-1 text-[13px] leading-tight"
+        >
+          Oportunidades
         </TabsTrigger>
+
         <TabsTrigger value="pedidos" className="min-h-11 gap-1 px-1 text-[13px] leading-tight">
           Pedidos
           {pendentes.length > 0 && <ContadorAba valor={pendentes.length} />}

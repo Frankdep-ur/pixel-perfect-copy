@@ -55,9 +55,13 @@ export const Route = createFileRoute("/contratar")({
   component: Contratar,
 });
 
-const PASSOS_PADRAO = [1, 2, 3, 4, 5, 6, 7, 8];
-/** Airbnb é preço fixo com escopo definido: só endereço, imóvel, data e observações. */
-const PASSOS_AIRBNB = [1, 2, 7, 8];
+/**
+ * Wizard curto: 1) tipo do imóvel, 2) endereço, 4) serviço (duração + cômodos,
+ * tipo de limpeza e extras opcionais na mesma tela), 7) data/hora + observações.
+ */
+const PASSOS_PADRAO = [1, 2, 4, 7];
+/** Airbnb é preço fixo com escopo definido: só imóvel, endereço e data. */
+const PASSOS_AIRBNB = [1, 2, 7];
 
 function Contratar() {
   const navigate = useNavigate();
@@ -160,7 +164,7 @@ function Contratar() {
   const total = sequencia.length;
   const ultimo = indice === total - 1;
 
-  /** As 8 etapas viram 4 bolinhas: local, serviço, detalhes e profissional. */
+  /** As etapas viram 4 bolinhas: local, serviço, detalhes e profissional. */
   const grupoAtual =
     fase === "passos" ? (passo <= 2 ? 1 : passo <= 6 ? 2 : 3) : fase === "busca" ? 4 : 4;
 
@@ -170,7 +174,8 @@ function Contratar() {
         return !!rascunho.tipo_imovel;
       case 2:
         return !!rascunho.endereco_id && !!rascunho.endereco.regiao;
-      case 3:
+      case 4:
+        if (!rascunho.duracao_horas || !rascunho.tipo_limpeza) return false;
         if (ehComercial(rascunho.tipo_imovel)) {
           return (
             !!rascunho.faixa_pessoas &&
@@ -178,17 +183,11 @@ function Contratar() {
           );
         }
         return true;
-      case 4:
-        return !!rascunho.duracao_horas;
-      case 5:
-        return !!rascunho.tipo_limpeza;
-      case 6:
-        return true;
       case 7:
         return (
           !!rascunho.data &&
           !ehDomingo(rascunho.data) &&
-          horarioValido(rascunho.duracao_horas, rascunho.hora)
+          horarioValido(rascunho.duracao_horas, rascunho.hora, airbnb)
         );
 
       default:
@@ -258,16 +257,20 @@ function Contratar() {
                 {passo === 2 && (
                   <PassoEndereco rascunho={rascunho} atualizar={atualizar} userId={user!.id} />
                 )}
-                {passo === 3 && <PassoTamanho rascunho={rascunho} atualizar={atualizar} />}
                 {passo === 4 && (
-                  <PassoDuracao rascunho={rascunho} atualizar={atualizar} precos={precos} />
+                  <div className="space-y-8">
+                    <PassoDuracao rascunho={rascunho} atualizar={atualizar} precos={precos} />
+                    <PassoTipoLimpeza rascunho={rascunho} atualizar={atualizar} />
+                    <PassoTamanho rascunho={rascunho} atualizar={atualizar} />
+                    <PassoExtras rascunho={rascunho} atualizar={atualizar} extras={listaExtras} />
+                  </div>
                 )}
-                {passo === 5 && <PassoTipoLimpeza rascunho={rascunho} atualizar={atualizar} />}
-                {passo === 6 && (
-                  <PassoExtras rascunho={rascunho} atualizar={atualizar} extras={listaExtras} />
+                {passo === 7 && (
+                  <div className="space-y-8">
+                    <PassoDataHora rascunho={rascunho} atualizar={atualizar} />
+                    <PassoObservacoes rascunho={rascunho} atualizar={atualizar} />
+                  </div>
                 )}
-                {passo === 7 && <PassoDataHora rascunho={rascunho} atualizar={atualizar} />}
-                {passo === 8 && <PassoObservacoes rascunho={rascunho} atualizar={atualizar} />}
 
                 <div className="mt-8 flex flex-col items-center gap-2">
                   <Button

@@ -21,7 +21,7 @@ import { DocumentosProfissional } from "@/components/profissional/documentos-pro
 import { BloqueiosProfissional } from "@/components/profissional/bloqueios-profissional";
 
 import { nomeRegiao } from "@/lib/regioes";
-import { useSession } from "@/hooks/use-auth";
+import { usePapeis, useSession } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/profissional")({
   head: () => ({
@@ -47,12 +47,21 @@ function AreaProfissional() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user, carregando } = useSession();
+  const { data: papeis } = usePapeis(user);
 
   useEffect(() => {
     if (!carregando && !user) {
       navigate({ to: "/profissional/entrar", search: { next: undefined }, replace: true });
     }
   }, [carregando, user, navigate]);
+
+  // Jornada travada: conta de cliente não acessa a área da profissional.
+  useEffect(() => {
+    if (!user || !papeis) return;
+    if (!papeis.includes("profissional") && !papeis.includes("admin")) {
+      navigate({ to: "/", replace: true });
+    }
+  }, [user, papeis, navigate]);
 
 
   const { data: perfil, isLoading } = useQuery({

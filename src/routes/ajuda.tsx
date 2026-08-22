@@ -1,30 +1,92 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { LifeBuoy } from "lucide-react";
+import { Headset } from "lucide-react";
 
-import { PlaceholderPage } from "@/components/placeholder-page";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { PaginaTexto, type Bloco } from "@/components/pagina-texto";
+import { linkSuporte } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/ajuda")({
   head: () => ({
     meta: [
-      { title: "Ajuda — Lar77" },
+      { title: "Ajuda e suporte — Lar77" },
       {
         name: "description",
-        content: "Central de ajuda do Lar77: dúvidas sobre contratação, pagamento e serviços.",
+        content: "Dúvidas sobre contratação, pagamento, cancelamento e suporte da Lar77.",
       },
-      { property: "og:title", content: "Ajuda — Lar77" },
+      { property: "og:title", content: "Ajuda e suporte — Lar77" },
       {
         property: "og:description",
-        content: "Central de ajuda do Lar77. Conteúdo em preparação.",
+        content: "Respostas rápidas sobre agendamento, pagamento e cancelamento na Lar77.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: () => (
-    <PlaceholderPage
-      icon={LifeBuoy}
-      titulo="Central de ajuda · Em breve"
-      texto="Estamos reunindo as dúvidas mais comuns para te ajudar por aqui."
-    />
-  ),
+  component: Ajuda,
 });
+
+const BLOCOS: Bloco[] = [
+  {
+    titulo: "Como agendar",
+    itens: [
+      "Escolha o tipo do imóvel, confirme o endereço, selecione a duração e a data. O preço aparece na hora.",
+      "Agendamentos precisam de 24 horas de antecedência e não atendemos domingos.",
+    ],
+  },
+  {
+    titulo: "Como escolhemos a profissional",
+    itens: [
+      "Avisamos as profissionais verificadas mais próximas do seu endereço.",
+      "Quando alguma aceita, você escolhe entre as disponíveis e só então faz o pagamento.",
+    ],
+  },
+  {
+    titulo: "Pagamento",
+    itens: [
+      "O pagamento é feito pela plataforma e fica retido até a conclusão do serviço.",
+      "O valor mostrado inclui o serviço, a taxa administrativa e a proteção Lar77.",
+    ],
+  },
+  {
+    titulo: "Cancelamento",
+    itens: [
+      "Cancele em Minhas reservas, antes do início do serviço.",
+      "Cancelamentos de última hora podem gerar cobrança parcial.",
+    ],
+  },
+  {
+    titulo: "Falar com a profissional",
+    itens: [
+      "Use o chat interno na tela da sua reserva. Não divulgamos telefones para preservar a segurança de todos.",
+    ],
+  },
+];
+
+function Ajuda() {
+  return (
+    <div className="flex min-h-screen flex-col bg-background">
+      <SiteHeader />
+      <main className="flex-1">
+        <PaginaTexto
+          titulo="Ajuda e suporte"
+          resumo="As dúvidas mais comuns e o caminho direto para falar com a nossa equipe."
+          blocos={BLOCOS}
+        />
+        <div className="mx-auto w-full max-w-md px-4 pb-8 md:max-w-2xl">
+          <a
+            href={linkSuporte()}
+            target="_blank"
+            rel="noreferrer"
+            className="flex h-14 items-center justify-center gap-2 rounded-[18px] bg-accent text-[15px] font-bold"
+            style={{ color: "#04162F" }}
+          >
+            <Headset size={20} strokeWidth={1.7} aria-hidden />
+            Falar com o suporte
+          </a>
+        </div>
+      </main>
+      <SiteFooter />
+    </div>
+  );
+}

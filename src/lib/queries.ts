@@ -134,6 +134,7 @@ export function profissionaisQuery(regiao: string | null) {
 
 /** Status em que a reserva ainda está viva para o cliente. */
 export const STATUS_RESERVA_ATIVA = [
+  "buscando",
   "aguardando_aceite",
   "sem_profissional",
   "solicitada",
@@ -143,6 +144,9 @@ export const STATUS_RESERVA_ATIVA = [
   "em_andamento",
   "finalizada",
 ];
+
+const SELECT_RESERVA =
+  "*, enderecos(rua, numero, complemento, bairro, cidade, estado, cep), profissionais!bookings_profissional_id_fkey(id, cidade, nota_media, total_servicos, total_avaliacoes, anos_experiencia, profiles!profissionais_user_id_fkey(nome, foto_url))";
 
 /**
  * Próxima reserva ativa do cliente logado (a mais próxima no tempo).
@@ -155,9 +159,7 @@ export function proximaReservaQuery(userId: string | undefined) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("bookings")
-        .select(
-          "*, enderecos(rua, numero, complemento, bairro, cidade, estado, cep), profissionais!bookings_profissional_id_fkey(id, cidade, nota_media, total_servicos, total_avaliacoes, anos_experiencia, profiles!profissionais_user_id_fkey(nome, foto_url))",
-        )
+        .select(SELECT_RESERVA)
         .eq("cliente_id", userId!)
         .in("status", STATUS_RESERVA_ATIVA)
         .order("data", { ascending: true, nullsFirst: false })
@@ -165,6 +167,40 @@ export function proximaReservaQuery(userId: string | undefined) {
         .limit(1);
       if (error) throw error;
       return data?.[0] ?? null;
+    },
+  });
+}
+
+/** Histórico completo do cliente (ativas primeiro, depois as mais recentes). */
+export function reservasClienteQuery(userId: string | undefined) {
+  return queryOptions({
+    queryKey: ["reservas-cliente", userId],
+    enabled: !!userId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("bookings")
+        .select(SELECT_RESERVA)
+        .eq("cliente_id", userId!)
+        .order("criado_em", { ascending: false });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+}
+
+/** Uma reserva do cliente pelo id (detalhe de "Minhas reservas"). */
+export function reservaQuery(id: string | undefined) {
+  return queryOptions({
+    queryKey: ["reserva", id],
+    enabled: !!id,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("bookings")
+        .select(SELECT_RESERVA)
+        .eq("id", id!)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
     },
   });
 }

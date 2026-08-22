@@ -20,6 +20,7 @@ import { Route as MensagensRouteImport } from './routes/mensagens'
 import { Route as MinhaContaRouteImport } from './routes/minha-conta'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as ProfissionalRouteImport } from './routes/profissional'
+import { Route as ReservasRouteImport } from './routes/reservas'
 import { Route as SejaProfissionalRouteImport } from './routes/seja-profissional'
 import { Route as TermosRouteImport } from './routes/termos'
 import { Route as TrabalheConoscoRouteImport } from './routes/trabalhe-conosco'
@@ -39,6 +40,7 @@ import { Route as AdminLoginRouteImport } from './routes/admin_.login'
 import { Route as ConfirmacaoIdRouteImport } from './routes/confirmacao.$id'
 import { Route as OportunidadeTokenRouteImport } from './routes/oportunidade.$token'
 import { Route as ProfissionalEntrarRouteImport } from './routes/profissional_.entrar'
+import { Route as ReservasIdRouteImport } from './routes/reservas_.$id'
 import { Route as ApiPublicZapiDrenarRouteImport } from './routes/api/public/zapi-drenar'
 import { Route as ApiPublicZapiReceberRouteImport } from './routes/api/public/zapi-receber'
 
@@ -95,6 +97,11 @@ const PrivacidadeRoute = PrivacidadeRouteImport.update({
 const ProfissionalRoute = ProfissionalRouteImport.update({
   id: '/profissional',
   path: '/profissional',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReservasRoute = ReservasRouteImport.update({
+  id: '/reservas',
+  path: '/reservas',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SejaProfissionalRoute = SejaProfissionalRouteImport.update({
@@ -192,6 +199,11 @@ const ProfissionalEntrarRoute = ProfissionalEntrarRouteImport.update({
   path: '/profissional/entrar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReservasIdRoute = ReservasIdRouteImport.update({
+  id: '/reservas_/$id',
+  path: '/reservas/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicZapiDrenarRoute = ApiPublicZapiDrenarRouteImport.update({
   id: '/api/public/zapi-drenar',
   path: '/api/public/zapi-drenar',
@@ -215,6 +227,7 @@ export interface FileRoutesByFullPath {
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
   '/profissional': typeof ProfissionalRoute
+  '/reservas': typeof ReservasRoute
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
   '/trabalhe-conosco': typeof TrabalheConoscoRoute
@@ -233,6 +246,7 @@ export interface FileRoutesByFullPath {
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
   '/oportunidade/$token': typeof OportunidadeTokenRoute
   '/profissional/entrar': typeof ProfissionalEntrarRoute
+  '/reservas/$id': typeof ReservasIdRoute
   '/admin/': typeof AdminIndexRoute
   '/api/public/zapi-drenar': typeof ApiPublicZapiDrenarRoute
   '/api/public/zapi-receber': typeof ApiPublicZapiReceberRoute
@@ -248,6 +262,7 @@ export interface FileRoutesByTo {
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
   '/profissional': typeof ProfissionalRoute
+  '/reservas': typeof ReservasRoute
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
   '/trabalhe-conosco': typeof TrabalheConoscoRoute
@@ -266,6 +281,7 @@ export interface FileRoutesByTo {
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
   '/oportunidade/$token': typeof OportunidadeTokenRoute
   '/profissional/entrar': typeof ProfissionalEntrarRoute
+  '/reservas/$id': typeof ReservasIdRoute
   '/admin': typeof AdminIndexRoute
   '/api/public/zapi-drenar': typeof ApiPublicZapiDrenarRoute
   '/api/public/zapi-receber': typeof ApiPublicZapiReceberRoute
@@ -283,6 +299,7 @@ export interface FileRoutesById {
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
   '/profissional': typeof ProfissionalRoute
+  '/reservas': typeof ReservasRoute
   '/seja-profissional': typeof SejaProfissionalRoute
   '/termos': typeof TermosRoute
   '/trabalhe-conosco': typeof TrabalheConoscoRoute
@@ -301,6 +318,7 @@ export interface FileRoutesById {
   '/confirmacao/$id': typeof ConfirmacaoIdRoute
   '/oportunidade/$token': typeof OportunidadeTokenRoute
   '/profissional_/entrar': typeof ProfissionalEntrarRoute
+  '/reservas_/$id': typeof ReservasIdRoute
   '/admin/': typeof AdminIndexRoute
   '/api/public/zapi-drenar': typeof ApiPublicZapiDrenarRoute
   '/api/public/zapi-receber': typeof ApiPublicZapiReceberRoute
@@ -319,6 +337,7 @@ export interface FileRouteTypes {
     | '/minha-conta'
     | '/privacidade'
     | '/profissional'
+    | '/reservas'
     | '/seja-profissional'
     | '/termos'
     | '/trabalhe-conosco'
@@ -337,6 +356,7 @@ export interface FileRouteTypes {
     | '/confirmacao/$id'
     | '/oportunidade/$token'
     | '/profissional/entrar'
+    | '/reservas/$id'
     | '/admin/'
     | '/api/public/zapi-drenar'
     | '/api/public/zapi-receber'
@@ -352,6 +372,7 @@ export interface FileRouteTypes {
     | '/minha-conta'
     | '/privacidade'
     | '/profissional'
+    | '/reservas'
     | '/seja-profissional'
     | '/termos'
     | '/trabalhe-conosco'
@@ -370,6 +391,7 @@ export interface FileRouteTypes {
     | '/confirmacao/$id'
     | '/oportunidade/$token'
     | '/profissional/entrar'
+    | '/reservas/$id'
     | '/admin'
     | '/api/public/zapi-drenar'
     | '/api/public/zapi-receber'
@@ -386,6 +408,7 @@ export interface FileRouteTypes {
     | '/minha-conta'
     | '/privacidade'
     | '/profissional'
+    | '/reservas'
     | '/seja-profissional'
     | '/termos'
     | '/trabalhe-conosco'
@@ -404,6 +427,7 @@ export interface FileRouteTypes {
     | '/confirmacao/$id'
     | '/oportunidade/$token'
     | '/profissional_/entrar'
+    | '/reservas_/$id'
     | '/admin/'
     | '/api/public/zapi-drenar'
     | '/api/public/zapi-receber'
@@ -421,6 +445,7 @@ export interface RootRouteChildren {
   MinhaContaRoute: typeof MinhaContaRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
   ProfissionalRoute: typeof ProfissionalRoute
+  ReservasRoute: typeof ReservasRoute
   SejaProfissionalRoute: typeof SejaProfissionalRoute
   TermosRoute: typeof TermosRoute
   TrabalheConoscoRoute: typeof TrabalheConoscoRoute
@@ -428,6 +453,7 @@ export interface RootRouteChildren {
   ConfirmacaoIdRoute: typeof ConfirmacaoIdRoute
   OportunidadeTokenRoute: typeof OportunidadeTokenRoute
   ProfissionalEntrarRoute: typeof ProfissionalEntrarRoute
+  ReservasIdRoute: typeof ReservasIdRoute
   ApiPublicZapiDrenarRoute: typeof ApiPublicZapiDrenarRoute
   ApiPublicZapiReceberRoute: typeof ApiPublicZapiReceberRoute
 }
@@ -509,6 +535,13 @@ declare module '@tanstack/react-router' {
       path: '/profissional'
       fullPath: '/profissional'
       preLoaderRoute: typeof ProfissionalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reservas': {
+      id: '/reservas'
+      path: '/reservas'
+      fullPath: '/reservas'
+      preLoaderRoute: typeof ReservasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/seja-profissional': {
@@ -644,6 +677,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfissionalEntrarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reservas_/$id': {
+      id: '/reservas_/$id'
+      path: '/reservas/$id'
+      fullPath: '/reservas/$id'
+      preLoaderRoute: typeof ReservasIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/zapi-drenar': {
       id: '/api/public/zapi-drenar'
       path: '/api/public/zapi-drenar'
@@ -705,6 +745,7 @@ const rootRouteChildren: RootRouteChildren = {
   MinhaContaRoute: MinhaContaRoute,
   PrivacidadeRoute: PrivacidadeRoute,
   ProfissionalRoute: ProfissionalRoute,
+  ReservasRoute: ReservasRoute,
   SejaProfissionalRoute: SejaProfissionalRoute,
   TermosRoute: TermosRoute,
   TrabalheConoscoRoute: TrabalheConoscoRoute,
@@ -712,6 +753,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConfirmacaoIdRoute: ConfirmacaoIdRoute,
   OportunidadeTokenRoute: OportunidadeTokenRoute,
   ProfissionalEntrarRoute: ProfissionalEntrarRoute,
+  ReservasIdRoute: ReservasIdRoute,
   ApiPublicZapiDrenarRoute: ApiPublicZapiDrenarRoute,
   ApiPublicZapiReceberRoute: ApiPublicZapiReceberRoute,
 }

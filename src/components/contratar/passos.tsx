@@ -631,8 +631,9 @@ export function PassoDataHora({ rascunho, atualizar }: Props) {
       <div className="space-y-2">
         <Label>Horário de início</Label>
         <p className="text-sm text-muted-foreground">
-          Para {rascunho.duracao_horas ?? 4} horas de serviço, os horários possíveis são{" "}
-          {horarios.join(" e ")}.
+          {airbnbHorarios
+            ? "Na limpeza de checkout você escolhe qualquer horário entre 07:00 e 16:00."
+            : `Para ${rascunho.duracao_horas ?? 4} horas de serviço, os horários possíveis são ${horarios.join(" e ")}.`}
         </p>
         <div className="grid grid-cols-3 gap-3">
           {horarios.map((hora) => (

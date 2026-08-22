@@ -239,8 +239,7 @@ export function HomeCliente({ nome, reserva }: { nome: string; reserva: ReservaH
                 Chat
               </Link>
               <Link
-                to="/minha-conta"
-                search={{ aba: "ativas" }}
+                to="/reservas"
                 className="text-[12px] font-semibold text-accent"
               >
                 Ver perfil →
@@ -265,12 +264,11 @@ export function HomeCliente({ nome, reserva }: { nome: string; reserva: ReservaH
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
           <h2 className="font-display text-[15px] font-semibold text-accent">Detalhes da faxina</h2>
           <Link
-            to="/minha-conta"
-            search={{ aba: "ativas" }}
+            to="/reservas"
             className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-accent px-3 text-[12px] font-semibold text-accent"
           >
             <Pencil size={14} strokeWidth={1.7} aria-hidden />
-            Editar
+            Detalhes
           </Link>
         </div>
 

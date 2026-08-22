@@ -201,8 +201,44 @@ export function SiteHeader() {
         </div>
 
         <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-5 pt-4">
-          {/* Cliente logado navega no app; visitante vê os links institucionais. */}
-          {user && !ehProfissional ? (
+          {/* Profissional e cliente têm apps diferentes; visitante vê os links institucionais. */}
+          {user && ehProfissional ? (
+            <>
+              <Link
+                to="/profissional"
+                onClick={() => setOpen(false)}
+                className="flex min-h-14 items-center gap-2 rounded-xl px-2 text-lg font-medium text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+              >
+                <Sparkles className="size-5" />
+                Oportunidades
+              </Link>
+              <Link
+                to="/profissional"
+                search={{ aba: "agenda" }}
+                onClick={() => setOpen(false)}
+                className="flex min-h-14 items-center gap-2 rounded-xl px-2 text-lg font-medium text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+              >
+                <CalendarCheck className="size-5" />
+                Minhas faxinas
+              </Link>
+              <Link
+                to="/mensagens"
+                onClick={() => setOpen(false)}
+                className="flex min-h-14 items-center gap-2 rounded-xl px-2 text-lg font-medium text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+              >
+                <Headset className="size-5" />
+                Mensagens
+              </Link>
+              <Link
+                to="/profissional/conta"
+                onClick={() => setOpen(false)}
+                className="flex min-h-14 items-center gap-2 rounded-xl px-2 text-lg font-medium text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+              >
+                <UserRound className="size-5" />
+                Minha conta
+              </Link>
+            </>
+          ) : user ? (
             <>
               <Link
                 to="/reservas"

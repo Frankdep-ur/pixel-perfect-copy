@@ -70,7 +70,12 @@ const PROXIMO: Record<string, { status: string; label: string; icone: LucideIcon
   em_andamento: { status: "finalizada", label: "Faxina finalizada", icone: Check },
 };
 
-export function ServicosProfissional({ profissionalId, nomeProfissional, userId }: Props) {
+export function ServicosProfissional({
+  profissionalId,
+  nomeProfissional,
+  userId,
+  abaInicial,
+}: Props & { abaInicial?: string }) {
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
@@ -195,7 +200,10 @@ export function ServicosProfissional({ profissionalId, nomeProfissional, userId 
       !PENDENTES.includes(b.status),
   );
 
-  const [aba, setAba] = useState<string | null>(null);
+  const [aba, setAba] = useState<string | null>(abaInicial ?? null);
+  useEffect(() => {
+    if (abaInicial) setAba(abaInicial);
+  }, [abaInicial]);
   useEffect(() => {
     if (isLoading || aba) return;
     setAba(meus.length > 0 ? "agenda" : pendentes.length > 0 ? "pedidos" : "oportunidades");

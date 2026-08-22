@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   BadgeCheck,
@@ -86,7 +87,17 @@ function Home() {
     proximaReservaQuery(user?.id),
   );
   const ehProfissional = (papeis ?? []).includes("profissional");
+  const ehAdmin = (papeis ?? []).includes("admin");
   const nomeCliente = (perfil?.nome ?? "").split(" ")[0] || "cliente";
+  const navigate = useNavigate();
+
+  // A profissional nunca cai na landing do cliente: o Início dela é a área dela.
+  useEffect(() => {
+    if (user && ehProfissional && !ehAdmin) {
+      navigate({ to: "/profissional", replace: true });
+    }
+  }, [user, ehProfissional, ehAdmin, navigate]);
+
 
   // Cliente logado vê o app: com faxina ativa (Estado 1) ou o painel vazio (Estado 2).
   if (user && !ehProfissional) {

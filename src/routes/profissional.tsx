@@ -1,7 +1,7 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { BadgeCheck, Clock3, Loader2, MapPin, Star } from "lucide-react";
+import { BadgeCheck, Clock3, Loader2, MapPin, Star, TriangleAlert, UserCog } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -13,30 +13,33 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { CadastroProfissional } from "@/components/profissional/cadastro-profissional";
-import { PerfilProfissional } from "@/components/profissional/perfil-profissional";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { EstadoVazio } from "@/components/estado-vazio";
 import { ServicosProfissional } from "@/components/profissional/servicos-profissional";
-import { DocumentosProfissional } from "@/components/profissional/documentos-profissional";
-import { BloqueiosProfissional } from "@/components/profissional/bloqueios-profissional";
 
 import { nomeRegiao } from "@/lib/regioes";
 import { usePapeis, useSession } from "@/hooks/use-auth";
 
+type Busca = { aba?: string };
+
 export const Route = createFileRoute("/profissional")({
+  validateSearch: (busca: Record<string, unknown>): Busca =>
+    typeof busca["aba"] === "string" ? { aba: busca["aba"] as string } : {},
   head: () => ({
     meta: [
-      { title: "Área da profissional — Lar77" },
+      { title: "Minhas faxinas — Lar77" },
       {
         name: "description",
         content:
-          "Gerencie seus serviços de limpeza, aceite solicitações e acompanhe seus ganhos no Lar77.",
+          "Aceite oportunidades da sua região, acompanhe sua agenda e atualize o andamento de cada faxina.",
       },
-      { property: "og:title", content: "Área da profissional — Lar77" },
+      { property: "og:title", content: "Minhas faxinas — Lar77" },
       {
         property: "og:description",
-        content: "Aceite solicitações, atualize o andamento do serviço e acompanhe sua nota.",
+        content: "Aceite oportunidades, atualize o andamento do serviço e acompanhe sua nota.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -46,6 +49,7 @@ export const Route = createFileRoute("/profissional")({
 function AreaProfissional() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { aba } = Route.useSearch();
   const { user, carregando } = useSession();
   const { data: papeis } = usePapeis(user);
 
@@ -63,7 +67,6 @@ function AreaProfissional() {
     }
   }, [user, papeis, navigate]);
 
-
   const { data: perfil, isLoading } = useQuery({
     queryKey: ["meu-perfil-profissional", user?.id],
     enabled: !!user,
@@ -76,11 +79,15 @@ function AreaProfissional() {
       if (error) throw error;
       return data;
     },
-
   });
+
+  const semMapa = !!perfil && (perfil.latitude === null || perfil.longitude === null);
 
   const alternarDisponivel = useMutation({
     mutationFn: async (valor: boolean) => {
+      if (valor && semMapa) {
+        throw new Error("Preencha seu endereço no mapa (aba Conta) para ficar disponível.");
+      }
       const { error } = await supabase
         .from("profissionais")
         .update({ disponivel: valor })
@@ -96,12 +103,7 @@ function AreaProfissional() {
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
-      <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-10">
-        <h1 className="text-3xl font-semibold tracking-tight">Área da profissional</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Receba solicitações da sua região e atualize o andamento de cada limpeza.
-        </p>
-
+      <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-6">
         {(carregando || isLoading) && (
           <div className="flex justify-center py-16">
             <Loader2 className="size-6 animate-spin text-primary" />
@@ -109,17 +111,22 @@ function AreaProfissional() {
         )}
 
         {!isLoading && user && !perfil && (
-          <div className="mt-8">
-            <CadastroProfissional user={user} />
-          </div>
+          <>
+            <h1 className="text-2xl font-semibold tracking-tight">Cadastro da profissional</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Complete seus dados para começar a receber faxinas da sua região.
+            </p>
+            <div className="mt-6">
+              <CadastroProfissional user={user} />
+            </div>
+          </>
         )}
 
         {!isLoading && perfil && (
           <>
-            <PwaInstalar className="mt-8" />
-            <Card className="mt-8 overflow-hidden">
+            <Card className="overflow-hidden">
               <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center">
-                <Avatar className="size-20 shrink-0 border border-border shadow-sm">
+                <Avatar className="size-16 shrink-0 border border-border shadow-sm">
                   {perfil.profiles?.foto_url && (
                     <AvatarImage
                       src={perfil.profiles.foto_url}
@@ -134,10 +141,10 @@ function AreaProfissional() {
                       .join("")}
                   </AvatarFallback>
                 </Avatar>
-                <div className="space-y-3">
-                  <h2 className="text-2xl font-bold tracking-tight text-foreground">
+                <div className="space-y-2">
+                  <h1 className="text-xl font-bold tracking-tight text-foreground">
                     {perfil.profiles?.nome ?? "Profissional Lar77"}
-                  </h2>
+                  </h1>
                   <div className="flex flex-wrap items-center gap-2">
                     {perfil.status === "aprovada" ? (
                       <Badge className="gap-1">
@@ -173,57 +180,48 @@ function AreaProfissional() {
               <Switch
                 id="disponivel"
                 checked={perfil.disponivel}
+                disabled={semMapa && !perfil.disponivel}
                 onCheckedChange={(v) => alternarDisponivel.mutate(v)}
               />
             </div>
+
+            {semMapa && (
+              <Link
+                to="/profissional/conta"
+                className="mt-3 flex items-start gap-3 rounded-2xl border border-warning/40 bg-warning/10 p-4 text-sm text-foreground"
+              >
+                <TriangleAlert className="mt-0.5 size-4 shrink-0 text-warning" />
+                <span>
+                  Marque seu endereço no mapa na aba <strong>Conta</strong>. É por ele que a gente
+                  calcula a distância das faxinas até você.
+                </span>
+              </Link>
+            )}
 
             {perfil.status === "aprovada" ? (
               <ServicosProfissional
                 profissionalId={perfil.id}
                 nomeProfissional={perfil.profiles?.nome ?? "sua profissional"}
                 userId={perfil.user_id}
+                {...(aba ? { abaInicial: aba } : {})}
               />
             ) : (
               <EstadoVazio
                 icon={Clock3}
                 titulo="Cadastro em análise"
-                texto="A equipe Lar77 revisa seu perfil no painel administrativo (Admin → Profissionais). Assim que for aprovado, as solicitações da sua região aparecem aqui."
+                texto="A equipe Lar77 está revisando seu perfil. Assim que for aprovado, as faxinas da sua região aparecem aqui para você aceitar."
               />
             )}
 
-            <PerfilProfissional
-              perfil={{
-                id: perfil.id,
-                user_id: perfil.user_id,
-                bio: perfil.bio,
-                anos_experiencia: perfil.anos_experiencia,
-                raio_km: perfil.raio_km,
-                regiao: perfil.regiao,
-                cidade: perfil.cidade,
-                cidades_atendidas: perfil.cidades_atendidas ?? [],
-                tipos_limpeza: perfil.tipos_limpeza ?? [],
-                nome: perfil.profiles?.nome ?? null,
-                telefone: perfil.profiles?.telefone ?? null,
-                foto_url: perfil.profiles?.foto_url ?? null,
-                pix_tipo: perfil.pix_tipo ?? null,
-                pix_chave: perfil.pix_chave ?? null,
-                pix_titular: perfil.pix_titular ?? null,
-              }}
-            />
+            <Link
+              to="/profissional/conta"
+              className="mt-6 flex min-h-14 items-center gap-2 rounded-2xl border border-border bg-surface px-4 text-sm font-semibold text-foreground"
+            >
+              <UserCog className="size-4 text-accent" />
+              Meu perfil, documentos, PIX e dias de folga
+            </Link>
 
-            <DocumentosProfissional
-              profissionalId={perfil.id}
-              userId={perfil.user_id}
-              docIdentidade={perfil.doc_identidade_url ?? null}
-              docCpf={perfil.doc_cpf_url ?? null}
-              comprovante={perfil.comprovante_url ?? null}
-              telefoneRecado={perfil.telefone_recado ?? null}
-              docTipo={perfil.doc_tipo ?? null}
-            />
-
-            <BloqueiosProfissional profissionalId={perfil.id} />
-
-
+            <PwaInstalar className="mt-6" />
           </>
         )}
       </main>

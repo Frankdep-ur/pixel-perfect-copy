@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { EstadoVazio } from "@/components/estado-vazio";
-import { useSession } from "@/hooks/use-auth";
+import { usePapeis, useSession } from "@/hooks/use-auth";
 import { labelTipoLimpeza } from "@/lib/catalogo";
 
 export const Route = createFileRoute("/mensagens")({
@@ -34,6 +34,8 @@ export const Route = createFileRoute("/mensagens")({
 function Mensagens() {
   const navigate = useNavigate();
   const { user, carregando } = useSession();
+  const { data: papeis } = usePapeis(user);
+  const ehProfissional = (papeis ?? []).includes("profissional");
 
   useEffect(() => {
     if (!carregando && !user) {
@@ -90,9 +92,13 @@ function Mensagens() {
           <EstadoVazio
             icon={MessageCircle}
             titulo="Nenhuma conversa ainda"
-            texto="O chat abre quando uma profissional aceita o seu serviço. Assim que isso acontecer, a conversa aparece aqui."
-            acaoLabel="Contratar faxina"
-            acaoTo="/contratar"
+            texto={
+              ehProfissional
+                ? "O chat abre quando um cliente te escolhe para a faxina. Assim que isso acontecer, a conversa aparece aqui."
+                : "O chat abre quando uma profissional aceita o seu serviço. Assim que isso acontecer, a conversa aparece aqui."
+            }
+            acaoLabel={ehProfissional ? "Ver oportunidades" : "Contratar faxina"}
+            acaoTo={ehProfissional ? "/profissional" : "/contratar"}
           />
         )}
 

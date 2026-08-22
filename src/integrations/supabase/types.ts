@@ -989,6 +989,8 @@ export type Database = {
     Functions: {
       abrir_rodada_convites: { Args: { _booking_id: string }; Returns: number }
       abrir_rodada_interna: { Args: { _booking_id: string }; Returns: number }
+      admin_excluir_usuario: { Args: { alvo: string }; Returns: undefined }
+      admin_limpar_contas_exceto: { Args: { manter: string[] }; Returns: Json }
       confirmar_pagamento_booking: {
         Args: { _booking_id: string }
         Returns: string

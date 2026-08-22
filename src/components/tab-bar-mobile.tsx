@@ -40,14 +40,25 @@ export function TabBarMobile() {
 
   if (!visivel) return null;
 
-  const abas: Aba[] = [
-    { label: "Início", icon: Home, to: "/", exact: true },
-    ehProfissional
-      ? { label: "Minhas faxinas", icon: CalendarCheck, to: "/profissional" }
-      : { label: "Minhas reservas", icon: CalendarCheck, to: "/reservas" },
-    { label: "Mensagens", icon: MessageCircle, to: "/mensagens", badge: naoLidas ?? 0 },
-    { label: "Conta", icon: UserRound, to: "/minha-conta", search: { aba: "perfil" } },
-  ];
+  // A profissional tem um app próprio: Início é a área dela, nunca a home do cliente.
+  const abas: Aba[] = ehProfissional
+    ? [
+        { label: "Início", icon: Home, to: "/profissional", exact: true },
+        {
+          label: "Minhas faxinas",
+          icon: CalendarCheck,
+          to: "/profissional",
+          search: { aba: "agenda" },
+        },
+        { label: "Mensagens", icon: MessageCircle, to: "/mensagens", badge: naoLidas ?? 0 },
+        { label: "Conta", icon: UserRound, to: "/profissional/conta" },
+      ]
+    : [
+        { label: "Início", icon: Home, to: "/", exact: true },
+        { label: "Minhas reservas", icon: CalendarCheck, to: "/reservas" },
+        { label: "Mensagens", icon: MessageCircle, to: "/mensagens", badge: naoLidas ?? 0 },
+        { label: "Conta", icon: UserRound, to: "/minha-conta", search: { aba: "perfil" } },
+      ];
 
   return (
     <>

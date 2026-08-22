@@ -7,6 +7,7 @@ import { adminBookingsQuery, adminClientesQuery, type AdminCliente } from "@/lib
 import { Painel, TituloSecao, formatarData } from "@/components/admin/ui";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { BotaoExcluirConta } from "@/components/admin/excluir-conta";
+import { STATUS_LABEL, formatBRL, labelTipoLimpeza } from "@/lib/catalogo";
 
 export const Route = createFileRoute("/admin/clientes")({
   component: AdminClientes,

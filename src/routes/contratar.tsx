@@ -242,11 +242,7 @@ function Contratar() {
     <div className="flex min-h-screen flex-col">
       <main className="mx-auto w-full max-w-md flex-1 px-4 pb-6 lg:max-w-6xl">
         {/* Sem logo no funil: o espaço vertical fica para as opções. */}
-        <TopoFunil
-          grupoAtual={grupoAtual}
-          onVoltar={voltar}
-          podeVoltar={fase !== "passos" || indice > 0}
-        />
+        <TopoFunil grupoAtual={grupoAtual} onVoltar={voltar} onCancelar={sair} />
 
         <div className="grid gap-8 lg:grid-cols-[1fr_20rem]">
 

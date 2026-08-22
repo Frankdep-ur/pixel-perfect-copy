@@ -467,3 +467,12 @@ function Cartao({
     </Card>
   );
 }
+
+/** Contagem da aba em badge — o número nunca vai no meio do rótulo. */
+function ContadorAba({ valor }: { valor: number }) {
+  return (
+    <span className="inline-flex min-w-[18px] items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold leading-[18px] text-accent-foreground">
+      {valor > 99 ? "99+" : valor}
+    </span>
+  );
+}

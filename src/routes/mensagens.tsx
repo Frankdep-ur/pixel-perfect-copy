@@ -76,9 +76,9 @@ function Mensagens() {
   return (
     <div className="flex min-h-dvh flex-col">
       <SiteHeader />
-      <main className="lar-container flex-1 py-8">
-        <h1 className="text-2xl font-semibold tracking-tight">Mensagens</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+      <main className="lar-container flex-1 pb-24 pt-6 md:pb-10">
+        <h1 className="text-[22px] font-semibold leading-tight tracking-tight">Mensagens</h1>
+        <p className="mt-1 text-[13px] text-muted-foreground">
           Suas conversas sobre os serviços contratados.
         </p>
 
@@ -107,15 +107,18 @@ function Mensagens() {
             {(data ?? []).map((conversa) => (
               <li key={conversa.ultima.booking_id}>
                 <Link
-                  to="/minha-conta"
-                  className="lar-card flex items-center gap-3 p-4 transition-colors duration-200 ease-out hover:border-accent"
+                  to={ehProfissional ? "/profissional" : "/reservas/$id"}
+                  {...(ehProfissional
+                    ? { search: { aba: "agenda" } as never }
+                    : { params: { id: conversa.ultima.booking_id } })}
+                  className="lar-card flex min-h-[72px] items-center gap-3 p-4 transition-colors duration-200 ease-out hover:border-accent"
                 >
                   <span className="lar-icon-box size-11 shrink-0">
                     <MessageCircle size={20} strokeWidth={1.5} aria-hidden />
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="flex items-center justify-between gap-2">
-                      <span className="truncate text-sm font-semibold text-foreground">
+                      <span className="truncate text-[15px] font-semibold text-foreground">
                         {conversa.booking
                           ? `${labelTipoLimpeza(conversa.booking.tipo_limpeza)} · ${conversa.booking.codigo ?? ""}`
                           : "Serviço"}
@@ -126,7 +129,7 @@ function Mensagens() {
                         </span>
                       )}
                     </span>
-                    <span className="mt-1 block truncate text-xs text-muted-foreground">
+                    <span className="mt-1 block truncate text-[13px] text-muted-foreground">
                       {conversa.ultima.conteudo}
                     </span>
                   </span>

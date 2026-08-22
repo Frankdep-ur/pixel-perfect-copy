@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
-import { useSession, usePapeis } from "@/hooks/use-auth";
+import { useSession, usePapeis, marcarSaida, estaSaindo } from "@/hooks/use-auth";
 import { linkSuporte } from "@/lib/whatsapp";
 
 
@@ -65,6 +65,7 @@ function AdminLayout() {
   const ehAdmin = (papeis ?? []).includes("admin");
 
   useEffect(() => {
+    if (estaSaindo()) return;
     if (carregando) return;
     if (!user) {
       navigate({ to: "/admin/login", replace: true });
@@ -84,9 +85,23 @@ function AdminLayout() {
   return (
     <div className="min-h-dvh bg-background lg:flex">
       <aside className="border-b border-border bg-primary text-primary-foreground lg:sticky lg:top-0 lg:h-dvh lg:w-64 lg:shrink-0 lg:border-b-0 lg:border-r">
-        <div className="flex items-center gap-2 px-5 py-4">
-          <Sparkles className="size-5" strokeWidth={1.5} aria-hidden />
-          <span className="text-lg font-semibold tracking-tight">Lar77 Admin</span>
+        <div className="flex items-center justify-between gap-3 px-4 py-3 lg:px-5 lg:py-4">
+          <div className="flex items-center gap-2">
+            <Sparkles className="size-5" strokeWidth={1.5} aria-hidden />
+            <span className="text-lg font-semibold tracking-tight">Lar77 Admin</span>
+          </div>
+          <button
+            type="button"
+            onClick={async () => {
+              marcarSaida();
+              await supabase.auth.signOut();
+              window.location.replace("/");
+            }}
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-primary-foreground/15 px-3 text-sm font-semibold text-primary-foreground"
+          >
+            <LogOut className="size-4" strokeWidth={1.5} aria-hidden />
+            Sair
+          </button>
         </div>
         <nav className="flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-col lg:overflow-visible">
           {ITENS.map((item) => {
@@ -118,21 +133,10 @@ function AdminLayout() {
             Suporte
           </a>
         </div>
-        <div className="flex items-center justify-between gap-3 px-5 py-4 text-xs text-primary-foreground/60">
+        <div className="hidden items-center justify-between gap-3 px-5 py-4 text-xs text-primary-foreground/60 lg:flex">
           <Link to="/" className="hover:text-primary-foreground">
             ← Voltar ao site
           </Link>
-          <button
-            type="button"
-            onClick={async () => {
-              await supabase.auth.signOut();
-              navigate({ to: "/admin/login", replace: true });
-            }}
-            className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 hover:text-primary-foreground"
-          >
-            <LogOut className="size-3.5" strokeWidth={1.5} aria-hidden />
-            Sair
-          </button>
         </div>
       </aside>
 

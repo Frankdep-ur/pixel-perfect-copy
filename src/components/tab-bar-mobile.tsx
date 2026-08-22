@@ -7,7 +7,7 @@ import { usePapeis, useSession } from "@/hooks/use-auth";
 import { useNaoLidas } from "@/hooks/use-nao-lidas";
 
 /** Rotas em que a barra nunca aparece. */
-const ROTAS_SEM_BARRA = ["/admin", "/contratar", "/auth"];
+const ROTAS_SEM_BARRA = ["/admin", "/auth"];
 
 type Aba = {
   label: string;

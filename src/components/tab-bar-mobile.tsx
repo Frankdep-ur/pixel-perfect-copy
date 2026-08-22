@@ -76,7 +76,7 @@ export function TabBarMobile() {
         {abas.map((aba) => {
           const Icone = aba.icon;
           const ativa = aba.exact
-            ? pathname === aba.to
+            ? pathname === aba.to && !abaAtual
             : aba.search
               ? pathname === aba.to && abaAtual === aba.search["aba"]
               : (pathname === aba.to || pathname.startsWith(`${aba.to}/`)) && !abaAtual;

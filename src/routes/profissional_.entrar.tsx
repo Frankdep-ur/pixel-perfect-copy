@@ -34,9 +34,15 @@ function EntrarProfissional() {
   const { next } = Route.useSearch();
   return (
     <div className="flex min-h-dvh flex-col">
-      <SiteHeader />
+      {/* No celular é tela de app: sem header nem rodapé institucional. */}
+      <div className="hidden md:block">
+        <SiteHeader />
+      </div>
       <FormAcesso papel="profissional" next={next} />
-      <SiteFooter />
+      <div className="hidden md:block">
+        <SiteFooter />
+      </div>
     </div>
   );
 }
+

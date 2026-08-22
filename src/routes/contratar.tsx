@@ -12,9 +12,7 @@ import {
   PassoDuracao,
   PassoEndereco,
   PassoExtras,
-  PassoImovel,
   PassoObservacoes,
-  PassoTamanho,
   PassoTipoLimpeza,
 } from "@/components/contratar/passos";
 import { Resumo } from "@/components/contratar/resumo";
@@ -24,7 +22,7 @@ import type { ProfissionalAceite } from "@/lib/orquestra";
 
 import { extrasQuery, pricingQuery } from "@/lib/queries";
 import { calcularOrcamento } from "@/lib/pricing";
-import { AIRBNB_TIPO_LIMPEZA, ehAirbnb, ehComercial, perfilImovel } from "@/lib/catalogo";
+import { AIRBNB_TIPO_LIMPEZA, ehAirbnb, perfilImovel, tipoLimpezaParaDuracao } from "@/lib/catalogo";
 import {
   RASCUNHO_INICIAL,
   carregarRascunho,
@@ -42,7 +40,7 @@ export const Route = createFileRoute("/contratar")({
       {
         name: "description",
         content:
-          "Monte seu serviço de limpeza em 8 passos, veja o preço na hora e escolha uma profissional verificada em Santa Catarina.",
+          "Monte seu serviço de limpeza, veja o preço na hora e escolha uma profissional verificada em Santa Catarina.",
       },
       { property: "og:title", content: "Contratar limpeza — Lar77" },
       {
@@ -56,18 +54,18 @@ export const Route = createFileRoute("/contratar")({
 });
 
 /**
- * Wizard curto: 1) tipo do imóvel, 2) endereço, 4) serviço (duração + cômodos,
- * tipo de limpeza e extras opcionais na mesma tela), 7) data/hora + observações.
+ * Funil: 2) imóvel cadastrado (já traz o tipo), 4) duração + limpeza + extras,
+ * 7) data/hora. Tipo do imóvel não é perguntado de novo.
  */
-const PASSOS_PADRAO = [1, 2, 4, 7];
-/** Airbnb é preço fixo com escopo definido: só imóvel, endereço e data. */
-const PASSOS_AIRBNB = [1, 2, 7];
+const PASSOS_PADRAO = [2, 4, 7];
+/** Airbnb é preço fixo: só endereço e data. */
+const PASSOS_AIRBNB = [2, 7];
 
 function Contratar() {
   const navigate = useNavigate();
   const { user, carregando } = useSession();
   const [rascunho, setRascunho] = useState<Rascunho>(RASCUNHO_INICIAL);
-  const [passo, setPasso] = useState(1);
+  const [passo, setPasso] = useState(2);
   const [fase, setFase] = useState<"passos" | "busca" | "checkout">("passos");
   const [pedido, setPedido] = useState<{ id: string; codigo: string | null } | null>(null);
   const [reserva, setReserva] = useState<{
@@ -101,6 +99,14 @@ function Contratar() {
         !horarioValido(parcial.duracao_horas, proximo.hora)
       ) {
         proximo.hora = null;
+      }
+      if (parcial.duracao_horas === 4) {
+        const trava = tipoLimpezaParaDuracao(4, proximo.tipo_imovel);
+        if (trava) proximo.tipo_limpeza = trava;
+      }
+      if (parcial.tipo_imovel && proximo.duracao_horas === 4) {
+        const trava = tipoLimpezaParaDuracao(4, parcial.tipo_imovel);
+        if (trava) proximo.tipo_limpeza = trava;
       }
       // Mudou data, horário ou tipo de limpeza: a disponibilidade precisa ser recalculada.
       if (
@@ -147,7 +153,6 @@ function Contratar() {
   );
 
   const airbnb = ehAirbnb(rascunho.tipo_imovel);
-  const precoAirbnb = Number(precos?.["airbnb_preco_fixo"] ?? 150);
   const duracaoAirbnb = (Number(precos?.["airbnb_duracao_horas"] ?? 4) || 4) as 4 | 6 | 8;
 
   // Airbnb tem escopo e duração fixos: preenchemos sem perguntar.
@@ -166,22 +171,14 @@ function Contratar() {
 
   /** As etapas viram 4 bolinhas: local, serviço, detalhes e profissional. */
   const grupoAtual =
-    fase === "passos" ? (passo <= 2 ? 1 : passo <= 6 ? 2 : 3) : fase === "busca" ? 4 : 4;
+    fase === "passos" ? (passo <= 2 ? 1 : passo <= 6 ? 2 : 3) : 4;
 
   const podeAvancar = (() => {
     switch (passo) {
-      case 1:
-        return !!rascunho.tipo_imovel;
       case 2:
-        return !!rascunho.endereco_id && !!rascunho.endereco.regiao;
+        return !!rascunho.endereco_id && !!rascunho.endereco.regiao && !!rascunho.tipo_imovel;
       case 4:
         if (!rascunho.duracao_horas || !rascunho.tipo_limpeza) return false;
-        if (ehComercial(rascunho.tipo_imovel)) {
-          return (
-            !!rascunho.faixa_pessoas &&
-            (rascunho.tipo_imovel !== "empresa" || !!rascunho.faixa_metragem)
-          );
-        }
         return true;
       case 7:
         return (
@@ -249,14 +246,6 @@ function Contratar() {
           <div>
             {fase === "passos" && (
               <>
-                {passo === 1 && (
-                  <PassoImovel
-                    rascunho={rascunho}
-                    atualizar={atualizar}
-                    precoAirbnb={precoAirbnb}
-                  />
-                )}
-
                 {passo === 2 && (
                   <PassoEndereco rascunho={rascunho} atualizar={atualizar} userId={user!.id} />
                 )}
@@ -264,7 +253,6 @@ function Contratar() {
                   <div className="space-y-8">
                     <PassoDuracao rascunho={rascunho} atualizar={atualizar} precos={precos} />
                     <PassoTipoLimpeza rascunho={rascunho} atualizar={atualizar} />
-                    <PassoTamanho rascunho={rascunho} atualizar={atualizar} />
                     <PassoExtras rascunho={rascunho} atualizar={atualizar} extras={listaExtras} />
                   </div>
                 )}

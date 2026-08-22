@@ -9,9 +9,11 @@ import { Label } from "@/components/ui/label";
 import { buscarCep, mascaraCep } from "@/lib/contratacao";
 import { REGIOES, regiaoPorCidade } from "@/lib/regioes";
 import type { Endereco } from "@/lib/enderecos";
+import { TIPOS_IMOVEL, labelTipoImovel } from "@/lib/catalogo";
 
 type Campos = {
   apelido: string;
+  tipo_imovel: string;
   cep: string;
   rua: string;
   numero: string;
@@ -20,11 +22,14 @@ type Campos = {
   cidade: string;
   estado: string;
   regiao: string | null;
+  latitude: number | null;
+  longitude: number | null;
 };
 
 function inicial(endereco?: Endereco | null): Campos {
   return {
     apelido: endereco?.apelido ?? "",
+    tipo_imovel: endereco?.tipo_imovel ?? "",
     cep: endereco?.cep ?? "",
     rua: endereco?.rua ?? "",
     numero: endereco?.numero ?? "",
@@ -33,6 +38,8 @@ function inicial(endereco?: Endereco | null): Campos {
     cidade: endereco?.cidade ?? "",
     estado: endereco?.estado ?? "",
     regiao: endereco?.regiao ?? null,
+    latitude: endereco?.latitude ?? null,
+    longitude: endereco?.longitude ?? null,
   };
 }
 
@@ -51,7 +58,10 @@ export function FormEndereco({
   const [buscando, setBuscando] = useState(false);
   const [salvando, setSalvando] = useState(false);
 
-  function set(campo: keyof Campos, valor: string) {
+  function set(
+    campo: Exclude<keyof Campos, "latitude" | "longitude" | "regiao">,
+    valor: string,
+  ) {
     setCampos((atual) => ({ ...atual, [campo]: valor }));
   }
 
@@ -68,6 +78,8 @@ export function FormEndereco({
         cidade,
         estado: dados.uf ?? "",
         regiao,
+        latitude: dados.latitude,
+        longitude: dados.longitude,
       }));
       if (!regiao) {
         toast.info("Ainda não atendemos esta cidade", {
@@ -82,6 +94,10 @@ export function FormEndereco({
   }
 
   async function salvar() {
+    if (!campos.tipo_imovel) {
+      toast.error("Escolha o tipo do imóvel.");
+      return;
+    }
     if (!campos.rua || !campos.numero || !campos.cidade) {
       toast.error("Preencha rua, número e cidade.");
       return;
@@ -91,6 +107,7 @@ export function FormEndereco({
       const payload = {
         user_id: userId,
         apelido: campos.apelido.trim() || "Meu imóvel",
+        tipo_imovel: campos.tipo_imovel,
         cep: campos.cep,
         rua: campos.rua,
         numero: campos.numero,
@@ -99,6 +116,8 @@ export function FormEndereco({
         cidade: campos.cidade,
         estado: campos.estado,
         regiao: campos.regiao ?? regiaoPorCidade(campos.cidade),
+        latitude: campos.latitude,
+        longitude: campos.longitude,
       };
 
       const consulta = endereco
@@ -107,7 +126,7 @@ export function FormEndereco({
 
       const { data, error } = await consulta
         .select(
-          "id, apelido, cep, rua, numero, complemento, bairro, cidade, estado, regiao, padrao",
+          "id, apelido, cep, rua, numero, complemento, bairro, cidade, estado, regiao, padrao, tipo_imovel, latitude, longitude",
         )
         .single();
       if (error) throw error;
@@ -131,6 +150,31 @@ export function FormEndereco({
           value={campos.apelido}
           onChange={(e) => set("apelido", e.target.value)}
         />
+      </div>
+
+      <div className="space-y-2">
+        <Label>Tipo do imóvel</Label>
+        <div className="grid grid-cols-2 gap-2">
+          {TIPOS_IMOVEL.map((tipo) => (
+            <button
+              key={tipo.id}
+              type="button"
+              onClick={() => set("tipo_imovel", tipo.id)}
+              className={
+                campos.tipo_imovel === tipo.id
+                  ? "min-h-11 rounded-xl border-2 border-primary bg-primary/10 px-3 text-sm font-semibold"
+                  : "min-h-11 rounded-xl border border-border bg-card px-3 text-sm"
+              }
+            >
+              {tipo.label}
+            </button>
+          ))}
+        </div>
+        {campos.tipo_imovel ? (
+          <p className="text-xs text-muted-foreground">
+            {labelTipoImovel(campos.tipo_imovel)} — isso define o tipo de faxina neste endereço.
+          </p>
+        ) : null}
       </div>
 
       <div className="space-y-2">

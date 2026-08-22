@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FormEndereco } from "@/components/enderecos/form-endereco";
 import { enderecosQuery, resumoEndereco, type Endereco } from "@/lib/enderecos";
+import { labelTipoImovel } from "@/lib/catalogo";
 
 export function MeusImoveis({ userId }: { userId: string }) {
   const queryClient = useQueryClient();
@@ -86,7 +87,10 @@ export function MeusImoveis({ userId }: { userId: string }) {
                   {e.apelido ?? "Meu imóvel"}
                   {e.padrao && <Badge variant="secondary">Principal</Badge>}
                 </p>
-                <p className="text-sm text-muted-foreground">{resumoEndereco(e)}</p>
+                <p className="text-sm text-muted-foreground">
+                  {e.tipo_imovel ? `${labelTipoImovel(e.tipo_imovel)} · ` : ""}
+                  {resumoEndereco(e)}
+                </p>
                 {e.complemento && (
                   <p className="text-sm text-muted-foreground">{e.complemento}</p>
                 )}

@@ -30,7 +30,7 @@ const BLOCOS: Bloco[] = [
   {
     titulo: "Como agendar",
     itens: [
-      "Escolha o tipo do imóvel, confirme o endereço, selecione a duração e a data. O preço aparece na hora.",
+      "Escolha o imóvel cadastrado, a duração e a data. O preço aparece na hora.",
       "Agendamentos precisam de 24 horas de antecedência e não atendemos domingos.",
     ],
   },
@@ -38,7 +38,7 @@ const BLOCOS: Bloco[] = [
     titulo: "Como escolhemos a profissional",
     itens: [
       "Avisamos as profissionais verificadas mais próximas do seu endereço.",
-      "Quando alguma aceita, você escolhe entre as disponíveis e só então faz o pagamento.",
+      "Avisamos as profissionais verificadas no raio de 15 km. Quem tiver interesse em 5 minutos entra na lista para você escolher. O pagamento confirma a contratação.",
     ],
   },
   {

@@ -166,6 +166,7 @@ export async function responderConvite(conviteId: string, aceitar: boolean) {
     _aceitar: aceitar,
   });
   if (error) throw error;
+  if (data === "aceito") dispararWhatsapp();
   return data as string;
 }
 
@@ -175,6 +176,7 @@ export async function responderConviteToken(token: string, aceitar: boolean) {
     _aceitar: aceitar,
   });
   if (error) throw error;
+  if (data === "aceito") dispararWhatsapp();
   return data as string;
 }
 

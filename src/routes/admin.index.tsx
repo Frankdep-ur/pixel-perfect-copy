@@ -69,7 +69,7 @@ function AdminDashboard() {
       valor: bookings.filter((b) => b.status === "cancelada" && noMes(b.data)).length,
     },
     { label: "GMV do mês", valor: formatBRL(gmv), detalhe: "Concluídas no mês" },
-    { label: "Receita Lar77", valor: formatBRL(receita), detalhe: "Taxa de 15%" },
+    { label: "Receita Lar77", valor: formatBRL(receita), detalhe: "Taxa de 17%" },
     { label: "Ticket médio", valor: formatBRL(ticket) },
   ];
 

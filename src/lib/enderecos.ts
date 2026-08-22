@@ -15,6 +15,9 @@ export type Endereco = {
   estado: string | null;
   regiao: string | null;
   padrao: boolean;
+  tipo_imovel: string | null;
+  latitude: number | null;
+  longitude: number | null;
 };
 
 export function enderecosQuery(userId: string | undefined) {
@@ -24,7 +27,9 @@ export function enderecosQuery(userId: string | undefined) {
     queryFn: async (): Promise<Endereco[]> => {
       const { data, error } = await supabase
         .from("enderecos")
-        .select("id, apelido, cep, rua, numero, complemento, bairro, cidade, estado, regiao, padrao")
+        .select(
+          "id, apelido, cep, rua, numero, complemento, bairro, cidade, estado, regiao, padrao, tipo_imovel, latitude, longitude",
+        )
         .eq("user_id", userId!)
         .order("padrao", { ascending: false })
         .order("criado_em", { ascending: true });

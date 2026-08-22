@@ -58,8 +58,8 @@ export function OportunidadesProfissional({ profissionalId }: { profissionalId: 
     mutationFn: ({ id, aceitar }: { id: string; aceitar: boolean }) => responderConvite(id, aceitar),
     onSuccess: (status) => {
       if (status === "aceito") {
-        toast.success("Oportunidade aceita!", {
-          description: "Agora o cliente vê seu perfil e pode te escolher.",
+        toast.success("Disponibilidade registrada!", {
+          description: "O cliente vê seu perfil e escolhe. O serviço só confirma depois do pagamento.",
         });
       } else if (status === "expirado") {
         toast.error("O prazo dessa oportunidade encerrou.");
@@ -84,7 +84,7 @@ export function OportunidadesProfissional({ profissionalId }: { profissionalId: 
         <Card key={c.id} className="border-2 border-primary/30">
           <CardContent className="space-y-2 p-5">
             <Badge variant="secondary" className="gap-1">
-              <Check className="size-3" /> Aceito — aguardando a escolha do cliente
+              <Check className="size-3" /> Disponível — aguardando a escolha do cliente
             </Badge>
             <p className="font-medium">{labelTipoLimpeza(c.tipo_limpeza ?? "")}</p>
             <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
@@ -203,7 +203,7 @@ function CartaoConvite({
           </p>
         </div>
 
-        {/* Aceitar e Indisponível sempre lado a lado, altura de polegar. */}
+        {/* Interesse e recusa lado a lado, altura de polegar. */}
         <div className="grid grid-cols-2 gap-2">
           <Button
             className="h-12 gap-2 px-2 text-[13px]"
@@ -211,7 +211,7 @@ function CartaoConvite({
             disabled={pendente || expirado}
             onClick={() => onResponder(true)}
           >
-            <Check className="size-4" /> Aceitar
+            <Check className="size-4" /> Tenho interesse
           </Button>
           <Button
             variant="outline"
@@ -220,7 +220,7 @@ function CartaoConvite({
             disabled={pendente || expirado}
             onClick={() => onResponder(false)}
           >
-            <X className="size-4" /> Indisponível
+            <X className="size-4" /> Sem interesse
           </Button>
         </div>
       </CardContent>

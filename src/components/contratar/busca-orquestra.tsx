@@ -22,7 +22,7 @@ import {
 import type { Rascunho } from "@/lib/contratacao";
 import type { Orcamento } from "@/lib/pricing";
 
-const MAX_RODADAS = 3;
+const MAX_RODADAS = 1;
 
 type Props = {
   rascunho: Rascunho;

@@ -124,7 +124,27 @@ export async function buscarCep(cep: string) {
     uf?: string;
   };
   if (dados.erro) throw new Error("CEP não encontrado.");
-  return dados;
+
+  let latitude: number | null = null;
+  let longitude: number | null = null;
+  try {
+    const geo = await fetch(`https://brasilapi.com.br/api/cep/v2/${limpo}`);
+    if (geo.ok) {
+      const json = (await geo.json()) as {
+        location?: { coordinates?: { latitude?: string; longitude?: string } };
+      };
+      const lat = Number(json.location?.coordinates?.latitude);
+      const lng = Number(json.location?.coordinates?.longitude);
+      if (Number.isFinite(lat) && Number.isFinite(lng)) {
+        latitude = lat;
+        longitude = lng;
+      }
+    }
+  } catch {
+    /* sem GPS o matching cai na região */
+  }
+
+  return { ...dados, latitude, longitude };
 }
 
 export function mascaraCep(valor: string) {

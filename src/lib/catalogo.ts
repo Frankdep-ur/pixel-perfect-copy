@@ -50,6 +50,15 @@ export function perfilImovel(tipoImovel: string | null | undefined): PerfilImove
   return "residencial";
 }
 
+/** 4 horas trava em Padrão (residencial) ou Essencial (comercial). */
+export function tipoLimpezaParaDuracao(
+  duracao: 4 | 6 | 8 | null | undefined,
+  tipoImovel: string | null | undefined,
+) {
+  if (duracao !== 4) return null;
+  return ehComercial(tipoImovel) ? "com_essencial" : "padrao";
+}
+
 export const TIPOS_LIMPEZA_COMERCIAL: { id: string; label: string; descricao: string }[] = [
   {
     id: "com_essencial",

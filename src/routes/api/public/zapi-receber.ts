@@ -39,16 +39,17 @@ function interpretar(bruto: string): Intencao {
 
 const RESPOSTAS: Record<string, string> = {
   aceito:
-    "✅ Recebemos seu aceite! Agora aguarde a escolha do cliente — avisamos aqui assim que a faxina for confirmada.",
-  indisponivel: "Ok, avisamos que você não está disponível para esta faxina. Até a próxima!",
+    "✅ DISPONIBILIDADE REGISTRADA!\n\nRecebemos sua resposta e você foi incluída na lista de profissionais disponíveis. Isso ainda não confirma o serviço — o cliente escolhe e o pagamento confirma. Se for selecionada, avisamos aqui.\n\nLAR77 — Diaristas de Confiança",
+  indisponivel:
+    "Ok, registramos que você não tem interesse nesta oportunidade. Até a próxima!\n\nLAR77 — Diaristas de Confiança",
   expirado:
-    "⏰ O prazo desta oportunidade já encerrou. Abra o Lar77 para ver as próximas faxinas da sua região.",
+    "⏰ O prazo desta oportunidade já encerrou. Fique de olho nas próximas faxinas da sua região.",
   sem_convite:
     "Não encontramos nenhuma oportunidade aberta no seu número agora. Abra o Lar77 para acompanhar as próximas.",
   ambiguo:
-    "Este número está cadastrado em mais de um perfil, então não conseguimos confirmar por aqui. Toque no link da mensagem da oportunidade ou abra o Lar77 para aceitar.",
-  duvida: "Não entendi 🙂 Responda *1* para ACEITAR ou *2* se estiver INDISPONÍVEL.",
-
+    "Este número está cadastrado em mais de um perfil, então não conseguimos confirmar por aqui. Abra o Lar77 para responder.",
+  duvida:
+    "Não entendi 🙂 Responda *1* se TEM INTERESSE E ESTÁ DISPONÍVEL ou *2* se NÃO TEM INTERESSE.",
 };
 
 export const Route = createFileRoute("/api/public/zapi-receber")({

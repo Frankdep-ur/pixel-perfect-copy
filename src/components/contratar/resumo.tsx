@@ -72,11 +72,6 @@ export function Resumo({
               <span>{formatBRL(Number(extra.preco))}</span>
             </div>
           ))}
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Taxa administrativa</span>
-            <span>{formatBRL(orcamento.taxaAdmin)}</span>
-          </div>
-
         </div>
 
         <Separator />
@@ -88,8 +83,8 @@ export function Resumo({
           </span>
         </div>
         <p className="text-xs text-muted-foreground">
-          A profissional recebe {formatBRL(orcamento.valorProfissional)} integralmente. A taxa
-          administrativa é somada ao valor, nunca descontada da profissional.
+          Total já inclui a taxa administrativa da Lar77 (17%). A profissional recebe{" "}
+          {formatBRL(orcamento.valorProfissional)}.
         </p>
 
       </CardContent>

@@ -23,6 +23,7 @@ import {
   ehAirbnb,
   ehComercial,
   permiteMultiplasProfissionais,
+  tipoLimpezaParaDuracao,
   formatBRL,
 } from "@/lib/catalogo";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -104,6 +105,7 @@ export function PassoEndereco({
   function escolher(e: Endereco) {
     atualizar({
       endereco_id: e.id,
+      tipo_imovel: e.tipo_imovel ?? rascunho.tipo_imovel,
       endereco: {
         cep: e.cep ?? "",
         rua: e.rua ?? "",
@@ -113,8 +115,8 @@ export function PassoEndereco({
         cidade: e.cidade ?? "",
         estado: e.estado ?? "",
         regiao: (e.regiao as RegiaoId | null) ?? null,
-        latitude: null,
-        longitude: null,
+        latitude: e.latitude,
+        longitude: e.longitude,
       },
     });
   }
@@ -150,7 +152,12 @@ export function PassoEndereco({
                 <MapPin className="size-4 text-primary" />
                 {e.apelido ?? "Meu imóvel"}
               </span>
-              <span className="text-sm text-muted-foreground">{resumoEndereco(e)}</span>
+              <span className="text-sm text-muted-foreground">
+                {e.tipo_imovel
+                  ? `${TIPOS_IMOVEL.find((t) => t.id === e.tipo_imovel)?.label ?? e.tipo_imovel} · `
+                  : ""}
+                {resumoEndereco(e)}
+              </span>
             </Cartao>
           ))}
         </div>
@@ -177,6 +184,30 @@ export function PassoEndereco({
         <Button type="button" variant="outline" onClick={() => setNovo(true)} className="gap-2">
           <Plus className="size-4" /> Cadastrar outro imóvel
         </Button>
+      )}
+
+      {rascunho.endereco_id && !rascunho.tipo_imovel && (
+        <div className="space-y-3 rounded-2xl border border-warning/40 bg-warning/10 p-4">
+          <p className="text-sm font-semibold">Qual o tipo deste imóvel?</p>
+          <div className="grid grid-cols-2 gap-2">
+            {TIPOS_IMOVEL.map((tipo) => (
+              <button
+                key={tipo.id}
+                type="button"
+                onClick={() => {
+                  atualizar({ tipo_imovel: tipo.id });
+                  void supabase
+                    .from("enderecos")
+                    .update({ tipo_imovel: tipo.id })
+                    .eq("id", rascunho.endereco_id!);
+                }}
+                className="min-h-11 rounded-xl border border-border bg-card px-3 text-sm font-medium"
+              >
+                {tipo.label}
+              </button>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );
@@ -510,7 +541,17 @@ export function PassoDuracao({
             descricao={duracao.descricao}
             valor={formatBRL(precos[`preco_${duracao.horas}h`] ?? 0)}
             ativo={rascunho.duracao_horas === duracao.horas}
-            onClick={() => atualizar({ duracao_horas: duracao.horas })}
+            onClick={() => {
+              const trava = tipoLimpezaParaDuracao(duracao.horas, rascunho.tipo_imovel);
+              atualizar({
+                duracao_horas: duracao.horas,
+                ...(trava
+                  ? { tipo_limpeza: trava }
+                  : rascunho.duracao_horas === 4
+                    ? { tipo_limpeza: null }
+                    : {}),
+              });
+            }}
           />
         ))}
       </div>
@@ -519,6 +560,19 @@ export function PassoDuracao({
 }
 
 export function PassoTipoLimpeza({ rascunho, atualizar }: Props) {
+  if (rascunho.duracao_horas === 4) {
+    const trava = tipoLimpezaParaDuracao(4, rascunho.tipo_imovel);
+    const label = [...TIPOS_LIMPEZA, ...TIPOS_LIMPEZA_COMERCIAL].find((t) => t.id === trava)?.label;
+    return (
+      <div className="space-y-2 rounded-2xl border border-border bg-surface-tint p-4">
+        <p className="text-sm font-semibold">Tipo de limpeza: {label ?? "Padrão"}</p>
+        <p className="text-sm text-muted-foreground">
+          No pacote de 4 horas a limpeza é obrigatoriamente padrão.
+        </p>
+      </div>
+    );
+  }
+
   const comercial = ehComercial(rascunho.tipo_imovel);
   const opcoes = comercial ? TIPOS_LIMPEZA_COMERCIAL : TIPOS_LIMPEZA;
 
@@ -565,7 +619,11 @@ export function PassoExtras({
         subtitulo="Opcional — você pode seguir sem escolher nenhum."
       />
       <div className="space-y-3">
-        {extras.map((extra) => {
+        {extras
+          .filter((extra) =>
+            /churrasqueira|forno e geladeira/i.test(extra.nome),
+          )
+          .map((extra) => {
           const ativo = rascunho.extras_ids.includes(extra.id);
           return (
             <label

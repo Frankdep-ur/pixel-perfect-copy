@@ -19,7 +19,7 @@ const LABELS: Record<string, string> = {
   preco_4h: "Preço base 4 horas (R$)",
   preco_6h: "Preço base 6 horas (R$)",
   preco_8h: "Preço base 8 horas (R$)",
-  taxa_admin_percentual: "Taxa administrativa (fração, ex.: 0,15 = 15%)",
+  taxa_admin_percentual: "Taxa administrativa (fração, ex.: 0,17 = 17%)",
   valor_seguro: "Proteção por faxina (R$)",
 
   adicional_por_quarto_extra: "Adicional por quarto extra (R$)",

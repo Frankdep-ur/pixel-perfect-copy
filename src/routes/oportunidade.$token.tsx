@@ -225,7 +225,7 @@ function OportunidadeCard({
               ) : (
                 <Check className="size-4" strokeWidth={1.5} />
               )}
-              ACEITAR
+              Tenho interesse
             </Button>
             <Button
               variant="outline"
@@ -233,7 +233,7 @@ function OportunidadeCard({
               disabled={respondendo}
               onClick={() => onResponder(false)}
             >
-              <X className="size-4" strokeWidth={1.5} /> ESTOU INDISPONÍVEL
+              <X className="size-4" strokeWidth={1.5} /> Sem interesse
             </Button>
           </div>
         ) : (

@@ -470,6 +470,7 @@ export type Database = {
           padrao: boolean
           regiao: string | null
           rua: string | null
+          tipo_imovel: string | null
           user_id: string
         }
         Insert: {
@@ -487,6 +488,7 @@ export type Database = {
           padrao?: boolean
           regiao?: string | null
           rua?: string | null
+          tipo_imovel?: string | null
           user_id: string
         }
         Update: {
@@ -504,6 +506,7 @@ export type Database = {
           padrao?: boolean
           regiao?: string | null
           rua?: string | null
+          tipo_imovel?: string | null
           user_id?: string
         }
         Relationships: [

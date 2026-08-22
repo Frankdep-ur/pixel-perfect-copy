@@ -75,6 +75,17 @@ export function TopoFunil({
       >
         <Headset size={22} strokeWidth={1.5} />
       </a>
+
+      {onCancelar && (
+        <button
+          type="button"
+          onClick={onCancelar}
+          aria-label="Cancelar e sair"
+          className="inline-flex size-11 shrink-0 items-center justify-center rounded-2xl text-muted-foreground transition-transform duration-200 ease-out active:scale-[0.96]"
+        >
+          <X size={22} strokeWidth={1.75} />
+        </button>
+      )}
     </div>
   );
 }

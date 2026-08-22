@@ -201,16 +201,46 @@ export function SiteHeader() {
         </div>
 
         <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-5 pt-4">
-          {navLinksCliente.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={() => setOpen(false)}
-              className="flex min-h-14 items-center rounded-xl px-2 text-lg font-medium text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
-            >
-              {link.label}
-            </a>
-          ))}
+          {/* Cliente logado navega no app; visitante vê os links institucionais. */}
+          {user && !ehProfissional ? (
+            <>
+              <Link
+                to="/reservas"
+                onClick={() => setOpen(false)}
+                className="flex min-h-14 items-center gap-2 rounded-xl px-2 text-lg font-medium text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+              >
+                <CalendarCheck className="size-5" />
+                Minhas reservas
+              </Link>
+              <Link
+                to="/contratar"
+                onClick={() => setOpen(false)}
+                className="flex min-h-14 items-center gap-2 rounded-xl px-2 text-lg font-medium text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+              >
+                <Sparkles className="size-5" />
+                Agendar minha faxina
+              </Link>
+              <Link
+                to="/ajuda"
+                onClick={() => setOpen(false)}
+                className="flex min-h-14 items-center gap-2 rounded-xl px-2 text-lg font-medium text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+              >
+                <Headset className="size-5" />
+                Ajuda / Suporte
+              </Link>
+            </>
+          ) : (
+            navLinksCliente.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                className="flex min-h-14 items-center rounded-xl px-2 text-lg font-medium text-foreground transition-transform duration-200 ease-out active:scale-[0.98]"
+              >
+                {link.label}
+              </a>
+            ))
+          )}
           <span className="mt-4 px-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             Acessos
           </span>

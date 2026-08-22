@@ -198,14 +198,15 @@ function CartaoConvite({
           <p className="text-lg font-semibold">
             Você recebe {formatBRL(Number(b?.valor_profissional ?? 0))}
           </p>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-[13px] text-muted-foreground">
             Endereço completo e contato do cliente liberados se o cliente te escolher.
           </p>
         </div>
 
-        <div className="flex flex-col gap-2 sm:flex-row">
+        {/* Aceitar e Indisponível sempre lado a lado, altura de polegar. */}
+        <div className="grid grid-cols-2 gap-2">
           <Button
-            className="flex-1 gap-2"
+            className="h-12 gap-2 px-2 text-[13px]"
             size="lg"
             disabled={pendente || expirado}
             onClick={() => onResponder(true)}
@@ -214,7 +215,7 @@ function CartaoConvite({
           </Button>
           <Button
             variant="outline"
-            className="flex-1 gap-2"
+            className="h-12 gap-2 px-2 text-[13px]"
             size="lg"
             disabled={pendente || expirado}
             onClick={() => onResponder(false)}

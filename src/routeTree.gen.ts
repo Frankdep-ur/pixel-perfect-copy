@@ -15,7 +15,6 @@ import { Route as AjudaRouteImport } from './routes/ajuda'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContratarRouteImport } from './routes/contratar'
 import { Route as EntrarRouteImport } from './routes/entrar'
-import { Route as FavoritosRouteImport } from './routes/favoritos'
 import { Route as MensagensRouteImport } from './routes/mensagens'
 import { Route as MinhaContaRouteImport } from './routes/minha-conta'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
@@ -73,11 +72,6 @@ const ContratarRoute = ContratarRouteImport.update({
 const EntrarRoute = EntrarRouteImport.update({
   id: '/entrar',
   path: '/entrar',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FavoritosRoute = FavoritosRouteImport.update({
-  id: '/favoritos',
-  path: '/favoritos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MensagensRoute = MensagensRouteImport.update({
@@ -228,7 +222,6 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
   '/entrar': typeof EntrarRoute
-  '/favoritos': typeof FavoritosRoute
   '/mensagens': typeof MensagensRoute
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
@@ -264,7 +257,6 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
   '/entrar': typeof EntrarRoute
-  '/favoritos': typeof FavoritosRoute
   '/mensagens': typeof MensagensRoute
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
@@ -302,7 +294,6 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/contratar': typeof ContratarRoute
   '/entrar': typeof EntrarRoute
-  '/favoritos': typeof FavoritosRoute
   '/mensagens': typeof MensagensRoute
   '/minha-conta': typeof MinhaContaRoute
   '/privacidade': typeof PrivacidadeRoute
@@ -341,7 +332,6 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contratar'
     | '/entrar'
-    | '/favoritos'
     | '/mensagens'
     | '/minha-conta'
     | '/privacidade'
@@ -377,7 +367,6 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contratar'
     | '/entrar'
-    | '/favoritos'
     | '/mensagens'
     | '/minha-conta'
     | '/privacidade'
@@ -414,7 +403,6 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contratar'
     | '/entrar'
-    | '/favoritos'
     | '/mensagens'
     | '/minha-conta'
     | '/privacidade'
@@ -452,7 +440,6 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ContratarRoute: typeof ContratarRoute
   EntrarRoute: typeof EntrarRoute
-  FavoritosRoute: typeof FavoritosRoute
   MensagensRoute: typeof MensagensRoute
   MinhaContaRoute: typeof MinhaContaRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
@@ -513,13 +500,6 @@ declare module '@tanstack/react-router' {
       path: '/entrar'
       fullPath: '/entrar'
       preLoaderRoute: typeof EntrarRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/favoritos': {
-      id: '/favoritos'
-      path: '/favoritos'
-      fullPath: '/favoritos'
-      preLoaderRoute: typeof FavoritosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mensagens': {
@@ -760,7 +740,6 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ContratarRoute: ContratarRoute,
   EntrarRoute: EntrarRoute,
-  FavoritosRoute: FavoritosRoute,
   MensagensRoute: MensagensRoute,
   MinhaContaRoute: MinhaContaRoute,
   PrivacidadeRoute: PrivacidadeRoute,

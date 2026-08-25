@@ -99,7 +99,8 @@ export function PassoEndereco({
   rascunho,
   atualizar,
   userId,
-}: Props & { userId: string }) {
+  precoAirbnb,
+}: Props & { userId: string; precoAirbnb?: number }) {
   const queryClient = useQueryClient();
   const { data: enderecos, isLoading } = useQuery(enderecosQuery(userId));
   const [novo, setNovo] = useState(false);

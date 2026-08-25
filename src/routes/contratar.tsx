@@ -252,7 +252,9 @@ function Contratar() {
                     rascunho={rascunho}
                     atualizar={atualizar}
                     userId={user!.id}
-                    precoAirbnb={Number(precos["airbnb_preco_fixo"]) || undefined}
+                    {...(Number(precos["airbnb_preco_fixo"])
+                      ? { precoAirbnb: Number(precos["airbnb_preco_fixo"]) }
+                      : {})}
                   />
                 )}
                 {passo === 4 && (

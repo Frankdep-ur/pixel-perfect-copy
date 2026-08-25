@@ -133,7 +133,11 @@ export function PassoEndereco({
       {!cadastrando && (
         <CabecalhoPasso
           titulo="Onde será a limpeza?"
-          subtitulo={`Escolha um dos seus imóveis. Atendemos ${REGIOES.grande_floripa.nome} e ${REGIOES.balneario.nome}.`}
+          subtitulo={`${
+            rascunho.tipo_imovel
+              ? `${TIPOS_IMOVEL.find((t) => t.id === rascunho.tipo_imovel)?.label ?? ""}: escolha um dos seus imóveis. `
+              : "Escolha um dos seus imóveis. "
+          }Atendemos ${REGIOES.grande_floripa.nome} e ${REGIOES.balneario.nome}.`}
         />
       )}
 
@@ -175,6 +179,7 @@ export function PassoEndereco({
             setNovo(false);
           }}
           {...(semImoveis ? {} : { onCancelar: () => setNovo(false) })}
+          {...(precoAirbnb != null ? { precoAirbnb } : {})}
         />
       )}
 

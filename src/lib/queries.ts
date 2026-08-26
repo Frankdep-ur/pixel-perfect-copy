@@ -150,14 +150,14 @@ export const extrasQuery = queryOptions({
 export const pricingQuery = queryOptions({
   queryKey: ["pricing-config"],
   queryFn: async () => {
-    const { data, error } = await supabase.from("pricing_config").select("*").maybeSingle();
+    const { data, error } = await supabase.from("pricing_config").select("chave, valor");
     if (error) throw error;
-    // pricing_config is a single-row key/value table of numbers
-    const row = (data ?? {}) as Record<string, unknown>;
+
+    // pricing_config stores one setting per row (chave/valor).
     const out: Record<string, number> = {};
-    for (const [k, v] of Object.entries(row)) {
-      if (typeof v === "number") out[k] = v;
-      else if (v != null && !Number.isNaN(Number(v))) out[k] = Number(v);
+    for (const row of data ?? []) {
+      const valor = Number(row.valor);
+      if (!Number.isNaN(valor)) out[row.chave] = valor;
     }
     return out;
   },

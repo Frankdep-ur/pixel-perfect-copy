@@ -99,13 +99,16 @@ export function FormAcesso({ papel, next }: Props) {
       toast.error("Informe um CPF válido", { description: "O CPF deve ter 11 dígitos." });
       return;
     }
+    // Cliente novo cai direto no funil (tipo do imóvel → endereço); login segue para a conta.
+    const destinoCadastro =
+      papel === "cliente" && destino === config.destino ? "/contratar" : destino;
     setEnviando(true);
     const { error } = await supabase.auth.signUp({
       email,
       password: senha,
       options: {
         data: { nome, telefone, cpf: cpfDigitos, role: papel },
-        emailRedirectTo: `${window.location.origin}${destino}`,
+        emailRedirectTo: `${window.location.origin}${destinoCadastro}`,
       },
     });
     setEnviando(false);
@@ -119,7 +122,7 @@ export function FormAcesso({ papel, next }: Props) {
     }
     toast.success("Conta criada!", { description: "Bem-vinda ao Lar77." });
     router.invalidate();
-    navigate({ to: destino, replace: true });
+    navigate({ to: destinoCadastro, replace: true });
   }
 
   async function entrarComGoogle() {

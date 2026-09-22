@@ -1,8 +1,8 @@
 import { queryOptions } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
-import heroProfissional from "@/assets/hero-profissional.jpg.asset.json";
-import heroSala from "@/assets/hero-sala.jpg";
+import heroProfissional from "@/assets/hero-profissional.webp";
+import heroSala from "@/assets/hero-sala.webp";
 
 export type Slide = {
   id: string;
@@ -19,7 +19,7 @@ export const MAX_SLIDES = 3;
 export const SLIDES_PADRAO: Slide[] = [
   {
     id: "padrao-1",
-    imagem_url: heroProfissional.url,
+    imagem_url: heroProfissional,
     titulo: "Profissionais verificadas",
     legenda: "Uniformizadas, avaliadas e prontas para cuidar da sua casa.",
     ordem: 1,

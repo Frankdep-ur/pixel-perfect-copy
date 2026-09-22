@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { LifeBuoy } from "lucide-react";
 
 import { linkSuporte } from "@/lib/whatsapp";
-import logoLar77 from "@/assets/logo-lar77.png.asset.json";
+import logoLar77 from "@/assets/logo-lar77.webp";
 import { useSession } from "@/hooks/use-auth";
 
 const links = [
@@ -21,7 +21,7 @@ export function SiteFooter() {
       }`}
     >
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-5 py-5 md:flex-row md:items-center md:justify-between md:gap-6 md:py-8">
-        <img src={logoLar77.url} alt="Lar77" className="h-8 w-auto self-start md:h-10" />
+        <img src={logoLar77} alt="Lar77" className="h-8 w-auto self-start md:h-10" />
         <nav className="flex flex-wrap items-center gap-1 text-sm text-muted-foreground">
           {links.map((link) => (
             <Link

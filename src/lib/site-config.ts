@@ -1,7 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
-import logoLar77 from "@/assets/logo-lar77.png.asset.json";
+import logoLar77 from "@/assets/logo-lar77.webp";
 
 /** Textos editáveis da home (Admin → Configurações do sistema). */
 export type TextosSite = {
@@ -56,7 +56,7 @@ export const CORES_PADRAO: CoresSite = {
 };
 
 
-export const LOGO_PADRAO = logoLar77.url;
+export const LOGO_PADRAO = logoLar77;
 
 export type SiteConfig = {
   textos: TextosSite;

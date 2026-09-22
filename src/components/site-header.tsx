@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession, usePapeis, marcarSaida } from "@/hooks/use-auth";
 import { useNaoLidas } from "@/hooks/use-nao-lidas";
 import { linkSuporte } from "@/lib/whatsapp";
-import logoLar77 from "@/assets/logo-lar77.png.asset.json";
+import logoLar77 from "@/assets/logo-lar77.webp";
 
 const navLinksCliente = [{ label: "Como funciona", href: "/#como-funciona" }];
 

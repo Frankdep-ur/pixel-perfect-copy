@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { LifeBuoy } from "lucide-react";
 
 import { linkSuporte } from "@/lib/whatsapp";
-import logoLar77 from "@/assets/logo-lar77.png.asset.json";
+import logoLar77 from "@/assets/logo-lar77.webp";
 import { useSession } from "@/hooks/use-auth";
 
 const links = [

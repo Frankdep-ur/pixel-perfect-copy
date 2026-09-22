@@ -56,7 +56,7 @@ export const CORES_PADRAO: CoresSite = {
 };
 
 
-export const LOGO_PADRAO = logoLar77.url;
+export const LOGO_PADRAO = logoLar77;
 
 export type SiteConfig = {
   textos: TextosSite;

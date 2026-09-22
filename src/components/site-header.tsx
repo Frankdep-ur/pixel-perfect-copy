@@ -58,7 +58,7 @@ export function SiteHeader() {
           className="mx-auto flex h-11 flex-col items-center justify-center transition-transform duration-200 ease-out active:scale-[0.98] md:mx-0"
         >
           <img
-            src={logoLar77.url}
+            src={logoLar77}
             alt="Lar77 — diaristas de confiança"
             className="h-[34px] w-auto md:h-10"
           />
@@ -192,7 +192,7 @@ export function SiteHeader() {
         aria-hidden={!open}
       >
         <div className="flex h-14 items-center justify-between px-5">
-          <img src={logoLar77.url} alt="Lar77" className="h-9 w-auto" />
+          <img src={logoLar77} alt="Lar77" className="h-9 w-auto" />
           <button
             type="button"
             aria-label="Fechar menu"

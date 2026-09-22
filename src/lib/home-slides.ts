@@ -19,7 +19,7 @@ export const MAX_SLIDES = 3;
 export const SLIDES_PADRAO: Slide[] = [
   {
     id: "padrao-1",
-    imagem_url: heroProfissional.url,
+    imagem_url: heroProfissional,
     titulo: "Profissionais verificadas",
     legenda: "Uniformizadas, avaliadas e prontas para cuidar da sua casa.",
     ordem: 1,
